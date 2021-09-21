@@ -4,8 +4,7 @@ _A.Y. 2020/2021_
 ## Author(s)
 
 The author(s) of this project is/are:
-- Name Surname (0123456)
-- Name Surname (0123456)
+- Sultan Umarbaev (1954544)
 
 ## Instructions
 

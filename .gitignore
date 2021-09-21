@@ -94,3 +94,5 @@ src/**/.*
 *.order
 *.symvers
 *.out
+
+src/module/module_test.c
