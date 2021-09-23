@@ -1,7 +1,10 @@
 #include "device.h"
 
-static int is_device_open = 0;
+// static int is_device_open = 0;
 
+/*
+ * Static functions
+ */
 static int open_device(struct inode *, struct file *);
 static int close_device(struct inode *, struct file *);
 static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg);
@@ -16,27 +19,40 @@ static struct file_operations fops = {
 static struct miscdevice mdev;
 
 /*
- * Static functions
+ * Static function impl-s
  */
 static int open_device(struct inode *inode, struct file *file)
 {
     // if (is_device_open) return -EBUSY;
-    is_device_open++;
+    // is_device_open++;
     try_module_get(THIS_MODULE);
     return 0;
 }
 
 static int close_device(struct inode *inode, struct file *file)
 {
-    is_device_open++;
+    // is_device_open++;
     module_put(THIS_MODULE);
     return 0;
 }
 
 static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
 {
-    printk(KERN_DEBUG "UMS device: IOCTL\n");
-    return 0;
+    int ret;
+
+    switch (cmd) {
+        case UMS_DEV_INIT_UMS_PROCESS:
+            ret = init_ums_process();
+            break;
+        case UMS_DEV_EXIT_UMS_PROCESS:
+            ret = exit_ums_process();
+            break;
+        default:
+            return -1;
+            break;
+    }
+
+    return ret;
 }
 
 /*
