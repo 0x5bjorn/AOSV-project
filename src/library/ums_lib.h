@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#include "../module/device_shared.h"
+
 #define UMS_DEVICE_PATH "/dev/umsdevice"
 
 /* 
@@ -14,3 +16,4 @@
  */
 int init_ums();
 int exit_ums();
+int create_completion_list();

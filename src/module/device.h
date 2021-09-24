@@ -6,9 +6,7 @@
 #include <linux/kernel.h>
 #include <linux/miscdevice.h>
 #include <linux/module.h>
-// for copy_to_user and copy_from_user
 #include <linux/uaccess.h>
-// for file_operations struct, register_chrdev unregister_chrdev
 #include <linux/fs.h>
 
 #include "ums.h"

@@ -47,6 +47,9 @@ static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
         case UMS_DEV_EXIT_UMS_PROCESS:
             ret = exit_ums_process();
             break;
+        case UMS_DEV_CREATE_COMPLETION_LIST:
+            ret = create_completion_list();
+            break;
         default:
             return -1;
             break;

@@ -9,10 +9,24 @@
 
 #include "ums_lib.h"
 
-void *thread_func(void *data)
+void *thread1_func(void *data)
 {
 	int ret = init_ums();
     printf("ioctl(init) returned %d\n", ret);
+	ret = create_completion_list();
+    printf("ioctl(create cl) returned %d\n", ret);
+	ret = exit_ums();
+    printf("ioctl(exit) returned %d\n", ret);
+}
+
+void *thread2_func(void *data)
+{
+	int ret = init_ums();
+    printf("ioctl(init) returned %d\n", ret);
+	ret = create_completion_list();
+    printf("ioctl(create cl1) returned %d\n", ret);
+	ret = create_completion_list();
+    printf("ioctl(create cl2) returned %d\n", ret);
 	ret = exit_ums();
     printf("ioctl(exit) returned %d\n", ret);
 }
@@ -21,8 +35,8 @@ int main(int argc, char **argv)
 {
 	pthread_t thread1, thread2;
 
-	int ret1 = pthread_create(&thread1, NULL, thread_func, NULL);
-	int ret2 = pthread_create(&thread2, NULL, thread_func, NULL);
+	int ret1 = pthread_create(&thread1, NULL, thread1_func, NULL);
+	int ret2 = pthread_create(&thread2, NULL, thread2_func, NULL);
 
 	pthread_join( thread1, NULL);
 	pthread_join( thread2, NULL);
