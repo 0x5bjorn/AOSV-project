@@ -15,6 +15,13 @@ void *thread1_func(void *data)
     printf("ioctl(init) returned %d\n", ret);
 	ret = create_completion_list();
     printf("ioctl(create cl) returned %d\n", ret);
+	
+	for (int i = 0; i<2; ++i)
+	{
+		ret = create_worker_thread(NULL, NULL, 1024);
+    	printf("ioctl(create wt) returned %d\n", ret);
+	}
+
 	ret = exit_ums();
     printf("ioctl(exit) returned %d\n", ret);
 }
@@ -27,6 +34,13 @@ void *thread2_func(void *data)
     printf("ioctl(create cl1) returned %d\n", ret);
 	ret = create_completion_list();
     printf("ioctl(create cl2) returned %d\n", ret);
+
+	for (int i = 0; i<3; ++i)
+	{
+		ret = create_worker_thread(NULL, NULL, 512);
+    	printf("ioctl(create wt) returned %d\n", ret);
+	}
+
 	ret = exit_ums();
     printf("ioctl(exit) returned %d\n", ret);
 }

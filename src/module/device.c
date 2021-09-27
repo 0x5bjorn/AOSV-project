@@ -50,6 +50,9 @@ static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
         case UMS_DEV_CREATE_COMPLETION_LIST:
             ret = create_completion_list();
             break;
+        case UMS_DEV_CREATE_WORKER_THREAD:
+            ret = create_worker_thread((worker_thread_params_t *) arg);
+            break;
         default:
             return -1;
             break;

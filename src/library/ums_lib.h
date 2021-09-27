@@ -12,8 +12,14 @@
 #define UMS_DEVICE_PATH "/dev/umsdevice"
 
 /* 
+ * Structs
+ */
+
+
+/* 
  * Functions
  */
 int init_ums();
 int exit_ums();
 int create_completion_list();
+int create_worker_thread(void (*function)(void *), void *args, unsigned long stack_size);
