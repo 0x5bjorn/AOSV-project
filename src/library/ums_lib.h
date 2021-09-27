@@ -23,3 +23,4 @@ int init_ums();
 int exit_ums();
 int create_completion_list();
 int create_worker_thread(void (*function)(void *), void *args, unsigned long stack_size);
+int add_worker_thread(unsigned int completion_list_id, unsigned int worker_thread_id);

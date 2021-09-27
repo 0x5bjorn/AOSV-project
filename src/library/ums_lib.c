@@ -88,3 +88,28 @@ int create_worker_thread(void (*function)(void *), void *args, unsigned long sta
 
     return ret;
 }
+
+int add_worker_thread(unsigned int completion_list_id, unsigned int worker_thread_id)
+{
+    //lib adding wt data structure to cl of wt
+
+    add_wt_params_t *params = (add_wt_params_t *)malloc(sizeof(add_wt_params_t));
+    params->completion_list_id = completion_list_id;
+    params->worker_thread_id = worker_thread_id;
+
+    int fd = open(UMS_DEVICE_PATH, O_RDONLY);
+	if(fd < 0) {
+		perror("Error opening " UMS_DEVICE_PATH);
+		return -1;
+	}
+
+    int ret = ioctl(fd, UMS_DEV_ADD_TO_COMPLETION_LIST, (unsigned long)params);
+    if (ret < 0) {
+        printf( "ums_lib: ioctl error, errno %d\n", errno);
+        return -1;
+    }
+
+    close(fd);
+
+    return ret;
+}

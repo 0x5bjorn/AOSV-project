@@ -61,7 +61,6 @@ typedef struct worker_thread_context {
 	pid_t created_by;
 	pid_t run_by;
 	worker_state_t state;
-	unsigned long stack_size;
 	unsigned long running_time;
 	unsigned int switch_count;
 } worker_thread_context_t;
@@ -73,8 +72,11 @@ int init_ums_process(void);
 int exit_ums_process(void);
 int create_completion_list(void);
 int create_worker_thread(worker_thread_params_t *params);
+int add_to_completion_list(add_wt_params_t *params);
 
 /* 
  * Auxiliary functions
  */
 static inline process_t *get_process_with_pid(pid_t req_pid);
+static inline completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id);
+static inline worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id);
