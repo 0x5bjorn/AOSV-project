@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <pthread.h>
 
 #include "ums_lib.h"
 
@@ -13,6 +6,7 @@ void *thread1_func(void *data)
 {
 	int ret = init_ums();
     printf("ioctl(init) returned %d\n", ret);
+
 	int cl_id = create_completion_list();
     printf("ioctl(create cl) returned %d\n", cl_id);
 	
@@ -24,6 +18,9 @@ void *thread1_func(void *data)
     	printf("ioctl(add wt) returned %d\n", ret);
 	}
 
+	ret = create_ums_thread(NULL, cl_id);
+    printf("ioctl(create umt) returned %d\n", ret);
+
 	ret = exit_ums();
     printf("ioctl(exit) returned %d\n", ret);
 }
@@ -32,26 +29,20 @@ void *thread2_func(void *data)
 {
 	int ret = init_ums();
     printf("ioctl(init) returned %d\n", ret);
-	int cl_id1 = create_completion_list();
-    printf("ioctl(create cl1) returned %d\n", cl_id1);
-	int cl_id2 = create_completion_list();
-    printf("ioctl(create cl2) returned %d\n", cl_id2);
 
-	for (int i = 0; i<2; ++i)
+	int cl_id = create_completion_list();
+    printf("ioctl(create cl) returned %d\n", cl_id);
+
+	for (int i = 0; i<3; ++i)
 	{
 		int wt_id = create_worker_thread(NULL, NULL, 512);
     	printf("ioctl(create wt) returned %d\n", wt_id);
-		ret = add_worker_thread(cl_id1, wt_id);
+		ret = add_worker_thread(cl_id, wt_id);
     	printf("ioctl(add wt) returned %d\n", ret);
 	}
 
-		for (int i = 0; i<2; ++i)
-	{
-		int wt_id = create_worker_thread(NULL, NULL, 512);
-    	printf("ioctl(create wt) returned %d\n", wt_id);
-		ret = add_worker_thread(cl_id2, wt_id);
-    	printf("ioctl(add wt) returned %d\n", ret);
-	}
+	ret = create_ums_thread(NULL, cl_id);
+    printf("ioctl(create umt) returned %d\n", ret);
 
 	ret = exit_ums();
     printf("ioctl(exit) returned %d\n", ret);

@@ -13,80 +13,111 @@ process_list_t process_list = {
  */
 int init_ums_process(void)
 {
+    printk(KERN_DEBUG UMS_LOG "---------\n");
+
     process_t *process;
 
     process = kmalloc(sizeof(process_t), GFP_KERNEL);
     list_add_tail(&process->list, &process_list.list);
+    process_list.process_count++;
 
     process->pid = current->tgid;
     INIT_LIST_HEAD(&process->cl_list.list);
     process->cl_list.cl_count = 0;
     INIT_LIST_HEAD(&process->worker_thread_list.list);
     process->worker_thread_list.worker_thread_count = 0;
+    INIT_LIST_HEAD(&process->ums_thread_list.list);
+    process->ums_thread_list.ums_thread_count = 0;
 
-    process_list.process_count++;
-
-    printk(KERN_DEBUG "UMS module: process pid = %d, INIT process count = %d\n", process->pid, process_list.process_count);
+    printk(KERN_DEBUG UMS_LOG "[INIT UMS] process pid = %d, process count = %d\n", process->pid, process_list.process_count);
 
     return 0;
 }
 
 int exit_ums_process(void)
 {
+    printk(KERN_DEBUG UMS_LOG "---------\n");
+
     int ret = 0;
     process_t *process = NULL;
     completion_list_t *completion_list = NULL;
     worker_thread_context_t *worker_thread_context = NULL;
+    ums_thread_context_t *ums_thread_context = NULL;
 
     process = get_process_with_pid(current->tgid);
-    // if (process == NULL)
-    // {
-
-    // }
-    
-    printk(KERN_DEBUG "UMS module: process pid = %d\n", process->pid);
-
-    completion_list_t *temp_cl = NULL;
-    list_for_each_entry_safe(completion_list, temp_cl, &process->cl_list.list, list) {
-    
-        printk(KERN_DEBUG "UMS nodule: completion list id = %d\n", completion_list->id);
-        
-        worker_thread_context_t *temp_wt = NULL;
-        if (!list_empty(&completion_list->wt_list)) {
-            list_for_each_entry_safe(worker_thread_context, temp_wt, &completion_list->wt_list, wt_list) {
-                list_del(&worker_thread_context->wt_list);
-                list_del(&worker_thread_context->list);
-                kfree(worker_thread_context);
-                process->worker_thread_list.worker_thread_count--;
-                completion_list->worker_thread_count--;
-                printk(KERN_DEBUG "UMS nodule: cl worker thread count = %d\n", completion_list->worker_thread_count);
-                printk(KERN_DEBUG "UMS nodule: process worker thread count = %d\n", process->worker_thread_list.worker_thread_count);
-            }
-        }
-
-        list_del(&completion_list->list);
-        kfree(completion_list);
-        process->cl_list.cl_count--;
-        printk(KERN_DEBUG "UMS nodule: process cl count = %d\n", process->cl_list.cl_count);
+    if (process == NULL)
+    {
+        printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process pid = %d\n", process->pid);
+        return -1;
     }
     
+    printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process pid = %d\n", process->pid);
 
-    list_del(&process->list);
-    kfree(process);
-    process_list.process_count--;
+    ums_thread_context_t *temp_umst = NULL;
+    if (!list_empty(&process->ums_thread_list.list)) {
+        list_for_each_entry_safe(ums_thread_context, temp_umst, &process->ums_thread_list.list, list) {
+            if (ums_thread_context->created_by == current->tgid)
+            {
+                break;
+            }
+        }
+    }
+    printk(KERN_DEBUG UMS_LOG "[DELETE UMST] ums thread id = %d\n", ums_thread_context->id);
 
-    printk(KERN_DEBUG "UMS module: EXIT process count = %d\n", process_list.process_count);
+    completion_list = get_cl_with_id(process, ums_thread_context->cl_id);
+    printk(KERN_DEBUG UMS_LOG "[DELETE CL AND WT] completion list id = %d\n", completion_list->id);
+    
+    worker_thread_context_t *temp_wt = NULL;
+    if (!list_empty(&completion_list->wt_list)) {
+        list_for_each_entry_safe(worker_thread_context, temp_wt, &completion_list->wt_list, wt_list) {
+            printk(KERN_DEBUG UMS_LOG "[DELETE WT] worker thread id = %d\n", worker_thread_context->id);
+            list_del(&worker_thread_context->wt_list);
+            list_del(&worker_thread_context->list);
+            kfree(worker_thread_context);
+            process->worker_thread_list.worker_thread_count--;
+            completion_list->worker_thread_count--;
+            printk(KERN_DEBUG UMS_LOG "[DELETE WT] cl worker thread count = %d\n", completion_list->worker_thread_count);
+            printk(KERN_DEBUG UMS_LOG "[DELETE WT] process worker thread count = %d\n", process->worker_thread_list.worker_thread_count);
+        }
+    }
+
+    list_del(&completion_list->list);
+    kfree(completion_list);
+    process->cl_list.cl_count--;
+    printk(KERN_DEBUG UMS_LOG "[DELETE CL] process cl count = %d\n", process->cl_list.cl_count);
+    
+    list_del(&ums_thread_context->list);
+    kfree(ums_thread_context);
+    process->ums_thread_list.ums_thread_count--;
+    printk(KERN_DEBUG UMS_LOG "[DELETE UMST] process umst count = %d\n", process->ums_thread_list.ums_thread_count);
+    
+    if (list_empty(&process->ums_thread_list.list) && 
+        list_empty(&process->cl_list.list) && 
+        list_empty(&process->worker_thread_list.list))
+    {
+        list_del(&process->list);
+        kfree(process);
+        process_list.process_count--;
+        printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process count = %d\n", process_list.process_count);
+    }
 
     return ret;
 }
 
 int create_completion_list(void)
 {
+    printk(KERN_DEBUG UMS_LOG "---------\n");
+
     int ret;
     process_t *process;
     completion_list_t *completion_list;
 
     process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        init_ums_process();
+    }
+
     completion_list = kmalloc(sizeof(completion_list_t), GFP_KERNEL);
     list_add_tail(&completion_list->list, &process->cl_list.list);
     completion_list->id = process->cl_list.cl_count;
@@ -95,7 +126,7 @@ int create_completion_list(void)
     INIT_LIST_HEAD(&completion_list->wt_list);
     completion_list->worker_thread_count = 0;
 
-    printk(KERN_DEBUG "UMS nodule: process cl count = %d, completion list id = %d\n", process->cl_list.cl_count, completion_list->id);
+    printk(KERN_DEBUG UMS_LOG "[CREATE CL] completion list id = %d, cl count = %d\n", completion_list->id, process->cl_list.cl_count);
 
     ret = completion_list->id;
     
@@ -104,12 +135,19 @@ int create_completion_list(void)
 
 int create_worker_thread(worker_thread_params_t *params)
 {
+    printk(KERN_DEBUG UMS_LOG "---------\n");
+
     worker_thread_params_t tmp_params;
     int ret;
     process_t *process;
     worker_thread_context_t *worker_thread_context;
 
     process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        init_ums_process();
+    }
+    
     worker_thread_context = kmalloc(sizeof(worker_thread_context_t), GFP_KERNEL);
     list_add_tail(&worker_thread_context->list, &process->worker_thread_list.list);
     worker_thread_context->id = process->worker_thread_list.worker_thread_count;
@@ -126,19 +164,21 @@ int create_worker_thread(worker_thread_params_t *params)
     copy_fxregs_to_kernel(&worker_thread_context->fpu_regs); // Legacy FPU register saving
     worker_thread_context->created_by = process->pid;
     worker_thread_context->run_by = -1;
-    worker_thread_context->state = IDLE;
+    worker_thread_context->state = READY;
     worker_thread_context->running_time = 0;
     worker_thread_context->switch_count = 0;
 
     ret = worker_thread_context->id;
 
-    printk(KERN_DEBUG "UMS nodule: process worker thread count = %d, worker thread id = %d\n", process->worker_thread_list.worker_thread_count, worker_thread_context->id);
+    printk(KERN_DEBUG UMS_LOG "[CREATE WT] worker thread id = %d, worker thread count = %d\n", worker_thread_context->id, process->worker_thread_list.worker_thread_count);
 
     return ret;
 }
 
 int add_to_completion_list(add_wt_params_t *params)
 {
+    printk(KERN_DEBUG UMS_LOG "---------\n");
+
     add_wt_params_t tmp_params;
     process_t *process;
     completion_list_t *completion_list;
@@ -152,20 +192,59 @@ int add_to_completion_list(add_wt_params_t *params)
 
     list_add_tail(&worker_thread_context->wt_list, &completion_list->wt_list);
     completion_list->worker_thread_count++;
-    printk(KERN_DEBUG "UMS nodule: completion list id = %d, worker thread id = %d\n", completion_list->id, worker_thread_context->id);
+    
+    printk(KERN_DEBUG UMS_LOG "[ADD WT TO CL] completion list id = %d, worker thread id = %d\n", completion_list->id, worker_thread_context->id);
 
     return 0;
 }
 
+int create_ums_thread(create_umst_params_t *params)
+{
+    printk(KERN_DEBUG UMS_LOG "---------\n");
+
+    create_umst_params_t tmp_params;
+    int ret;
+    process_t *process;
+    ums_thread_context_t *ums_thread_context;
+
+    process = get_process_with_pid(current->tgid);
+    ums_thread_context = kmalloc(sizeof(ums_thread_context_t), GFP_KERNEL);
+    list_add_tail(&ums_thread_context->list, &process->ums_thread_list.list);
+    ums_thread_context->id = process->ums_thread_list.ums_thread_count;
+    process->ums_thread_list.ums_thread_count++;
+
+    copy_from_user(&tmp_params, params, sizeof(create_umst_params_t));
+    ums_thread_context->entry_point = tmp_params.function;
+    ums_thread_context->cl_id = tmp_params.completion_list_id;
+    memcpy(&ums_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
+    ums_thread_context->regs.ip = tmp_params.function;
+    memset(&ums_thread_context->fpu_regs, 0, sizeof(struct fpu));
+    copy_fxregs_to_kernel(&ums_thread_context->fpu_regs); // Legacy FPU register saving
+    ums_thread_context->wt_id = -1;
+    ums_thread_context->created_by = process->pid;
+    ums_thread_context->run_by = -1;
+    ums_thread_context->state = IDLE;
+    ums_thread_context->switch_count = 0;
+    // ums_thread_context->last_switch_time = 0;
+
+    ret = ums_thread_context->id;
+
+    printk(KERN_DEBUG UMS_LOG "[CREATE UMST] ums thread id = %d, umst clid = %d, ums thread count = %d\n", ums_thread_context->id, ums_thread_context->cl_id, process->ums_thread_list.ums_thread_count);
+
+    return ret;
+}
+
+
 /* 
  * Auxiliary function impl-s
  */
-static inline process_t *get_process_with_pid(pid_t req_pid)
+process_t *get_process_with_pid(pid_t req_pid)
 {
-    // if (list_empty(&process_list.list))
-    // {
-
-    // }
+    if (list_empty(&process_list.list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] Empty process list\n");
+        return NULL;
+    }
 
     process_t *process = NULL;
     process_t *temp = NULL;
@@ -179,12 +258,13 @@ static inline process_t *get_process_with_pid(pid_t req_pid)
     return process;
 }
 
-static inline completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id)
+completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id)
 {
-    // if (list_empty(&process->cl_list.list))
-    // {
-
-    // }
+    if (list_empty(&process->cl_list.list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] Empty cl list\n");
+        return NULL;
+    }
 
     completion_list_t *completion_list = NULL;
     completion_list_t *temp = NULL;
@@ -198,12 +278,13 @@ static inline completion_list_t *get_cl_with_id(process_t *process, unsigned int
     return completion_list;
 }
 
-static inline worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id)
+worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id)
 {
-    // if (list_empty(&process->worker_thread_list.list))
-    // {
-
-    // }
+    if (list_empty(&process->worker_thread_list.list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] Empty wt list\n");
+        return NULL;
+    }
 
     worker_thread_context_t *worker_thread_context = NULL;
     worker_thread_context_t *temp = NULL;

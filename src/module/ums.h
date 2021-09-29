@@ -7,11 +7,12 @@
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/sched.h>
-#include <linux/sched.h>
-#include <linux/uaccess.h>
 #include <linux/sched/task_stack.h>
+#include <linux/uaccess.h>
 
 #include "device_shared.h"
+
+#define UMS_LOG "UMS: "
 
 /* 
  * Structs
@@ -31,10 +32,16 @@ typedef struct worker_thread_list {
 	unsigned int worker_thread_count;
 } worker_thread_list_t;
 
+typedef struct ums_thread_list {
+	struct list_head list;
+	unsigned int ums_thread_count;
+} ums_thread_list_t;
+
 typedef struct process {
     pid_t pid;
     cl_list_t cl_list;
 	worker_thread_list_t worker_thread_list;
+	ums_thread_list_t ums_thread_list;
 	struct list_head list;
 } process_t;
 
@@ -46,8 +53,8 @@ typedef struct completion_list {
 } completion_list_t;
 
 typedef enum worker_state {
-    RUNNING,
-	IDLE,
+	BUSY,
+	READY,
     FINISHED
 } worker_state_t;
 
@@ -65,18 +72,39 @@ typedef struct worker_thread_context {
 	unsigned int switch_count;
 } worker_thread_context_t;
 
+typedef enum ums_state {
+    RUNNING,
+	IDLE
+} ums_state_t;
+
+typedef struct ums_thread_context {
+	unsigned int id;
+	struct pt_regs regs;
+	struct fpu fpu_regs;
+	struct list_head list;
+	unsigned long entry_point;
+	unsigned int cl_id;
+	unsigned int wt_id;
+	pid_t created_by;
+	pid_t run_by;
+	ums_state_t state;
+	unsigned int switch_count;
+	// struct timespec last_switch_time;
+} ums_thread_context_t;
+
 /* 
  * Functions
  */
-int init_ums_process(void);
 int exit_ums_process(void);
 int create_completion_list(void);
 int create_worker_thread(worker_thread_params_t *params);
 int add_to_completion_list(add_wt_params_t *params);
+int create_ums_thread(create_umst_params_t *params);
 
 /* 
  * Auxiliary functions
  */
-static inline process_t *get_process_with_pid(pid_t req_pid);
-static inline completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id);
-static inline worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id);
+int init_ums_process(void);
+process_t *get_process_with_pid(pid_t req_pid);
+completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id);
+worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id);
