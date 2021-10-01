@@ -38,61 +38,21 @@ int exit_ums_process(void)
 {
     printk(KERN_DEBUG UMS_LOG "---------\n");
 
-    int ret = 0;
     process_t *process = NULL;
-    completion_list_t *completion_list = NULL;
-    worker_thread_context_t *worker_thread_context = NULL;
-    ums_thread_context_t *ums_thread_context = NULL;
-
     process = get_process_with_pid(current->tgid);
     if (process == NULL)
     {
-        printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process pid = %d\n", process->pid);
         return -1;
     }
     
     printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process pid = %d\n", process->pid);
+    free_worker_thread(process);
+    free_completion_list(process);
+    free_ums_thread(process);
 
-    ums_thread_context_t *temp_umst = NULL;
-    if (!list_empty(&process->ums_thread_list.list)) {
-        list_for_each_entry_safe(ums_thread_context, temp_umst, &process->ums_thread_list.list, list) {
-            if (ums_thread_context->created_by == current->tgid)
-            {
-                printk(KERN_DEBUG UMS_LOG "[DELETE UMST] ums thread id = %d\n", ums_thread_context->id);
-
-                completion_list = get_cl_with_id(process, ums_thread_context->cl_id);
-                printk(KERN_DEBUG UMS_LOG "[DELETE CL AND WT] completion list id = %d\n", completion_list->id);
-                
-                worker_thread_context_t *temp_wt = NULL;
-                if (!list_empty(&completion_list->wt_list)) {
-                    list_for_each_entry_safe(worker_thread_context, temp_wt, &completion_list->wt_list, wt_list) {
-                        printk(KERN_DEBUG UMS_LOG "[DELETE WT] worker thread id = %d\n", worker_thread_context->id);
-                        list_del(&worker_thread_context->wt_list);
-                        list_del(&worker_thread_context->list);
-                        kfree(worker_thread_context);
-                        process->worker_thread_list.worker_thread_count--;
-                        completion_list->worker_thread_count--;
-                        printk(KERN_DEBUG UMS_LOG "[DELETE WT] cl worker thread count = %d\n", completion_list->worker_thread_count);
-                        printk(KERN_DEBUG UMS_LOG "[DELETE WT] process worker thread count = %d\n", process->worker_thread_list.worker_thread_count);
-                    }
-                }
-
-                list_del(&completion_list->list);
-                kfree(completion_list);
-                process->cl_list.cl_count--;
-                printk(KERN_DEBUG UMS_LOG "[DELETE CL] process cl count = %d\n", process->cl_list.cl_count);
-                
-                list_del(&ums_thread_context->list);
-                kfree(ums_thread_context);
-                process->ums_thread_list.ums_thread_count--;
-                printk(KERN_DEBUG UMS_LOG "[DELETE UMST] process umst count = %d\n", process->ums_thread_list.ums_thread_count);
-            }
-        }
-    }
-    
-    if (list_empty(&process->ums_thread_list.list) && 
+    if (list_empty(&process->worker_thread_list.list) && 
         list_empty(&process->cl_list.list) && 
-        list_empty(&process->worker_thread_list.list))
+        list_empty(&process->ums_thread_list.list))
     {
         list_del(&process->list);
         kfree(process);
@@ -100,7 +60,7 @@ int exit_ums_process(void)
         printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process count = %d\n", process_list.process_count);
     }
 
-    return ret;
+    return 0;
 }
 
 int create_completion_list(void)
@@ -285,4 +245,88 @@ worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_
     }
 
     return worker_thread_context;
+}
+
+ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thread_id)
+{
+    if (list_empty(&process->ums_thread_list.list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] Empty umst list\n");
+        return NULL;
+    }
+
+    ums_thread_context_t *ums_thread_context = NULL;
+    ums_thread_context_t *temp = NULL;
+    list_for_each_entry_safe(ums_thread_context, temp, &process->ums_thread_list.list, list) {
+        if (ums_thread_context->id == ums_thread_id)
+        {
+            break;
+        }
+    }
+
+    return ums_thread_context;
+}
+
+int free_ums_thread(process_t *process)
+{
+    if (list_empty(&process->ums_thread_list.list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] Empty umst list\n");
+        return -1;
+    }
+
+    ums_thread_context_t *ums_thread_context = NULL;
+    ums_thread_context_t *temp = NULL;
+    list_for_each_entry_safe(ums_thread_context, temp, &process->ums_thread_list.list, list) {
+        printk(KERN_DEBUG UMS_LOG "[DELETE UMST] ums thread id = %d\n", ums_thread_context->id);
+        list_del(&ums_thread_context->list);
+        kfree(ums_thread_context);
+        process->ums_thread_list.ums_thread_count--;
+        printk(KERN_DEBUG UMS_LOG "[DELETE UMST] process umst count = %d\n", process->ums_thread_list.ums_thread_count);
+    }
+
+    return 0;
+}
+
+int free_completion_list(process_t *process)
+{
+    if (list_empty(&process->cl_list.list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] Empty cl list\n");
+        return -1;
+    }
+
+    completion_list_t *completion_list = NULL;
+    completion_list_t *temp = NULL;
+    list_for_each_entry_safe(completion_list, temp, &process->cl_list.list, list) {
+        printk(KERN_DEBUG UMS_LOG "[DELETE CL] completion list id = %d\n", completion_list->id);
+        list_del(&completion_list->list);
+        kfree(completion_list);
+        process->cl_list.cl_count--;
+        printk(KERN_DEBUG UMS_LOG "[DELETE CL] process cl count = %d\n", process->cl_list.cl_count);
+    }
+
+    return 0;
+}
+
+int free_worker_thread(process_t *process)
+{
+    if (list_empty(&process->worker_thread_list.list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] Empty wt list\n");
+        return -1;
+    }
+
+    worker_thread_context_t *worker_thread_context = NULL;
+    worker_thread_context_t *temp = NULL;
+    list_for_each_entry_safe(worker_thread_context, temp, &process->worker_thread_list.list, list) {
+        printk(KERN_DEBUG UMS_LOG "[DELETE WT] worker thread id = %d\n", worker_thread_context->id);
+        list_del(&worker_thread_context->wt_list);
+        list_del(&worker_thread_context->list);
+        kfree(worker_thread_context);
+        process->worker_thread_list.worker_thread_count--;
+        printk(KERN_DEBUG UMS_LOG "[DELETE WT] process worker thread count = %d\n", process->worker_thread_list.worker_thread_count);
+    }
+
+    return 0;
 }

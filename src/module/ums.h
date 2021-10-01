@@ -108,3 +108,7 @@ int init_ums_process(void);
 process_t *get_process_with_pid(pid_t req_pid);
 completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id);
 worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id);
+ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thread_id);
+int free_ums_thread(process_t *process);
+int free_completion_list(process_t *process);
+int free_worker_thread(process_t *process);
