@@ -4,8 +4,7 @@
 
 void *thread1_func(void *data)
 {
-	int ret = init_ums();
-    printf("ioctl(init) returned %d\n", ret);
+	int ret = 0;
 
 	int cl_id = create_completion_list();
     printf("ioctl(create cl) returned %d\n", cl_id);
@@ -20,15 +19,11 @@ void *thread1_func(void *data)
 
 	ret = create_ums_thread(NULL, cl_id);
     printf("ioctl(create umt) returned %d\n", ret);
-
-	ret = exit_ums();
-    printf("ioctl(exit) returned %d\n", ret);
 }
 
 void *thread2_func(void *data)
 {
-	int ret = init_ums();
-    printf("ioctl(init) returned %d\n", ret);
+	int ret = 0;
 
 	int cl_id = create_completion_list();
     printf("ioctl(create cl) returned %d\n", cl_id);
@@ -43,13 +38,13 @@ void *thread2_func(void *data)
 
 	ret = create_ums_thread(NULL, cl_id);
     printf("ioctl(create umt) returned %d\n", ret);
-
-	ret = exit_ums();
-    printf("ioctl(exit) returned %d\n", ret);
 }
 
 int main(int argc, char **argv)
 {
+	int ret = init_ums();
+    printf("ioctl(init) returned %d\n", ret);
+
 	pthread_t thread1, thread2;
 
 	int ret1 = pthread_create(&thread1, NULL, thread1_func, NULL);
@@ -60,6 +55,9 @@ int main(int argc, char **argv)
 
 	printf("Thread 1 returns: %d\n",ret1);
 	printf("Thread 2 returns: %d\n",ret2);
+
+	ret = exit_ums();
+    printf("ioctl(exit) returned %d\n", ret);
 
 	return 0;
 }

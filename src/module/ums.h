@@ -99,7 +99,7 @@ int exit_ums_process(void);
 int create_completion_list(void);
 int create_worker_thread(worker_thread_params_t *params);
 int add_to_completion_list(add_wt_params_t *params);
-int create_ums_thread(create_umst_params_t *params);
+int create_ums_thread(ums_thread_params_t *params);
 
 /* 
  * Auxiliary functions

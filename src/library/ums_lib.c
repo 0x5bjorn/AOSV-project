@@ -5,6 +5,21 @@
  */
 int fd = -1;
 
+cl_list_t cl_list = {
+    .list = LIST_HEAD_INIT(cl_list.list),
+    .cl_count = 0
+};
+
+worker_thread_list_t worker_thread_list = {
+    .list = LIST_HEAD_INIT(worker_thread_list.list),
+    .worker_thread_count = 0
+};
+
+ums_thread_list_t ums_thread_list = {
+    .list = LIST_HEAD_INIT(ums_thread_list.list),
+    .ums_thread_count = 0
+};
+
 /* 
  * Implementations
  */
@@ -14,10 +29,9 @@ int init_ums()
 
     int ret = ioctl(fd, UMS_DEV_INIT_UMS_PROCESS);
     if (ret < 0) {
-        printf("ums_lib: ioctl error, errno %d\n", errno);
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
         return -1;
     }
-
 
     return ret;
 }
@@ -28,33 +42,36 @@ int exit_ums()
 
     int ret = ioctl(fd, UMS_DEV_EXIT_UMS_PROCESS);
     if (ret < 0) {
-        printf("ums_lib: ioctl error, errno %d\n", errno);
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
         return -1;
     }
-
 
     return ret;
 }
 
 int create_completion_list()
 {
-    //lib data structure for completion list
+    completion_list_t *completion_list;
 
     fd = open_dev();
 
     int ret = ioctl(fd, UMS_DEV_CREATE_COMPLETION_LIST);
     if (ret < 0) {
-        printf("ums_lib: ioctl error, errno %d\n", errno);
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
         return -1;
     }
 
+    completion_list = (completion_list_t *)malloc(sizeof(completion_list_t));
+    completion_list->id = ret;
+    list_add_tail(&completion_list->list, &cl_list.list);
+    cl_list.cl_count++;
 
     return ret;
 }
 
 int create_worker_thread(void (*function)(void *), void *args, unsigned long stack_size)
 {
-    //lib data structure for worker threads
+    worker_thread_t *worker_thread;
 
     worker_thread_params_t *params = (worker_thread_params_t *)malloc(sizeof(worker_thread_params_t));
     params->function = (unsigned long)function;
@@ -66,16 +83,23 @@ int create_worker_thread(void (*function)(void *), void *args, unsigned long sta
 
     int ret = ioctl(fd, UMS_DEV_CREATE_WORKER_THREAD, (unsigned long)params);
     if (ret < 0) {
-        printf("ums_lib: ioctl error, errno %d\n", errno);
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
         return -1;
     }
+
+    worker_thread = (worker_thread_t *)malloc(sizeof(worker_thread_t));
+    worker_thread->id = ret;
+    worker_thread->params = params;
+    list_add_tail(&worker_thread->list, &worker_thread_list.list);
+    worker_thread_list.worker_thread_count++;
 
     return ret;
 }
 
 int add_worker_thread(unsigned int completion_list_id, unsigned int worker_thread_id)
 {
-    //lib adding wt data structure to cl of wt
+    completion_list_t *completion_list = get_cl_with_id(completion_list_id);
+    worker_thread_t *worker_thread = get_wt_with_id(worker_thread_id);
 
     add_wt_params_t *params = (add_wt_params_t *)malloc(sizeof(add_wt_params_t));
     params->completion_list_id = completion_list_id;
@@ -85,18 +109,20 @@ int add_worker_thread(unsigned int completion_list_id, unsigned int worker_threa
 
     int ret = ioctl(fd, UMS_DEV_ADD_TO_COMPLETION_LIST, (unsigned long)params);
     if (ret < 0) {
-        printf("ums_lib: ioctl error, errno %d\n", errno);
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
         return -1;
     }
+
+    completion_list->worker_thread_count++;
 
     return ret;
 }
 
 int create_ums_thread(void (*function)(void *), unsigned long completion_list_id)
 {
-    //lib data structure for ums threads
+    ums_thread_t *ums_thread;
 
-    create_umst_params_t *params = (create_umst_params_t *)malloc(sizeof(create_umst_params_t));
+    ums_thread_params_t *params = (ums_thread_params_t *)malloc(sizeof(ums_thread_params_t));
     params->function = (unsigned long)function;
     params->completion_list_id = completion_list_id;
 
@@ -104,9 +130,15 @@ int create_ums_thread(void (*function)(void *), unsigned long completion_list_id
 
     int ret = ioctl(fd, UMS_DEV_CREATE_UMS_THREAD, (unsigned long)params);
     if (ret < 0) {
-        printf("ums_lib: ioctl error, errno %d\n", errno);
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
         return -1;
     }
+
+    ums_thread = (ums_thread_t *)malloc(sizeof(ums_thread_t));
+    ums_thread->id = ret;
+    ums_thread->params = params;
+    list_add_tail(&ums_thread->list, &ums_thread_list.list);
+    ums_thread_list.ums_thread_count++;
 
     return ret;
 }
@@ -123,6 +155,46 @@ int open_dev(void)
 	}
 
     return fd;
+}
+
+completion_list_t *get_cl_with_id(unsigned int completion_list_id)
+{
+    if (list_empty(&cl_list.list))
+    {
+        printf(UMS_LIB_LOG "[ERROR] Empty cl list\n");
+        return NULL;
+    }
+
+    completion_list_t *completion_list = NULL;
+    completion_list_t *temp = NULL;
+    list_for_each_entry_safe(completion_list, temp, &cl_list.list, list) {
+        if (completion_list->id == completion_list_id)
+        {
+            break;
+        }
+    }
+
+    return completion_list;
+}
+
+worker_thread_t *get_wt_with_id(unsigned int worker_thread_id)
+{
+    if (list_empty(&worker_thread_list.list))
+    {
+        printf(UMS_LIB_LOG "[ERROR] Empty wt list\n");
+        return NULL;
+    }
+
+    worker_thread_t *worker_thread = NULL;
+    worker_thread_t *temp = NULL;
+    list_for_each_entry_safe(worker_thread, temp, &worker_thread_list.list, list) {
+        if (worker_thread->id == worker_thread_id)
+        {
+            break;
+        }
+    }
+
+    return worker_thread;
 }
 
 __attribute__((constructor))
