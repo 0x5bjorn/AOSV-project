@@ -1,6 +1,11 @@
 #include "device.h"
 
+
 // static int is_device_open = 0;
+
+spinlock_t spinlock;
+DEFINE_SPINLOCK(spinlock);
+unsigned long sl_irq_flags;
 
 /*
  * Static functions
@@ -40,7 +45,10 @@ static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
 {
     int ret;
 
-    switch (cmd) {
+    spin_lock_irqsave(&spinlock, sl_irq_flags);
+
+    switch (cmd)
+    {
         case UMS_DEV_INIT_UMS_PROCESS:
             ret = init_ums_process();
             break;
@@ -64,6 +72,8 @@ static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
             break;
     }
 
+    spin_unlock_irqrestore(&spinlock, sl_irq_flags);
+
     return ret;
 }
 
@@ -77,21 +87,21 @@ int init_device(void)
     mdev.mode = S_IALLUGO;
     mdev.fops = &fops;
 
-    printk(KERN_DEBUG "UMS device: init\n");
+    printk(KERN_DEBUG UMS_DEVICE_LOG "init\n");
     int ret = misc_register(&mdev);
 
     if (ret < 0)
     {
-        printk(KERN_ALERT "UMS device: Registering device failed\n");
+        printk(KERN_ALERT UMS_DEVICE_LOG "Registering device failed\n");
         return ret;
     }
-    printk(KERN_DEBUG "UMS device: Device registered successfully\n");
+    printk(KERN_DEBUG UMS_DEVICE_LOG "Device registered successfully\n");
 
-    return 0;
+    return ret;
 }
 
 void exit_device(void)
 {
     misc_deregister(&mdev);
-    printk(KERN_DEBUG "UMS device: Device deregistered\n");   
+    printk(KERN_DEBUG UMS_DEVICE_LOG "Device deregistered\n");   
 }
