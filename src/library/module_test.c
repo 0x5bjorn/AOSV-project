@@ -2,40 +2,51 @@
 
 #include "ums_lib.h"
 
+void thread1_func()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		int a = 75 * i;
+	}
+	printf("thread 1\n");
+	exit_ums_scheduling_mode();
+}
+
+void thread2_func()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		int a = 126 * i;
+	}
+	printf("thread 2\n");
+	exit_ums_scheduling_mode();
+}
+
 int main(int argc, char **argv)
 {
 	int ret = init_ums();
-    printf("ioctl(init) returned %d\n", ret);
 
 	int cl1 = create_completion_list();
-    printf("ioctl(create cl) returned %d\n", cl1);
+
 	int cl2 = create_completion_list();
-    printf("ioctl(create cl) returned %d\n", cl2);
 
 	for (int i = 0; i<2; ++i)
 	{
 		int wt_id = create_worker_thread(NULL, NULL, 1024);
-    	printf("ioctl(create wt) returned %d\n", wt_id);
 		ret = add_worker_thread(cl1, wt_id);
-    	printf("ioctl(add wt) returned %d\n", ret);
 	}
 
 	for (int i = 0; i<3; ++i)
 	{
 		int wt_id = create_worker_thread(NULL, NULL, 512);
-    	printf("ioctl(create wt) returned %d\n", wt_id);
 		ret = add_worker_thread(cl2, wt_id);
-    	printf("ioctl(add wt) returned %d\n", ret);
 	}
 
-	ret = enter_ums_scheduling_mode(NULL, cl1);
-    printf("ioctl(create umt) returned %d\n", ret);
+	ret = enter_ums_scheduling_mode(thread1_func, cl1);
 
-	ret = enter_ums_scheduling_mode(NULL, cl2);
-    printf("ioctl(create umt) returned %d\n", ret);
+	ret = enter_ums_scheduling_mode(thread2_func, cl2);
 
 	ret = exit_ums();
-    printf("ioctl(exit) returned %d\n", ret);
 
 	return 0;
 }

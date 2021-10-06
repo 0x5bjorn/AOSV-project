@@ -27,3 +27,6 @@ typedef struct ums_thread_params {
 #define UMS_DEV_CREATE_WORKER_THREAD    _IOR(UMS_DEV_IOCTL_MAGIC, 3, worker_thread_params_t *)
 #define UMS_DEV_ADD_TO_COMPLETION_LIST  _IOR(UMS_DEV_IOCTL_MAGIC, 4, add_wt_params_t *)
 #define UMS_DEV_CREATE_UMS_THREAD       _IOR(UMS_DEV_IOCTL_MAGIC, 5, ums_thread_params_t *)
+#define UMS_DEV_CONVERT_TO_UMS_THREAD   _IOR(UMS_DEV_IOCTL_MAGIC, 6, int)
+#define UMS_DEV_CONVERT_FROM_UMS_THREAD _IO(UMS_DEV_IOCTL_MAGIC, 7)
+

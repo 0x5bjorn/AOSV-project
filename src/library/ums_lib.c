@@ -4,6 +4,7 @@
  * Variables
  */
 int fd = -1;
+// pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 cl_list_t cl_list = {
     .list = LIST_HEAD_INIT(cl_list.list),
@@ -34,12 +35,29 @@ int init_ums()
         return -1;
     }
 
+    printf(UMS_LIB_LOG "[INIT UMS]\n");
+
     return ret;
 }
 
 int exit_ums()
 {
-    synch_pthreads();
+    if (list_empty(&ums_thread_list.list))
+    {
+        printf(UMS_LIB_LOG "[ERROR] Empty umst list\n");
+        goto end;
+    }
+
+    ums_thread_t *ums_thread = NULL;
+    ums_thread_t *temp = NULL;
+    list_for_each_entry_safe(ums_thread, temp, &ums_thread_list.list, list) {
+        int ret = pthread_join(ums_thread->pt, NULL);
+        if(ret < 0)
+        {
+            printf(UMS_LIB_LOG "[ERROR] pthread join error %d\n", errno);
+            goto end;
+        }
+    }
 
     fd = open_dev();
 
@@ -47,12 +65,16 @@ int exit_ums()
     if (ret < 0)
     {
         printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
-        return -1;
+        goto end;
     }
 
+end:
+    close_dev();
     free_ums_thread();
     free_completion_list();
     free_worker_thread();
+
+    printf(UMS_LIB_LOG "[EXIT UMS]\n");
 
     return ret;
 }
@@ -75,6 +97,8 @@ int create_completion_list()
     list_add_tail(&completion_list->list, &cl_list.list);
     cl_list.cl_count++;
 
+    printf(UMS_LIB_LOG "[CREATE CL] completion list id = %d\n", completion_list->id);
+
     return ret;
 }
 
@@ -94,6 +118,7 @@ int create_worker_thread(void (*function)(void *), void *args, unsigned long sta
     if (ret < 0)
     {
         printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
+        free(params);
         return -1;
     }
 
@@ -102,6 +127,8 @@ int create_worker_thread(void (*function)(void *), void *args, unsigned long sta
     worker_thread->params = params;
     list_add_tail(&worker_thread->list, &worker_thread_list.list);
     worker_thread_list.worker_thread_count++;
+
+    printf(UMS_LIB_LOG "[CREATE WT] worker thread id = %d\n", worker_thread->id);
 
     return ret;
 }
@@ -121,18 +148,17 @@ int add_worker_thread(unsigned int completion_list_id, unsigned int worker_threa
     if (ret < 0)
     {
         printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
+        free(params);
         return -1;
     }
 
     completion_list->worker_thread_count++;
 
-    return ret;
-}
+    printf(UMS_LIB_LOG "[ADD WT TO CL] worker thread id = %d, completion list id = %d\n", worker_thread->id, completion_list->id);
 
-int *pthread_print_test(unsigned int ums_id)
-{
-    printf("pthread ums id: %d\n", ums_id);
-    return 0;
+    free(params);
+
+    return ret;
 }
 
 int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion_list_id)
@@ -149,6 +175,7 @@ int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion
     if (ret < 0) 
     {
         printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
+        free(params);
         return -1;
     }
 
@@ -158,7 +185,54 @@ int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion
     list_add_tail(&ums_thread->list, &ums_thread_list.list);
     ums_thread_list.ums_thread_count++;
 
-    ret = pthread_create(&ums_thread->pt, NULL, pthread_print_test, ums_thread->id);
+    printf(UMS_LIB_LOG "[ENTER UMS SCH MODE] ums scheduler id = %d\n", ums_thread->id);
+
+    ret = pthread_create(&ums_thread->pt, NULL, convert_to_ums_thread, (void *)ums_thread->id);
+    if (ret < 0) 
+    {
+        printf(UMS_LIB_LOG "[ERROR] pthread create error %d\n", errno);
+        free(params);
+        return -1;
+    }
+
+    return ret;
+}
+
+void *convert_to_ums_thread(void *ums_thread_id)
+{
+    unsigned int *ums_id = (unsigned int *)ums_thread_id;
+
+    int ret = open_dev();
+    if (ret < 0) 
+    {
+        printf(UMS_LIB_LOG "[ERROR] opening during convert %d\n", errno);
+        pthread_exit(NULL);
+    }
+
+    printf(UMS_LIB_LOG "[CONVERT TO UMS] ums scheduler id = %d\n", ums_thread_id);
+
+    ret = ioctl(ret, UMS_DEV_CONVERT_TO_UMS_THREAD, (unsigned long)ums_id);
+    if (ret < 0) 
+    {
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
+        pthread_exit(NULL);
+    }
+
+    pthread_exit(NULL);
+}
+
+int exit_ums_scheduling_mode(void)
+{
+    fd = open_dev();
+
+    int ret = ioctl(fd, UMS_DEV_CONVERT_FROM_UMS_THREAD);
+    if(ret < 0)
+    {
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
+        return -1;
+    }
+    
+    printf(UMS_LIB_LOG "[CONVERT FROM UMS]\n");
 
     return ret;
 }
@@ -168,12 +242,31 @@ int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion
  */
 int open_dev(void)
 {
-    fd = open(UMS_DEVICE_PATH, O_RDONLY);
-	if(fd < 0)
+    // pthread_mutex_lock(&mutex);
+    if(fd < 0)
     {
-		perror("Error opening " UMS_DEVICE_PATH);
-		return -1;
-	}
+        fd = open(UMS_DEVICE_PATH, O_RDONLY);
+        if(fd < 0)
+        {
+            perror("Error opening " UMS_DEVICE_PATH);
+            return -1;
+        }
+    }
+    // pthread_mutex_unlock(&mutex);
+
+    return fd;
+}
+
+int close_dev(void)
+{
+    // pthread_mutex_lock(&mutex);
+    fd = close(fd);
+    if(fd < 0)
+    {
+        perror("Error closing " UMS_DEVICE_PATH);
+        return -1;
+    }
+    // pthread_mutex_unlock(&mutex);
 
     return fd;
 }
@@ -230,6 +323,7 @@ int free_ums_thread(void)
     ums_thread_t *temp = NULL;
     list_for_each_entry_safe(ums_thread, temp, &ums_thread_list.list, list) {
         list_del(&ums_thread->list);
+        free(ums_thread->params);
         free(ums_thread);
         ums_thread_list.ums_thread_count--;
     }
@@ -268,25 +362,10 @@ int free_worker_thread(void)
     worker_thread_t *temp = NULL;
     list_for_each_entry_safe(worker_thread, temp, &worker_thread_list.list, list) {
         list_del(&worker_thread->list);
+        free(worker_thread->params->stack_address - worker_thread->params->stack_size);
+        free(worker_thread->params);
         free(worker_thread);
         worker_thread_list.worker_thread_count--;
-    }
-
-    return 0;
-}
-
-int synch_pthreads(void)
-{
-    if (list_empty(&ums_thread_list.list))
-    {
-        printf(UMS_LIB_LOG "[ERROR] Empty umst list\n");
-        return -1;
-    }
-
-    ums_thread_t *ums_thread = NULL;
-    ums_thread_t *temp = NULL;
-    list_for_each_entry_safe(ums_thread, temp, &ums_thread_list.list, list) {
-        pthread_join(ums_thread->pt, NULL);
     }
 
     return 0;
@@ -302,6 +381,4 @@ __attribute__((destructor))
 void destructor(void)
 {
     printf(UMS_LIB_LOG "exit() destructor called\n");
-
-    close(fd);
 }

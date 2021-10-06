@@ -60,8 +60,6 @@ typedef enum worker_state {
 
 typedef struct worker_thread_context {
 	unsigned int id;
-	struct pt_regs regs;
-	struct fpu fpu_regs;
 	struct list_head list;
 	struct list_head wt_list;
 	unsigned long entry_point;
@@ -70,6 +68,8 @@ typedef struct worker_thread_context {
 	worker_state_t state;
 	unsigned long running_time;
 	unsigned int switch_count;
+	struct pt_regs regs;
+	struct fpu fpu_regs;
 } worker_thread_context_t;
 
 typedef enum ums_state {
@@ -79,8 +79,6 @@ typedef enum ums_state {
 
 typedef struct ums_thread_context {
 	unsigned int id;
-	struct pt_regs regs;
-	struct fpu fpu_regs;
 	struct list_head list;
 	unsigned long entry_point;
 	unsigned int cl_id;
@@ -89,7 +87,10 @@ typedef struct ums_thread_context {
 	pid_t run_by;
 	ums_state_t state;
 	unsigned int switch_count;
-	// struct timespec last_switch_time;
+	unsigned int last_switch_time;
+	struct pt_regs regs;
+	struct fpu fpu_regs;
+	struct pt_regs ret_regs;
 } ums_thread_context_t;
 
 /* 
@@ -100,6 +101,8 @@ int create_completion_list(void);
 int create_worker_thread(worker_thread_params_t *params);
 int add_to_completion_list(add_wt_params_t *params);
 int create_ums_thread(ums_thread_params_t *params);
+int convert_to_ums_thread(unsigned int ums_thread_id);
+int convert_from_ums_thread(void);
 
 /* 
  * Auxiliary functions
@@ -109,6 +112,7 @@ process_t *get_process_with_pid(pid_t req_pid);
 completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id);
 worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id);
 ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thread_id);
+ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid);
 int free_ums_thread(process_t *process);
 int free_completion_list(process_t *process);
 int free_worker_thread(process_t *process);

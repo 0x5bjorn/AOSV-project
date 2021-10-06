@@ -67,6 +67,12 @@ static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
         case UMS_DEV_CREATE_UMS_THREAD:
             ret = create_ums_thread((ums_thread_params_t *) arg);
             break;
+        case UMS_DEV_CONVERT_TO_UMS_THREAD:
+            ret = convert_to_ums_thread((unsigned int) arg);
+            break;
+        case UMS_DEV_CONVERT_FROM_UMS_THREAD:
+            ret = convert_from_ums_thread();
+            break;
         default:
             return -1;
             break;

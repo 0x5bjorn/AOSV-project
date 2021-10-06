@@ -61,17 +61,19 @@ int create_completion_list();
 int create_worker_thread(void (*function)(void *), void *args, unsigned long stack_size);
 int add_worker_thread(unsigned int completion_list_id, unsigned int worker_thread_id);
 int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion_list_id);
+void *convert_to_ums_thread(void *ums_thread_id);
+int exit_ums_scheduling_mode(void);
 
 /* 
  * Auxiliary functions
  */
 int open_dev(void);
+int close_dev(void);
 completion_list_t *get_cl_with_id(unsigned int completion_list_id);
 worker_thread_t *get_wt_with_id(unsigned int worker_thread_id);
 int free_ums_thread(void);
 int free_completion_list(void);
 int free_worker_thread(void);
-int synch_pthreads(void);
 
 __attribute__((constructor)) void constructor(void);
 __attribute__((destructor)) void destructor(void);

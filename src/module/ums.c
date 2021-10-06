@@ -13,7 +13,7 @@ process_list_t process_list = {
  */
 int init_ums_process(void)
 {
-    printk(KERN_DEBUG UMS_LOG "---------\n");
+    printk(KERN_DEBUG UMS_LOG "--------- [INIT UMS]\n");
 
     process_t *process;
 
@@ -36,7 +36,7 @@ int init_ums_process(void)
 
 int exit_ums_process(void)
 {
-    printk(KERN_DEBUG UMS_LOG "---------\n");
+    printk(KERN_DEBUG UMS_LOG "--------- [EXIT UMS]\n");
 
     process_t *process = NULL;
     process = get_process_with_pid(current->tgid);
@@ -50,22 +50,17 @@ int exit_ums_process(void)
     free_completion_list(process);
     free_ums_thread(process);
 
-    if (list_empty(&process->worker_thread_list.list) && 
-        list_empty(&process->cl_list.list) && 
-        list_empty(&process->ums_thread_list.list))
-    {
-        list_del(&process->list);
-        kfree(process);
-        process_list.process_count--;
-        printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process count = %d\n", process_list.process_count);
-    }
+    list_del(&process->list);
+    kfree(process);
+    process_list.process_count--;
+    printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process count = %d\n", process_list.process_count);
 
     return 0;
 }
 
 int create_completion_list(void)
 {
-    printk(KERN_DEBUG UMS_LOG "---------\n");
+    printk(KERN_DEBUG UMS_LOG "--------- [CREATE CL]\n");
 
     int ret;
     process_t *process;
@@ -73,8 +68,8 @@ int create_completion_list(void)
 
     process = get_process_with_pid(current->tgid);
     completion_list = kmalloc(sizeof(completion_list_t), GFP_KERNEL);
-    list_add_tail(&completion_list->list, &process->cl_list.list);
     completion_list->id = process->cl_list.cl_count;
+    list_add_tail(&completion_list->list, &process->cl_list.list);
     process->cl_list.cl_count++;
 
     INIT_LIST_HEAD(&completion_list->wt_list);
@@ -89,7 +84,7 @@ int create_completion_list(void)
 
 int create_worker_thread(worker_thread_params_t *params)
 {
-    printk(KERN_DEBUG UMS_LOG "---------\n");
+    printk(KERN_DEBUG UMS_LOG "--------- [CREATE WT]\n");
 
     worker_thread_params_t tmp_params;
     int ret;
@@ -98,12 +93,18 @@ int create_worker_thread(worker_thread_params_t *params)
 
     process = get_process_with_pid(current->tgid);    
     worker_thread_context = kmalloc(sizeof(worker_thread_context_t), GFP_KERNEL);
-    list_add_tail(&worker_thread_context->list, &process->worker_thread_list.list);
     worker_thread_context->id = process->worker_thread_list.worker_thread_count;
+    list_add_tail(&worker_thread_context->list, &process->worker_thread_list.list);
     process->worker_thread_list.worker_thread_count++;
 
     copy_from_user(&tmp_params, params, sizeof(worker_thread_params_t));
     worker_thread_context->entry_point = tmp_params.function;
+    worker_thread_context->created_by = process->pid;
+    worker_thread_context->run_by = -1;
+    worker_thread_context->state = READY;
+    worker_thread_context->running_time = 0;
+    worker_thread_context->switch_count = 0;
+
     memcpy(&worker_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
     worker_thread_context->regs.ip = tmp_params.function;
     worker_thread_context->regs.di = tmp_params.function_args;
@@ -111,11 +112,6 @@ int create_worker_thread(worker_thread_params_t *params)
     worker_thread_context->regs.bp = tmp_params.stack_address;
     memset(&worker_thread_context->fpu_regs, 0, sizeof(struct fpu));
     copy_fxregs_to_kernel(&worker_thread_context->fpu_regs); // Legacy FPU register saving
-    worker_thread_context->created_by = process->pid;
-    worker_thread_context->run_by = -1;
-    worker_thread_context->state = READY;
-    worker_thread_context->running_time = 0;
-    worker_thread_context->switch_count = 0;
 
     ret = worker_thread_context->id;
 
@@ -126,7 +122,7 @@ int create_worker_thread(worker_thread_params_t *params)
 
 int add_to_completion_list(add_wt_params_t *params)
 {
-    printk(KERN_DEBUG UMS_LOG "---------\n");
+    printk(KERN_DEBUG UMS_LOG "--------- [ADD WT TO CL]\n");
 
     add_wt_params_t tmp_params;
     process_t *process;
@@ -149,7 +145,7 @@ int add_to_completion_list(add_wt_params_t *params)
 
 int create_ums_thread(ums_thread_params_t *params)
 {
-    printk(KERN_DEBUG UMS_LOG "---------\n");
+    printk(KERN_DEBUG UMS_LOG "--------- [CREATE UMST]\n");
 
     ums_thread_params_t tmp_params;
     int ret;
@@ -158,24 +154,20 @@ int create_ums_thread(ums_thread_params_t *params)
 
     process = get_process_with_pid(current->tgid);
     ums_thread_context = kmalloc(sizeof(ums_thread_context_t), GFP_KERNEL);
-    list_add_tail(&ums_thread_context->list, &process->ums_thread_list.list);
     ums_thread_context->id = process->ums_thread_list.ums_thread_count;
+    list_add_tail(&ums_thread_context->list, &process->ums_thread_list.list);
     process->ums_thread_list.ums_thread_count++;
 
     copy_from_user(&tmp_params, params, sizeof(ums_thread_params_t));
     ums_thread_context->entry_point = tmp_params.function;
     ums_thread_context->cl_id = tmp_params.completion_list_id;
-    memcpy(&ums_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
-    ums_thread_context->regs.ip = tmp_params.function;
-    memset(&ums_thread_context->fpu_regs, 0, sizeof(struct fpu));
-    copy_fxregs_to_kernel(&ums_thread_context->fpu_regs); // Legacy FPU register saving
     ums_thread_context->wt_id = -1;
     ums_thread_context->created_by = process->pid;
     ums_thread_context->run_by = -1;
     ums_thread_context->state = IDLE;
     ums_thread_context->switch_count = 0;
-    // ums_thread_context->last_switch_time = 0;
-
+    ums_thread_context->last_switch_time = 0;
+    
     ret = ums_thread_context->id;
 
     printk(KERN_DEBUG UMS_LOG "[CREATE UMST] ums thread id = %d, umst clid = %d, ums thread count = %d\n", ums_thread_context->id, ums_thread_context->cl_id, process->ums_thread_list.ums_thread_count);
@@ -183,6 +175,68 @@ int create_ums_thread(ums_thread_params_t *params)
     return ret;
 }
 
+int convert_to_ums_thread(unsigned int ums_thread_id)
+{
+    printk(KERN_DEBUG UMS_LOG "--------- [CONVERT TO UMST]\n");
+
+    process_t *process;
+    ums_thread_context_t *ums_thread_context;
+    process = get_process_with_pid(current->tgid);
+    ums_thread_context = get_umst_with_id(process, ums_thread_id);
+
+    if (ums_thread_context->state == RUNNING)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] umst is already RUNNING\n");
+        return -1;
+    }
+
+    memcpy(&ums_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
+    memset(&ums_thread_context->fpu_regs, 0, sizeof(struct fpu));
+    copy_fxregs_to_kernel(&ums_thread_context->fpu_regs); // Legacy FPU register saving
+    ums_thread_context->ret_regs = ums_thread_context->regs;
+    printk(KERN_DEBUG UMS_LOG "regs ip = %d\n", ums_thread_context->regs.ip);
+    printk(KERN_DEBUG UMS_LOG "regs sp = %d\n", ums_thread_context->regs.sp);
+    printk(KERN_DEBUG UMS_LOG "regs bp = %d\n", ums_thread_context->regs.bp);
+    printk(KERN_DEBUG UMS_LOG "saved ip = %d\n", ums_thread_context->ret_regs.ip);
+    printk(KERN_DEBUG UMS_LOG "saved sp = %d\n", ums_thread_context->ret_regs.sp);
+    printk(KERN_DEBUG UMS_LOG "saved bp = %d\n", ums_thread_context->ret_regs.bp);
+    ums_thread_context->regs.ip = ums_thread_context->entry_point;
+
+    ums_thread_context->run_by = current->pid;
+    ums_thread_context->state = RUNNING;
+    memcpy(task_pt_regs(current), &ums_thread_context->regs, sizeof(struct pt_regs));
+
+    printk(KERN_DEBUG UMS_LOG "[CONVERT TO UMST] ums thread id = %d, current pid = %d\n", ums_thread_context->id, current->pid);
+
+    return 0;
+}
+
+int convert_from_ums_thread()
+{
+    printk(KERN_DEBUG UMS_LOG "--------- [CONVERT FROM UMST]\n");
+
+    process_t *process;
+    ums_thread_context_t *ums_thread_context;
+    process = get_process_with_pid(current->tgid);
+    ums_thread_context = get_umst_run_by_pid(process, current->pid);
+
+    ums_thread_context->run_by = -1;
+    ums_thread_context->state = IDLE;
+    
+    printk(KERN_DEBUG UMS_LOG "regs ip = %d\n", ums_thread_context->regs.ip);
+    printk(KERN_DEBUG UMS_LOG "regs sp = %d\n", ums_thread_context->regs.sp);
+    printk(KERN_DEBUG UMS_LOG "regs bp = %d\n", ums_thread_context->regs.bp);
+    printk(KERN_DEBUG UMS_LOG "saved ip = %d\n", ums_thread_context->ret_regs.ip);
+    printk(KERN_DEBUG UMS_LOG "saved sp = %d\n", ums_thread_context->ret_regs.sp);
+    printk(KERN_DEBUG UMS_LOG "saved bp = %d\n", ums_thread_context->ret_regs.bp);
+
+    memcpy(task_pt_regs(current), &ums_thread_context->ret_regs, sizeof(struct pt_regs));
+    copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
+
+    printk(KERN_DEBUG UMS_LOG "[CONVERT FROM UMST] ums thread id = %d, current pid = %d\n", ums_thread_context->id, current->pid);
+
+    return 0;
+}
 
 /* 
  * Auxiliary function impl-s
@@ -259,6 +313,26 @@ ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thre
     ums_thread_context_t *temp = NULL;
     list_for_each_entry_safe(ums_thread_context, temp, &process->ums_thread_list.list, list) {
         if (ums_thread_context->id == ums_thread_id)
+        {
+            break;
+        }
+    }
+
+    return ums_thread_context;
+}
+
+ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid)
+{
+    if (list_empty(&process->ums_thread_list.list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] Empty umst list\n");
+        return NULL;
+    }
+
+    ums_thread_context_t *ums_thread_context = NULL;
+    ums_thread_context_t *temp = NULL;
+    list_for_each_entry_safe(ums_thread_context, temp, &process->ums_thread_list.list, list) {
+        if (ums_thread_context->run_by == req_pid)
         {
             break;
         }
