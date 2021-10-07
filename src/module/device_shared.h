@@ -29,4 +29,4 @@ typedef struct ums_thread_params {
 #define UMS_DEV_CREATE_UMS_THREAD       _IOR(UMS_DEV_IOCTL_MAGIC, 5, ums_thread_params_t *)
 #define UMS_DEV_CONVERT_TO_UMS_THREAD   _IOR(UMS_DEV_IOCTL_MAGIC, 6, int)
 #define UMS_DEV_CONVERT_FROM_UMS_THREAD _IO(UMS_DEV_IOCTL_MAGIC, 7)
-
+#define UMS_DEV_DEQUEUE_CL_ITEMS        _IOWR(UMS_DEV_IOCTL_MAGIC, 8, int *)

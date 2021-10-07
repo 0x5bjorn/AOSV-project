@@ -63,14 +63,17 @@ int add_worker_thread(unsigned int completion_list_id, unsigned int worker_threa
 int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion_list_id);
 void *convert_to_ums_thread(void *ums_thread_id);
 int exit_ums_scheduling_mode(void);
+int dequeue_completion_list_items(int *read_wt_list);
 
 /* 
  * Auxiliary functions
  */
 int open_dev(void);
 int close_dev(void);
+int get_wt_count_in_current_umst_cl();
 completion_list_t *get_cl_with_id(unsigned int completion_list_id);
 worker_thread_t *get_wt_with_id(unsigned int worker_thread_id);
+ums_thread_t *get_umst_run_by_pthread(pthread_t current_pt);
 int free_ums_thread(void);
 int free_completion_list(void);
 int free_worker_thread(void);

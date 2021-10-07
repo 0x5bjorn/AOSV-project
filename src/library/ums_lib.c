@@ -237,6 +237,22 @@ int exit_ums_scheduling_mode(void)
     return ret;
 }
 
+int dequeue_completion_list_items(int *read_wt_list)
+{
+    fd = open_dev();
+
+    int ret = ioctl(fd, UMS_DEV_DEQUEUE_CL_ITEMS, (unsigned long)read_wt_list);
+    if(ret < 0)
+    {
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
+        return -1;
+    }
+
+    printf(UMS_LIB_LOG "[DEQUEUE CL]\n");
+
+    return 0;
+}
+
 /* 
  * Auxiliary functions
  */
@@ -269,6 +285,15 @@ int close_dev(void)
     // pthread_mutex_unlock(&mutex);
 
     return fd;
+}
+
+int get_wt_count_in_current_umst_cl()
+{
+    pthread_t current_pt = pthread_self();
+    ums_thread_t *ums_thread = get_umst_run_by_pthread(current_pt);
+    completion_list_t *completion_list = get_cl_with_id(ums_thread->params->completion_list_id);
+    
+    return completion_list->worker_thread_count;
 }
 
 completion_list_t *get_cl_with_id(unsigned int completion_list_id)
@@ -309,6 +334,26 @@ worker_thread_t *get_wt_with_id(unsigned int worker_thread_id)
     }
 
     return worker_thread;
+}
+
+ums_thread_t *get_umst_run_by_pthread(pthread_t current_pt)
+{
+    if (list_empty(&ums_thread_list.list))
+    {
+        printf(UMS_LIB_LOG "[ERROR] Empty wt list\n");
+        return NULL;
+    }
+
+    ums_thread_t *ums_thread = NULL;
+    ums_thread_t *temp = NULL;
+    list_for_each_entry_safe(ums_thread, temp, &ums_thread_list.list, list) {
+        if (pthread_equal(ums_thread->pt, current_pt))
+        {
+            break;
+        }
+    }
+
+    return ums_thread;
 }
 
 int free_ums_thread(void)

@@ -190,20 +190,14 @@ int convert_to_ums_thread(unsigned int ums_thread_id)
         return -1;
     }
 
+    ums_thread_context->run_by = current->pid;
+    ums_thread_context->state = RUNNING;
     memcpy(&ums_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
     memset(&ums_thread_context->fpu_regs, 0, sizeof(struct fpu));
     copy_fxregs_to_kernel(&ums_thread_context->fpu_regs); // Legacy FPU register saving
     ums_thread_context->ret_regs = ums_thread_context->regs;
-    printk(KERN_DEBUG UMS_LOG "regs ip = %d\n", ums_thread_context->regs.ip);
-    printk(KERN_DEBUG UMS_LOG "regs sp = %d\n", ums_thread_context->regs.sp);
-    printk(KERN_DEBUG UMS_LOG "regs bp = %d\n", ums_thread_context->regs.bp);
-    printk(KERN_DEBUG UMS_LOG "saved ip = %d\n", ums_thread_context->ret_regs.ip);
-    printk(KERN_DEBUG UMS_LOG "saved sp = %d\n", ums_thread_context->ret_regs.sp);
-    printk(KERN_DEBUG UMS_LOG "saved bp = %d\n", ums_thread_context->ret_regs.bp);
     ums_thread_context->regs.ip = ums_thread_context->entry_point;
 
-    ums_thread_context->run_by = current->pid;
-    ums_thread_context->state = RUNNING;
     memcpy(task_pt_regs(current), &ums_thread_context->regs, sizeof(struct pt_regs));
 
     printk(KERN_DEBUG UMS_LOG "[CONVERT TO UMST] ums thread id = %d, current pid = %d\n", ums_thread_context->id, current->pid);
@@ -222,19 +216,39 @@ int convert_from_ums_thread()
 
     ums_thread_context->run_by = -1;
     ums_thread_context->state = IDLE;
-    
-    printk(KERN_DEBUG UMS_LOG "regs ip = %d\n", ums_thread_context->regs.ip);
-    printk(KERN_DEBUG UMS_LOG "regs sp = %d\n", ums_thread_context->regs.sp);
-    printk(KERN_DEBUG UMS_LOG "regs bp = %d\n", ums_thread_context->regs.bp);
-    printk(KERN_DEBUG UMS_LOG "saved ip = %d\n", ums_thread_context->ret_regs.ip);
-    printk(KERN_DEBUG UMS_LOG "saved sp = %d\n", ums_thread_context->ret_regs.sp);
-    printk(KERN_DEBUG UMS_LOG "saved bp = %d\n", ums_thread_context->ret_regs.bp);
 
     memcpy(task_pt_regs(current), &ums_thread_context->ret_regs, sizeof(struct pt_regs));
     copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
 
     printk(KERN_DEBUG UMS_LOG "[CONVERT FROM UMST] ums thread id = %d, current pid = %d\n", ums_thread_context->id, current->pid);
 
+    return 0;
+}
+
+int dequeue_completion_list_items(int *read_wt_list)
+{
+    printk(KERN_DEBUG UMS_LOG "--------- [DEQUEUE CL]\n");
+    
+    process_t *process;
+    ums_thread_context_t *ums_thread_context;
+    completion_list_t *completion_list;
+
+    process = get_process_with_pid(current->tgid);
+    ums_thread_context = get_umst_run_by_pid(process, current->pid);
+    completion_list = get_cl_with_id(process, ums_thread_context->cl_id);
+
+    int list_of_wt[completion_list->worker_thread_count];
+    get_ready_wt_list(completion_list, list_of_wt);
+    copy_to_user(read_wt_list, &list_of_wt, sizeof(int)*completion_list->worker_thread_count);
+
+    int i;
+    for (i = 0; i < completion_list->worker_thread_count; ++i)
+    {
+        printk(KERN_DEBUG UMS_LOG "[DEQUEUE CL] list_of_wt[%d] = %d\n", i, list_of_wt[i]);
+        printk(KERN_DEBUG UMS_LOG "[DEQUEUE CL] ready_wt_list[%d] = %d\n", i, read_wt_list[i]);
+    }
+    printk(KERN_DEBUG UMS_LOG "[DEQUEUE CL] ums thread id = %d, cl id = %d, cl size = %d\n", ums_thread_context->id, completion_list->id, completion_list->worker_thread_count);
+    
     return 0;
 }
 
@@ -299,6 +313,28 @@ worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_
     }
 
     return worker_thread_context;
+}
+
+int *get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt_list)
+{
+    if (list_empty(&completion_list->wt_list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] No worker threads in completion list\n");
+        return -1;
+    }
+
+    int i = 0;
+    worker_thread_context_t *worker_thread_context = NULL;
+    worker_thread_context_t *temp = NULL;
+    list_for_each_entry_safe(worker_thread_context, temp, &completion_list->wt_list, wt_list) {
+        if (worker_thread_context->state == READY)
+        {
+            ready_wt_list[i] = worker_thread_context->id;
+            i++;
+        }
+    }
+
+    return 0;
 }
 
 ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thread_id)

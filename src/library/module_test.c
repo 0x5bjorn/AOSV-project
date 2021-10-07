@@ -2,23 +2,35 @@
 
 #include "ums_lib.h"
 
-void thread1_func()
+void scheduling_func1()
 {
-	for (int i = 0; i < 6; i++)
-	{
-		int a = 75 * i;
-	}
-	printf("thread 1\n");
+	printf("scheduler 1\n");
+
+	int wt_count = get_wt_count_in_current_umst_cl();
+	int ready_wt_list[wt_count];
+	dequeue_completion_list_items(ready_wt_list);
+
+    for (int i = 0; i < wt_count; ++i)
+    {
+        printf("ready_wt_list[%d] = %d\n", i, ready_wt_list[i]);
+    }
+
 	exit_ums_scheduling_mode();
 }
 
-void thread2_func()
+void scheduling_func2()
 {
-	for (int i = 0; i < 4; i++)
-	{
-		int a = 126 * i;
-	}
-	printf("thread 2\n");
+	printf("scheduler 2\n");
+
+	int wt_count = get_wt_count_in_current_umst_cl();
+	int ready_wt_list[wt_count];
+	dequeue_completion_list_items(ready_wt_list);
+
+    for (int i = 0; i < wt_count; ++i)
+    {
+        printf("ready_wt_list[%d] = %d\n", i, ready_wt_list[i]);
+    }
+	
 	exit_ums_scheduling_mode();
 }
 
@@ -42,9 +54,9 @@ int main(int argc, char **argv)
 		ret = add_worker_thread(cl2, wt_id);
 	}
 
-	ret = enter_ums_scheduling_mode(thread1_func, cl1);
+	ret = enter_ums_scheduling_mode(scheduling_func1, cl1);
 
-	ret = enter_ums_scheduling_mode(thread2_func, cl2);
+	ret = enter_ums_scheduling_mode(scheduling_func2, cl2);
 
 	ret = exit_ums();
 
