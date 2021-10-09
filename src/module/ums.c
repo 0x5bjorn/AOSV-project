@@ -129,9 +129,8 @@ int add_to_completion_list(add_wt_params_t *params)
     completion_list_t *completion_list;
     worker_thread_context_t *worker_thread_context;
 
-    process = get_process_with_pid(current->tgid);
-
     copy_from_user(&tmp_params, params, sizeof(add_wt_params_t));
+    process = get_process_with_pid(current->tgid);
     completion_list = get_cl_with_id(process, tmp_params.completion_list_id);
     worker_thread_context = get_wt_with_id(process, tmp_params.worker_thread_id);
 
@@ -181,6 +180,7 @@ int convert_to_ums_thread(unsigned int ums_thread_id)
 
     process_t *process;
     ums_thread_context_t *ums_thread_context;
+
     process = get_process_with_pid(current->tgid);
     ums_thread_context = get_umst_with_id(process, ums_thread_id);
 
@@ -211,6 +211,7 @@ int convert_from_ums_thread()
 
     process_t *process;
     ums_thread_context_t *ums_thread_context;
+
     process = get_process_with_pid(current->tgid);
     ums_thread_context = get_umst_run_by_pid(process, current->pid);
 
@@ -249,6 +250,85 @@ int dequeue_completion_list_items(int *read_wt_list)
     }
     printk(KERN_DEBUG UMS_LOG "[DEQUEUE CL] ums thread id = %d, cl id = %d, cl size = %d\n", ums_thread_context->id, completion_list->id, completion_list->worker_thread_count);
     
+    return 0;
+}
+
+int switch_to_worker_thread(unsigned int worker_thread_id)
+{
+    printk(KERN_DEBUG UMS_LOG "--------- [SWITCH TO WT]\n");
+
+    process_t *process;
+    ums_thread_context_t *ums_thread_context;
+    worker_thread_context_t *worker_thread_context;
+
+    process = get_process_with_pid(current->tgid);
+    ums_thread_context = get_umst_run_by_pid(process, current->pid);
+    worker_thread_context = get_wt_with_id(process, worker_thread_id);
+
+    if (worker_thread_context->state == BUSY)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] wt is BUSY\n");
+        return -1;
+    }
+
+    ums_thread_context->wt_id = worker_thread_id;
+    ums_thread_context->switch_count++;
+    // ums_thread_context->last_switch_time = 
+    memcpy(&ums_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
+    copy_fxregs_to_kernel(&ums_thread_context->fpu_regs);
+
+    worker_thread_context->run_by = ums_thread_context->id;
+    worker_thread_context->state = BUSY;
+    worker_thread_context->switch_count++;
+    memcpy(task_pt_regs(current), &worker_thread_context->regs, sizeof(struct pt_regs));
+    copy_kernel_to_fxregs(&worker_thread_context->fpu_regs.state.fxsave);
+
+    printk(KERN_DEBUG UMS_LOG "[SWITCH TO WT] ums thread id = %d, wt id = %d\n", ums_thread_context->id, worker_thread_id);
+
+    return 0;
+}
+
+int switch_back_to_ums_thread(yield_reason_t yield_reason)
+{
+    printk(KERN_DEBUG UMS_LOG "--------- [SWITCH BACK TO UMST]\n");
+
+    process_t *process;
+    ums_thread_context_t *ums_thread_context;
+    worker_thread_context_t *worker_thread_context;
+
+    process = get_process_with_pid(current->tgid);
+    ums_thread_context = get_umst_run_by_pid(process, current->pid);
+    worker_thread_context = get_wt_run_by_umst_id(process, ums_thread_context->id);
+
+    if (yield_reason == FINISH)
+    {
+        worker_thread_context->state = FINISHED;
+        memcpy(&worker_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
+        copy_fxregs_to_kernel(&worker_thread_context->fpu_regs);
+
+        ums_thread_context->wt_id = -1;
+        ums_thread_context->switch_count++;
+        // ums_thread_context->last_switch_time = 
+        memcpy(task_pt_regs(current), &ums_thread_context->regs, sizeof(struct pt_regs));
+        copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
+    }
+    else
+    {
+        worker_thread_context->run_by = -1;
+        worker_thread_context->state = READY;
+        worker_thread_context->switch_count++;
+        memcpy(&worker_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
+        copy_fxregs_to_kernel(&worker_thread_context->fpu_regs);
+
+        ums_thread_context->wt_id = -1;
+        ums_thread_context->switch_count++;
+        // ums_thread_context->last_switch_time = 
+        memcpy(task_pt_regs(current), &ums_thread_context->regs, sizeof(struct pt_regs));
+        copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
+    }
+
+    printk(KERN_DEBUG UMS_LOG "[SWITCH BACK TO UMST] ums thread id = %d, wt id = %d, yield reason = %d\n", ums_thread_context->id, worker_thread_context->id, yield_reason);
+
     return 0;
 }
 
@@ -335,6 +415,26 @@ int *get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_w
     }
 
     return 0;
+}
+
+worker_thread_context_t *get_wt_run_by_umst_id(process_t *process, unsigned int ums_thread_id)
+{
+    if (list_empty(&process->worker_thread_list.list))
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] Empty wt list\n");
+        return NULL;
+    }
+
+    worker_thread_context_t *worker_thread_context = NULL;
+    worker_thread_context_t *temp = NULL;
+    list_for_each_entry_safe(worker_thread_context, temp, &process->worker_thread_list.list, list) {
+        if (worker_thread_context->run_by == ums_thread_id)
+        {
+            break;
+        }
+    }
+
+    return worker_thread_context;
 }
 
 ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thread_id)

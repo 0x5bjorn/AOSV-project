@@ -237,11 +237,11 @@ int exit_ums_scheduling_mode(void)
     return ret;
 }
 
-int dequeue_completion_list_items(int *read_wt_list)
+int dequeue_completion_list_items(int *ready_wt_list)
 {
     fd = open_dev();
 
-    int ret = ioctl(fd, UMS_DEV_DEQUEUE_CL_ITEMS, (unsigned long)read_wt_list);
+    int ret = ioctl(fd, UMS_DEV_DEQUEUE_CL_ITEMS, (unsigned long)ready_wt_list);
     if(ret < 0)
     {
         printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
@@ -250,7 +250,39 @@ int dequeue_completion_list_items(int *read_wt_list)
 
     printf(UMS_LIB_LOG "[DEQUEUE CL]\n");
 
-    return 0;
+    return ret;
+}
+
+int execute_worker_thread(unsigned int worker_thread_id)
+{
+    fd = open_dev();
+
+    int ret = ioctl(fd, UMS_DEV_SWITCH_TO_WORKER_THREAD, (unsigned long)worker_thread_id);
+    if(ret < 0)
+    {
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
+        return -1;
+    }
+
+    printf(UMS_LIB_LOG "[EXECUTE WT] wt id = %d\n", worker_thread_id);
+
+    return ret;
+}
+
+int worker_thread_yield(yield_reason_t yield_reason)
+{
+    fd = open_dev();
+
+    int ret = ioctl(fd, UMS_DEV_SWITCH_BACK_TO_UMS_THREAD, (unsigned long)yield_reason);
+    if(ret < 0)
+    {
+        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
+        return -1;
+    }
+
+    printf(UMS_LIB_LOG "[WT YIELD] yield reason = %d\n", yield_reason);
+
+    return ret;
 }
 
 /* 
@@ -380,7 +412,7 @@ int free_completion_list(void)
 {
     if (list_empty(&cl_list.list))
     {
-        printf(UMS_LIB_LOG "[ERROR] Empty umst list\n");
+        printf(UMS_LIB_LOG "[ERROR] Empty cl list\n");
         return -1;
     }
 
@@ -399,7 +431,7 @@ int free_worker_thread(void)
 {
     if (list_empty(&worker_thread_list.list))
     {
-        printf(UMS_LIB_LOG "[ERROR] Empty umst list\n");
+        printf(UMS_LIB_LOG "[ERROR] Empty wt list\n");
         return -1;
     }
 
@@ -407,7 +439,7 @@ int free_worker_thread(void)
     worker_thread_t *temp = NULL;
     list_for_each_entry_safe(worker_thread, temp, &worker_thread_list.list, list) {
         list_del(&worker_thread->list);
-        free(worker_thread->params->stack_address - worker_thread->params->stack_size);
+        free((void *)(worker_thread->params->stack_address - worker_thread->params->stack_size));
         free(worker_thread->params);
         free(worker_thread);
         worker_thread_list.worker_thread_count--;

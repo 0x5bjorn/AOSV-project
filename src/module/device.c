@@ -76,6 +76,12 @@ static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
         case UMS_DEV_DEQUEUE_CL_ITEMS:
             ret = dequeue_completion_list_items((int *) arg);
             break;
+        case UMS_DEV_SWITCH_TO_WORKER_THREAD:
+            ret = switch_to_worker_thread((unsigned int) arg);
+            break;
+        case UMS_DEV_SWITCH_BACK_TO_UMS_THREAD:
+            ret = switch_back_to_ums_thread((yield_reason_t) arg);
+            break;
         default:
             return -1;
             break;

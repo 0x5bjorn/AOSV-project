@@ -104,6 +104,8 @@ int create_ums_thread(ums_thread_params_t *params);
 int convert_to_ums_thread(unsigned int ums_thread_id);
 int convert_from_ums_thread(void);
 int dequeue_completion_list_items(int *runnable_wt_ptr);
+int switch_to_worker_thread(unsigned int worker_thread_id);
+int switch_back_to_ums_thread(yield_reason_t yield_reason);
 
 /* 
  * Auxiliary functions
@@ -113,6 +115,7 @@ process_t *get_process_with_pid(pid_t req_pid);
 completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id);
 worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id);
 int *get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt_list);
+worker_thread_context_t *get_wt_run_by_umst_id(process_t *process, unsigned int ums_thread_id);
 ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thread_id);
 ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid);
 int free_ums_thread(process_t *process);

@@ -63,7 +63,9 @@ int add_worker_thread(unsigned int completion_list_id, unsigned int worker_threa
 int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion_list_id);
 void *convert_to_ums_thread(void *ums_thread_id);
 int exit_ums_scheduling_mode(void);
-int dequeue_completion_list_items(int *read_wt_list);
+int dequeue_completion_list_items(int *ready_wt_list);
+int execute_worker_thread(unsigned int worker_thread_id);
+int worker_thread_yield(yield_reason_t yield_reason);
 
 /* 
  * Auxiliary functions
