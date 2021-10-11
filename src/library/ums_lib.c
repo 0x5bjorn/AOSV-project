@@ -253,15 +253,27 @@ int dequeue_completion_list_items(int *ready_wt_list)
     return ret;
 }
 
-int execute_worker_thread(unsigned int worker_thread_id)
+int execute_worker_thread(int *ready_wt_list, unsigned int worker_thread_id)
 {
     fd = open_dev();
 
     int ret = ioctl(fd, UMS_DEV_SWITCH_TO_WORKER_THREAD, (unsigned long)worker_thread_id);
-    if(ret < 0)
+    if(ret < -2)
     {
         printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
         return -1;
+    }
+    
+    while (ret == -2)
+    {
+        ret = ioctl(fd, UMS_DEV_SWITCH_TO_WORKER_THREAD, (unsigned long)(++worker_thread_id));
+    }
+
+    if (ret == -1)
+    {
+        int i = -1;
+        while (ready_wt_list[i] != worker_thread_id) ++i;
+        ready_wt_list[i] = -1;
     }
 
     printf(UMS_LIB_LOG "[EXECUTE WT] wt id = %d\n", worker_thread_id);
@@ -283,6 +295,19 @@ int worker_thread_yield(yield_reason_t yield_reason)
     printf(UMS_LIB_LOG "[WT YIELD] yield reason = %d\n", yield_reason);
 
     return ret;
+}
+
+int get_next_ready_item(int *ready_wt_list, int size)
+{
+    int i = -1;
+    while (++i < size && ready_wt_list[i] == -1);
+    return ready_wt_list[i];
+}
+
+int check_ready_wt_list(int *ready_wt_list, int size)
+{
+    while (--size > -1 && ready_wt_list[size] == -1);
+    return size != -1;
 }
 
 /* 

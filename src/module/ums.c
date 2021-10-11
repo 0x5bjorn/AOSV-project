@@ -268,6 +268,11 @@ int switch_to_worker_thread(unsigned int worker_thread_id)
     if (worker_thread_context->state == BUSY)
     {
         printk(KERN_ALERT UMS_LOG "[ERROR] wt is BUSY\n");
+        return -2;
+    }
+    else if (worker_thread_context->state == FINISHED)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] wt is FINISHED\n");
         return -1;
     }
 
@@ -302,6 +307,7 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason)
 
     if (yield_reason == FINISH)
     {
+        worker_thread_context->run_by = -1;
         worker_thread_context->state = FINISHED;
         memcpy(&worker_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
         copy_fxregs_to_kernel(&worker_thread_context->fpu_regs);
@@ -312,7 +318,7 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason)
         memcpy(task_pt_regs(current), &ums_thread_context->regs, sizeof(struct pt_regs));
         copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
     }
-    else
+    else if (yield_reason == PAUSE)
     {
         worker_thread_context->run_by = -1;
         worker_thread_context->state = READY;
@@ -410,8 +416,12 @@ int *get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_w
         if (worker_thread_context->state == READY)
         {
             ready_wt_list[i] = worker_thread_context->id;
-            i++;
         }
+        else
+        {
+            ready_wt_list[i] = -1;
+        }
+        i++;
     }
 
     return 0;
