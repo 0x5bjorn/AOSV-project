@@ -253,26 +253,40 @@ int dequeue_completion_list_items(int *ready_wt_list)
     return ret;
 }
 
-int execute_worker_thread(int *ready_wt_list, unsigned int worker_thread_id)
+int execute_worker_thread(int *ready_wt_list, int size, unsigned int worker_thread_id)
 {
     fd = open_dev();
 
     int ret = ioctl(fd, UMS_DEV_SWITCH_TO_WORKER_THREAD, (unsigned long)worker_thread_id);
-    if(ret < -2)
+    if(ret < 0)
     {
         printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
         return -1;
     }
     
-    while (ret == -2)
+    if (ret == 2)
     {
-        ret = ioctl(fd, UMS_DEV_SWITCH_TO_WORKER_THREAD, (unsigned long)(++worker_thread_id));
+        printf(UMS_LIB_LOG "[WARNING] worker thread with id = %d is BUSY\n", worker_thread_id);
+        
+        int i = 0;
+        while (i < size && (ready_wt_list[i] == worker_thread_id || ready_wt_list[i] == -1)) ++i;
+        
+        if (i == size)
+        {
+            printf(UMS_LIB_LOG "[WARNING] no available READY worker threads remain\n");
+            return ret;
+        }
+        
+        worker_thread_id = ready_wt_list[i];
+        printf(UMS_LIB_LOG "[WARNING] attempting to execute next READY worker thread, id = %d\n", worker_thread_id);
+        ret = ioctl(fd, UMS_DEV_SWITCH_TO_WORKER_THREAD, (unsigned long)(worker_thread_id));
     }
 
-    if (ret == -1)
+    if (ret == 1)
     {
-        int i = -1;
-        while (ready_wt_list[i] != worker_thread_id) ++i;
+        printf(UMS_LIB_LOG "[ERROR] worker thread with id = %d is FINISHED\n", worker_thread_id);
+        int i = 0;
+        while (i < size && ready_wt_list[i] != worker_thread_id) ++i;
         ready_wt_list[i] = -1;
     }
 

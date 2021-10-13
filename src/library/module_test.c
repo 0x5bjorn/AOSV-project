@@ -8,6 +8,11 @@ void worker1_func()
 
 	printf("worker thread 1\n");
 
+	for (int i = 0; i<500; ++i)
+	{
+		int a = 25 * i;
+	}
+
 	worker_thread_yield(PAUSE);
 
 	printf("worker thread 1 repeat, local a = %d\n", a);
@@ -18,6 +23,11 @@ void worker1_func()
 void worker2_func(void *a)
 {
 	printf("worker thread 2: a = %d\n", a);
+	
+	for (int i = 0; i<300; ++i)
+	{
+		int a = 52 * i;
+	}
 
 	worker_thread_yield(FINISH);
 }
@@ -33,7 +43,7 @@ void scheduling_func1()
     while (check_ready_wt_list(ready_wt_list, wt_count))
     {
 		int id = get_next_ready_item(ready_wt_list, wt_count);
-		execute_worker_thread(ready_wt_list, id);
+		execute_worker_thread(ready_wt_list, wt_count, id);
 	}
 
 	exit_ums_scheduling_mode();
@@ -50,7 +60,7 @@ void scheduling_func2()
     while (check_ready_wt_list(ready_wt_list, wt_count))
     {
 		int id = get_next_ready_item(ready_wt_list, wt_count);
-		execute_worker_thread(ready_wt_list, id);
+		execute_worker_thread(ready_wt_list, wt_count, id);
 	}
 
 	exit_ums_scheduling_mode();
@@ -64,21 +74,52 @@ int main(int argc, char **argv)
 
 	int cl2 = create_completion_list();
 
+	// for (int i = 0; i<3; ++i)
+	// {
+	// 	int wt_id = create_worker_thread(worker1_func, NULL, STACK_SIZE);
+	// 	ret = add_worker_thread(cl1, wt_id);
+	// }
+
+	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, STACK_SIZE));
 	for (int i = 0; i<2; ++i)
 	{
-		int wt_id = create_worker_thread(worker1_func, NULL, 4096);
-		ret = add_worker_thread(cl1, wt_id);
+		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		ret = add_worker_thread(cl2, wt_id);
+	}
+	ret = add_worker_thread(cl1, create_worker_thread(worker2_func, NULL, STACK_SIZE));
+	for (int i = 0; i<2; ++i)
+	{
+		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		ret = add_worker_thread(cl2, wt_id);
+	}
+	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, STACK_SIZE));
+	for (int i = 0; i<2; ++i)
+	{
+		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		ret = add_worker_thread(cl2, wt_id);
+	}
+	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, STACK_SIZE));
+	for (int i = 0; i<2; ++i)
+	{
+		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		ret = add_worker_thread(cl2, wt_id);
+	}
+	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, STACK_SIZE));
+	for (int i = 0; i<2; ++i)
+	{
+		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		ret = add_worker_thread(cl2, wt_id);
 	}
 
-	for (int i = 0; i<3; ++i)
+	for (int i = 0; i<2; ++i)
 	{
-		int wt_id = create_worker_thread(worker2_func, (void *)5, 4096);
-		ret = add_worker_thread(cl2, wt_id);
+		int wt_id = create_worker_thread(worker2_func, (void *)8, STACK_SIZE);
+		ret = add_worker_thread(cl1, wt_id);
 	}
 
 	ret = enter_ums_scheduling_mode(scheduling_func1, cl1);
 
-	ret = enter_ums_scheduling_mode(scheduling_func2, cl2);
+	ret = enter_ums_scheduling_mode(scheduling_func2, cl1);
 
 	ret = exit_ums();
 

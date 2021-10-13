@@ -268,12 +268,12 @@ int switch_to_worker_thread(unsigned int worker_thread_id)
     if (worker_thread_context->state == BUSY)
     {
         printk(KERN_ALERT UMS_LOG "[ERROR] wt is BUSY\n");
-        return -2;
+        return 2;
     }
     else if (worker_thread_context->state == FINISHED)
     {
         printk(KERN_ALERT UMS_LOG "[ERROR] wt is FINISHED\n");
-        return -1;
+        return 1;
     }
 
     ums_thread_context->wt_id = worker_thread_id;

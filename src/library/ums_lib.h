@@ -14,6 +14,8 @@
 #define UMS_DEVICE_PATH "/dev/umsdevice"
 #define UMS_LIB_LOG "UMS lib: "
 
+#define STACK_SIZE 4096
+
 /* 
  * Structs
  */
@@ -64,7 +66,7 @@ int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion
 void *convert_to_ums_thread(void *ums_thread_id);
 int exit_ums_scheduling_mode(void);
 int dequeue_completion_list_items(int *ready_wt_list);
-int execute_worker_thread(int *ready_wt_list, unsigned int worker_thread_id);
+int execute_worker_thread(int *ready_wt_list, int size, unsigned int worker_thread_id);
 int worker_thread_yield(yield_reason_t yield_reason);
 int get_next_ready_item(int *ready_wt_list, int size);
 int check_ready_wt_list(int *ready_wt_list, int size);
