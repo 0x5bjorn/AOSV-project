@@ -4,3 +4,4 @@
 #include <linux/module.h>
 
 #include "device.h"
+#include "proc.h"

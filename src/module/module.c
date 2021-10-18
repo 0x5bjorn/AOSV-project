@@ -8,6 +8,7 @@ MODULE_VERSION("1.0.0");
 static int __init ums_module_init(void)
 {
 	int ret = init_device();
+	ret = init_proc();
 	printk(KERN_INFO "UMS Module: Module loaded\n");
 	return ret;
 }
@@ -15,6 +16,7 @@ static int __init ums_module_init(void)
 static void __exit ums_module_exit(void)
 {
 	exit_device();
+	exit_proc();
 	printk(KERN_INFO "UMS Module: Module unloaded\n");
 }
 
