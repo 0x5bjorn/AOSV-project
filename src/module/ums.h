@@ -9,6 +9,7 @@
 #include <linux/sched.h>
 #include <linux/sched/task_stack.h>
 #include <linux/uaccess.h>
+#include <linux/ktime.h>
 
 #include "device_shared.h"
 
@@ -68,6 +69,7 @@ typedef struct worker_thread_context {
 	worker_state_t state;
 	unsigned long running_time;
 	unsigned int switch_count;
+	struct timespec64 last_switch_time;
 	struct pt_regs regs;
 	struct fpu fpu_regs;
 } worker_thread_context_t;
@@ -87,7 +89,7 @@ typedef struct ums_thread_context {
 	pid_t run_by;
 	ums_state_t state;
 	unsigned int switch_count;
-	unsigned int last_switch_time;
+	struct timespec64 last_switch_time;
 	struct pt_regs regs;
 	struct fpu fpu_regs;
 	struct pt_regs ret_regs;
@@ -121,3 +123,4 @@ ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid);
 int free_ums_thread(process_t *process);
 int free_completion_list(process_t *process);
 int free_worker_thread(process_t *process);
+unsigned long get_wt_running_time(worker_thread_context_t *worker_thread_context);

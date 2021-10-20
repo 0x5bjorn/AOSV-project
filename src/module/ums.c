@@ -165,7 +165,6 @@ int create_ums_thread(ums_thread_params_t *params)
     ums_thread_context->run_by = -1;
     ums_thread_context->state = IDLE;
     ums_thread_context->switch_count = 0;
-    ums_thread_context->last_switch_time = 0;
     
     ret = ums_thread_context->id;
 
@@ -192,6 +191,8 @@ int convert_to_ums_thread(unsigned int ums_thread_id)
 
     ums_thread_context->run_by = current->pid;
     ums_thread_context->state = RUNNING;
+    ums_thread_context->switch_count++;
+    ktime_get_real_ts64(&ums_thread_context->last_switch_time);
     memcpy(&ums_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
     memset(&ums_thread_context->fpu_regs, 0, sizeof(struct fpu));
     copy_fxregs_to_kernel(&ums_thread_context->fpu_regs); // Legacy FPU register saving
@@ -277,14 +278,13 @@ int switch_to_worker_thread(unsigned int worker_thread_id)
     }
 
     ums_thread_context->wt_id = worker_thread_id;
-    ums_thread_context->switch_count++;
-    // ums_thread_context->last_switch_time = 
     memcpy(&ums_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
     copy_fxregs_to_kernel(&ums_thread_context->fpu_regs);
 
     worker_thread_context->run_by = ums_thread_context->id;
     worker_thread_context->state = BUSY;
     worker_thread_context->switch_count++;
+    ktime_get_real_ts64(&worker_thread_context->last_switch_time);
     memcpy(task_pt_regs(current), &worker_thread_context->regs, sizeof(struct pt_regs));
     copy_kernel_to_fxregs(&worker_thread_context->fpu_regs.state.fxsave);
 
@@ -309,12 +309,13 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason)
     {
         worker_thread_context->run_by = -1;
         worker_thread_context->state = FINISHED;
+        worker_thread_context->running_time = get_wt_running_time(worker_thread_context);
         memcpy(&worker_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
         copy_fxregs_to_kernel(&worker_thread_context->fpu_regs);
 
         ums_thread_context->wt_id = -1;
         ums_thread_context->switch_count++;
-        // ums_thread_context->last_switch_time = 
+        ktime_get_real_ts64(&ums_thread_context->last_switch_time);
         memcpy(task_pt_regs(current), &ums_thread_context->regs, sizeof(struct pt_regs));
         copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
     }
@@ -322,13 +323,13 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason)
     {
         worker_thread_context->run_by = -1;
         worker_thread_context->state = READY;
-        worker_thread_context->switch_count++;
+        worker_thread_context->running_time = get_wt_running_time(worker_thread_context);
         memcpy(&worker_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
         copy_fxregs_to_kernel(&worker_thread_context->fpu_regs);
 
         ums_thread_context->wt_id = -1;
         ums_thread_context->switch_count++;
-        // ums_thread_context->last_switch_time = 
+        ktime_get_real_ts64(&ums_thread_context->last_switch_time);
         memcpy(task_pt_regs(current), &ums_thread_context->regs, sizeof(struct pt_regs));
         copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
     }
@@ -549,4 +550,19 @@ int free_worker_thread(process_t *process)
     }
 
     return 0;
+}
+
+unsigned long get_wt_running_time(worker_thread_context_t *worker_thread_context)
+{
+    struct timespec64 current_timespec;
+    unsigned long current_time;
+    unsigned long worker_thread_time;
+    unsigned long running_time;
+
+    ktime_get_real_ts64(&current_timespec);
+    current_time = current_timespec.tv_sec * 1000 + current_timespec.tv_nsec / 1000000;
+    worker_thread_time = worker_thread_context->last_switch_time.tv_sec * 1000 + worker_thread_context->last_switch_time.tv_nsec / 1000000;
+    running_time = worker_thread_context->running_time + (current_time - worker_thread_time);
+    
+    return running_time;
 }
