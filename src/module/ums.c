@@ -31,6 +31,8 @@ int init_ums_process(void)
 
     printk(KERN_DEBUG UMS_LOG "[INIT UMS] process pid = %d, process count = %d\n", process->pid, process_list.process_count);
 
+    create_process_entry(process->pid);
+
     return 0;
 }
 
@@ -54,6 +56,8 @@ int exit_ums_process(void)
     kfree(process);
     process_list.process_count--;
     printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process count = %d\n", process_list.process_count);
+
+    delete_process_entry(process->pid);
 
     return 0;
 }
@@ -563,6 +567,6 @@ unsigned long get_wt_running_time(worker_thread_context_t *worker_thread_context
     current_time = current_timespec.tv_sec * 1000 + current_timespec.tv_nsec / 1000000;
     worker_thread_time = worker_thread_context->last_switch_time.tv_sec * 1000 + worker_thread_context->last_switch_time.tv_nsec / 1000000;
     running_time = worker_thread_context->running_time + (current_time - worker_thread_time);
-    
+
     return running_time;
 }

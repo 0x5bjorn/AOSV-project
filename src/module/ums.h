@@ -12,6 +12,7 @@
 #include <linux/ktime.h>
 
 #include "device_shared.h"
+#include "proc.h"
 
 #define UMS_LOG "UMS: "
 
@@ -98,6 +99,7 @@ typedef struct ums_thread_context {
 /* 
  * Functions
  */
+int init_ums_process(void);
 int exit_ums_process(void);
 int create_completion_list(void);
 int create_worker_thread(worker_thread_params_t *params);
@@ -112,7 +114,6 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason);
 /* 
  * Auxiliary functions
  */
-int init_ums_process(void);
 process_t *get_process_with_pid(pid_t req_pid);
 completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id);
 worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id);
