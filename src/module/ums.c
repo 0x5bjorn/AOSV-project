@@ -57,7 +57,7 @@ int exit_ums_process(void)
     process_list.process_count--;
     printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process count = %d\n", process_list.process_count);
 
-    delete_process_entry(process->pid);
+    // delete_process_entry(process->pid);
 
     return 0;
 }
@@ -138,6 +138,7 @@ int add_to_completion_list(add_wt_params_t *params)
     completion_list = get_cl_with_id(process, tmp_params.completion_list_id);
     worker_thread_context = get_wt_with_id(process, tmp_params.worker_thread_id);
 
+    worker_thread_context->cl_id = tmp_params.completion_list_id;
     list_add_tail(&worker_thread_context->wt_list, &completion_list->wt_list);
     completion_list->worker_thread_count++;
     
@@ -173,6 +174,8 @@ int create_ums_thread(ums_thread_params_t *params)
     ret = ums_thread_context->id;
 
     printk(KERN_DEBUG UMS_LOG "[CREATE UMST] ums thread id = %d, umst clid = %d, ums thread count = %d\n", ums_thread_context->id, ums_thread_context->cl_id, process->ums_thread_list.ums_thread_count);
+
+    create_umst_entry(process->pid, ums_thread_context->id);
 
     return ret;
 }
@@ -227,6 +230,8 @@ int convert_from_ums_thread()
     copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
 
     printk(KERN_DEBUG UMS_LOG "[CONVERT FROM UMST] ums thread id = %d, current pid = %d\n", ums_thread_context->id, current->pid);
+
+    // delete_umst_entry(ums_thread_context->id);
 
     return 0;
 }
@@ -406,7 +411,7 @@ worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_
     return worker_thread_context;
 }
 
-int *get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt_list)
+int get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt_list)
 {
     if (list_empty(&completion_list->wt_list))
     {

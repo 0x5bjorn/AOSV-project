@@ -1,6 +1,7 @@
 #pragma once
 
 #include <linux/proc_fs.h>
+#include <linux/seq_file.h>
 
 #include "ums.h"
 
@@ -54,9 +55,12 @@ typedef struct worker_thread_entry {
 int init_proc(void);
 void exit_proc(void);
 int create_process_entry(pid_t pid);
-int delete_process_entry(pid_t pid);
+// int delete_process_entry(pid_t pid);
+int create_umst_entry(pid_t pid, unsigned int id);
+// int delete_umst_entry(unsigned int id);
 
 /* 
  * Auxiliary functions
  */
 process_entry_t *get_process_entry_with_pid(pid_t req_pid);
+ums_thread_entry_t *get_ums_thread_entry_with_pid(unsigned int id);

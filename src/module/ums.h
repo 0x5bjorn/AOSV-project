@@ -65,6 +65,7 @@ typedef struct worker_thread_context {
 	struct list_head list;
 	struct list_head wt_list;
 	unsigned long entry_point;
+	unsigned int cl_id;
 	pid_t created_by;
 	pid_t run_by;
 	worker_state_t state;
@@ -117,7 +118,7 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason);
 process_t *get_process_with_pid(pid_t req_pid);
 completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id);
 worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id);
-int *get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt_list);
+int get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt_list);
 worker_thread_context_t *get_wt_run_by_umst_id(process_t *process, unsigned int ums_thread_id);
 ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thread_id);
 ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid);
