@@ -113,7 +113,7 @@ int create_process_entry(pid_t pid)
 //     return 0;
 // }
 
-int create_umst_entry(pid_t pid, unsigned int id)
+int create_umst_entry(pid_t pid, unsigned int umst_id)
 {
     process_entry_t *process_entry;
     ums_thread_entry_t *ums_thread_entry;
@@ -125,13 +125,13 @@ int create_umst_entry(pid_t pid, unsigned int id)
     }
 
     ums_thread_entry = kmalloc(sizeof(ums_thread_entry_t), GFP_KERNEL);
-    ums_thread_entry->id = id;
+    ums_thread_entry->id = umst_id;
     list_add_tail(&ums_thread_entry->list, &ums_thread_entry_list.list);
     ums_thread_entry_list.ums_thread_entry_count++;
 
     char entry_name[32];
-    if(!(snprintf(entry_name, 32, "%u", id))) {
-        printk(KERN_ALERT UMS_PROC_LOG "Error reading id");
+    if(!(snprintf(entry_name, 32, "%u", umst_id))) {
+        printk(KERN_ALERT UMS_PROC_LOG "Error reading umst_id");
         return -1;
     }
     ums_thread_entry->entry = proc_mkdir(entry_name, process_entry->schedulers_entry);
@@ -155,15 +155,15 @@ int create_umst_entry(pid_t pid, unsigned int id)
         return -1;
     }
 
-    printk(KERN_DEBUG UMS_PROC_LOG "[INIT UMST ENTRY] name = %d, process entry count = %d\n", ums_thread_entry->id, ums_thread_entry_list.ums_thread_entry_count);
+    printk(KERN_DEBUG UMS_PROC_LOG "[INIT UMST ENTRY] name = %d, umst entry count = %d\n", ums_thread_entry->id, ums_thread_entry_list.ums_thread_entry_count);
 
     return 0;
 }
 
-// int delete_umst_entry(unsigned int id)
+// int delete_umst_entry(unsigned int umst_id)
 // {
 //     ums_thread_entry_t *ums_thread_entry;
-//     ums_thread_entry = get_ums_thread_entry_with_pid(id);
+//     ums_thread_entry = get_ums_thread_entry_with_pid(umst_id);
 //     if (ums_thread_entry == NULL)
 //     {
 //         return -1;
@@ -179,6 +179,39 @@ int create_umst_entry(pid_t pid, unsigned int id)
 
 //     return 0;
 // }
+
+int create_wt_entry(unsigned int umst_id, unsigned int wt_id)
+{
+    ums_thread_entry_t *ums_thread_entry;
+    worker_thread_entry_t *worker_thread_entry;
+
+    ums_thread_entry = get_ums_thread_entry_with_pid(umst_id);
+    if (ums_thread_entry == NULL)
+    {
+        return -1;
+    }
+
+    worker_thread_entry = kmalloc(sizeof(worker_thread_entry_t), GFP_KERNEL);
+    worker_thread_entry->id = wt_id;
+    list_add_tail(&worker_thread_entry->list, &worker_thread_entry_list.list);
+    worker_thread_entry_list.worker_thread_entry_count++;
+
+    char entry_name[32];
+    if(!(snprintf(entry_name, 32, "%u", wt_id))) {
+        printk(KERN_ALERT UMS_PROC_LOG "Error reading wt_id");
+        return -1;
+    }
+    worker_thread_entry->entry = proc_create(entry_name, S_IALLUGO, ums_thread_entry->workers_entry, &wt_entry_fops);
+    if(!worker_thread_entry->entry)
+    {
+        printk(KERN_ALERT UMS_PROC_LOG "Error creating /proc/ums/<PID>/schedulers/<ID>/workers/<ID> entry");
+        return -1;
+    }
+
+    printk(KERN_DEBUG UMS_PROC_LOG "[INIT WT ENTRY] name = %d, wt entry count = %d\n", worker_thread_entry->id, ums_thread_entry_list.ums_thread_entry_count);
+
+    return 0;
+}
 
 /*
  * Static function impl-s
@@ -221,29 +254,6 @@ static int open_umst_entry(struct inode *inode, struct file *file)
     return ret;
 }
 
-static int show_umst_entry(struct seq_file *sf, void *v)
-{
-    ums_thread_context_t *ums_thread_context = (ums_thread_context_t *)sf->private;
-    seq_printf(sf, "%-20s : %u\n", "ums thread id", ums_thread_context->id);
-    seq_printf(sf, "%-20s : %#lx\n", "entry point", ums_thread_context->entry_point);
-    seq_printf(sf, "%-20s : %u\n", "completion list id", ums_thread_context->cl_id);
-    if (ums_thread_context->state == 0)
-    {
-        seq_printf(sf, "%-20s : RUNNING\n", "state");
-        seq_printf(sf, "%-20s : %u\n", "worker thread id", ums_thread_context->wt_id);
-    }
-    else
-    {
-        seq_printf(sf, "%-20s : IDLE\n", "state");
-    }
-    seq_printf(sf, "%-20s : %u\n", "creator pid", (unsigned int)ums_thread_context->created_by);
-    seq_printf(sf, "%-20s : %u\n", "pthread runner pid", (unsigned int)ums_thread_context->run_by);
-    seq_printf(sf, "%-20s : %u\n", "switch count", ums_thread_context->switch_count);
-    seq_printf(sf, "%-20s : %lu\n", "last switch time (ns)", ums_thread_context->last_switch_time.tv_nsec);
-
-    return 0;
-}
-
 static int open_wt_entry(struct inode *inode, struct file *file)
 {
     int ret;
@@ -280,29 +290,52 @@ static int open_wt_entry(struct inode *inode, struct file *file)
     return ret;
 }
 
-static int show_wt_entry(struct seq_file *sf, void *v)
+static int show_umst_entry(struct seq_file *sf, void *v)
 {
-    worker_thread_context_t *worker_thread_context = (worker_thread_context_t *)sf->private;
-    seq_printf(sf, "%-20s : %u\n", "worker thread id", worker_thread_context->id);
-    seq_printf(sf, "%-20s : %#lx\n", "entry point", worker_thread_context->entry_point);
-    seq_printf(sf, "%-20s : %u\n", "completion list id", worker_thread_context->cl_id);
-    if (worker_thread_context->state == 0)
+    ums_thread_context_t *ums_thread_context = (ums_thread_context_t *)sf->private;
+    seq_printf(sf, "%-25s : %u\n", "ums thread id", ums_thread_context->id);
+    seq_printf(sf, "%-25s : %#lx\n", "entry point", ums_thread_context->entry_point);
+    seq_printf(sf, "%-25s : %u\n", "completion list id", ums_thread_context->cl_id);
+    if (ums_thread_context->state == 0)
     {
-        seq_printf(sf, "%-20s : BUSY\n", "state");
-        seq_printf(sf, "%-20s : %u\n", "ums thread runner id", (unsigned int)worker_thread_context->run_by);
-    }
-    else if (worker_thread_context->state == 1)
-    {
-        seq_printf(sf, "%-20s : READY\n", "state");
+        seq_printf(sf, "%-25s : RUNNING\n", "state");
+        seq_printf(sf, "%-25s : %u\n", "pthread runner pid", (unsigned int)ums_thread_context->run_by);
+        seq_printf(sf, "%-25s : %u\n", "worker thread id", ums_thread_context->wt_id);
     }
     else
     {
-        seq_printf(sf, "%-20s : FINISHED\n", "state");
+        seq_printf(sf, "%-25s : IDLE\n", "state");
     }
-    seq_printf(sf, "%-20s : %u\n", "creator pid", (unsigned int)worker_thread_context->created_by);
-    seq_printf(sf, "%-30s : %lu\n", "running time (ms)", get_wt_running_time(worker_thread_context));
-    seq_printf(sf, "%-20s : %u\n", "switch count", worker_thread_context->switch_count);
-    seq_printf(sf, "%-20s : %lu\n", "last switch time (ns)", worker_thread_context->last_switch_time.tv_nsec);
+    seq_printf(sf, "%-25s : %u\n", "creator pid", (unsigned int)ums_thread_context->created_by);
+    seq_printf(sf, "%-25s : %u\n", "switch count", ums_thread_context->switch_count);
+    seq_printf(sf, "%-25s : %lu\n", "last switch time (ns)", ums_thread_context->last_switch_time.tv_nsec);
+
+    return 0;
+}
+
+static int show_wt_entry(struct seq_file *sf, void *v)
+{
+    worker_thread_context_t *worker_thread_context = (worker_thread_context_t *)sf->private;
+    seq_printf(sf, "%-25s : %u\n", "worker thread id", worker_thread_context->id);
+    seq_printf(sf, "%-25s : %#lx\n", "entry point", worker_thread_context->entry_point);
+    seq_printf(sf, "%-25s : %u\n", "completion list id", worker_thread_context->cl_id);
+    if (worker_thread_context->state == 0)
+    {
+        seq_printf(sf, "%-25s : BUSY\n", "state");
+        seq_printf(sf, "%-25s : %u\n", "ums thread runner id", (unsigned int)worker_thread_context->run_by);
+    }
+    else if (worker_thread_context->state == 1)
+    {
+        seq_printf(sf, "%-25s : READY\n", "state");
+    }
+    else
+    {
+        seq_printf(sf, "%-25s : FINISHED\n", "state");
+    }
+    seq_printf(sf, "%-25s : %u\n", "creator pid", (unsigned int)worker_thread_context->created_by);
+    seq_printf(sf, "%-25s : %lu\n", "running time (ms)", get_wt_running_time(worker_thread_context));
+    seq_printf(sf, "%-25s : %u\n", "switch count", worker_thread_context->switch_count);
+    seq_printf(sf, "%-25s : %lu\n", "last switch time (ns)", worker_thread_context->last_switch_time.tv_nsec);
 
     return 0;
 }

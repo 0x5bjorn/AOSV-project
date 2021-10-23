@@ -177,6 +177,14 @@ int create_ums_thread(ums_thread_params_t *params)
 
     create_umst_entry(process->pid, ums_thread_context->id);
 
+    completion_list_t *completion_list = get_cl_with_id(process, ums_thread_context->cl_id);
+    worker_thread_context_t *worker_thread_context = NULL;
+    worker_thread_context_t *temp = NULL;
+    list_for_each_entry_safe(worker_thread_context, temp, &completion_list->wt_list, wt_list) {
+        printk(KERN_DEBUG UMS_LOG "umst id = %d, cl id = %d, wt id = %d\n", ums_thread_context->id, ums_thread_context->cl_id, worker_thread_context->id);
+        create_wt_entry(ums_thread_context->id, worker_thread_context->id);
+    }
+
     return ret;
 }
 

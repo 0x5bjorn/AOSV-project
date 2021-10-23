@@ -67,7 +67,7 @@ typedef struct worker_thread_context {
 	unsigned long entry_point;
 	unsigned int cl_id;
 	pid_t created_by;
-	pid_t run_by;
+	unsigned int run_by;
 	worker_state_t state;
 	unsigned long running_time;
 	unsigned int switch_count;
