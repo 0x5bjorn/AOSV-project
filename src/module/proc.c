@@ -58,6 +58,30 @@ void exit_proc(void)
 {
     printk(KERN_INFO UMS_PROC_LOG "exit proc\n");
     proc_remove(ums_entry);
+
+    process_entry_t *process_entry = NULL;
+    process_entry_t *temp_process = NULL;
+    list_for_each_entry_safe(process_entry, temp_process, &process_entry_list.list, list) {
+        list_del(&process_entry->list);
+        kfree(process_entry);
+        process_entry_list.process_entry_count--;
+    }
+
+    ums_thread_entry_t *ums_thread_entry = NULL;
+    ums_thread_entry_t *temp_umst = NULL;
+    list_for_each_entry_safe(ums_thread_entry, temp_umst, &ums_thread_entry_list.list, list) {
+        list_del(&ums_thread_entry->list);
+        kfree(ums_thread_entry);
+        ums_thread_entry_list.ums_thread_entry_count--;
+    }
+
+    worker_thread_entry_t *worker_thread_entry = NULL;
+    worker_thread_entry_t *temp_wt = NULL;
+    list_for_each_entry_safe(worker_thread_entry, temp_wt, &worker_thread_entry_list.list, list) {
+        list_del(&worker_thread_entry->list);
+        kfree(worker_thread_entry);
+        worker_thread_entry_list.worker_thread_entry_count--;
+    }
 }
 
 int create_process_entry(pid_t pid)
@@ -92,26 +116,6 @@ int create_process_entry(pid_t pid)
 
     return 0;
 }
-
-// int delete_process_entry(pid_t pid)
-// {
-//     process_entry_t *process_entry;
-//     process_entry = get_process_entry_with_pid(pid);
-//     if (process_entry == NULL)
-//     {
-//         return -1;
-//     }
-
-//     proc_remove(process_entry->entry);
-    
-//     list_del(&process_entry->list);
-//     kfree(process_entry);
-//     process_entry_list.process_entry_count--;
-
-//     printk(KERN_DEBUG UMS_PROC_LOG "[DELETE PROCESS ENTRY] name = %d, process entry count = %d\n", process_entry->pid, process_entry_list.process_entry_count);
-
-//     return 0;
-// }
 
 int create_umst_entry(pid_t pid, unsigned int umst_id)
 {
@@ -159,26 +163,6 @@ int create_umst_entry(pid_t pid, unsigned int umst_id)
 
     return 0;
 }
-
-// int delete_umst_entry(unsigned int umst_id)
-// {
-//     ums_thread_entry_t *ums_thread_entry;
-//     ums_thread_entry = get_ums_thread_entry_with_pid(umst_id);
-//     if (ums_thread_entry == NULL)
-//     {
-//         return -1;
-//     }
-
-//     proc_remove(ums_thread_entry->entry);
-    
-//     list_del(&ums_thread_entry->list);
-//     kfree(ums_thread_entry);
-//     ums_thread_entry_list.ums_thread_entry_count--;
-
-//     printk(KERN_DEBUG UMS_PROC_LOG "[DELETE UMST ENTRY] name = %d, process entry count = %d\n", ums_thread_entry->id, ums_thread_entry_list.ums_thread_entry_count);
-
-//     return 0;
-// }
 
 int create_wt_entry(unsigned int umst_id, unsigned int wt_id)
 {

@@ -54,9 +54,7 @@ typedef struct worker_thread_entry {
 int init_proc(void);
 void exit_proc(void);
 int create_process_entry(pid_t pid);
-// int delete_process_entry(pid_t pid);
 int create_umst_entry(pid_t pid, unsigned int umst_id);
-// int delete_umst_entry(unsigned int id);
 int create_wt_entry(unsigned int umst_id, unsigned int wt_id);
 
 /* 
