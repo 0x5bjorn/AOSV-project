@@ -496,5 +496,6 @@ void constructor(void)
 __attribute__((destructor))
 void destructor(void)
 {
+    exit_ums();
     printf(UMS_LIB_LOG "exit() destructor called\n");
 }

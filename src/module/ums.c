@@ -1,3 +1,24 @@
+/**
+ * Copyright (C) 2021 Sultan Umarbaev <name.sul27@gmail.com>
+ *
+ * This file is part of UMS implementation (Kernel Module).
+ *
+ * UMS implementation (Kernel Module) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * UMS implementation (Kernel Module) is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with UMS implementation (Kernel Module).  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+
 #include "ums.h"
 
 /*
@@ -13,9 +34,14 @@ process_list_t process_list = {
  */
 int init_ums_process(void)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [INIT UMS]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [INIT UMS]\n");
 
     process_t *process;
+    process = get_process_with_pid(current->tgid);
+    if (process != NULL)
+    {
+        return -ERROR_PROCESS_ALREADY_INITIALIZED;
+    }
 
     process = kmalloc(sizeof(process_t), GFP_KERNEL);
     list_add_tail(&process->list, &process_list.list);
@@ -31,6 +57,7 @@ int init_ums_process(void)
 
     printk(KERN_DEBUG UMS_LOG "[INIT UMS] process pid = %d, process count = %d\n", process->pid, process_list.process_count);
 
+    // proc entry
     create_process_entry(process->pid);
 
     return 0;
@@ -38,39 +65,58 @@ int init_ums_process(void)
 
 int exit_ums_process(void)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [EXIT UMS]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [EXIT UMS]\n");
 
+    int ret = 0;
     process_t *process = NULL;
     process = get_process_with_pid(current->tgid);
     if (process == NULL)
     {
-        return -1;
+        return -ERROR_PROCESS_NOT_INITIALIZED;
     }
     
     printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process pid = %d\n", process->pid);
-    free_worker_thread(process);
-    free_completion_list(process);
-    free_ums_thread(process);
+    ret = free_worker_thread(process);
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] free_worker_thread() failed", ret);
+        return -ERROR_UMS_FAIL;
+    }
+    ret = free_completion_list(process);
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] free_completion_list() failed", ret);
+        return -ERROR_UMS_FAIL;
+    }
+    ret = free_ums_thread(process);
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] free_ums_thread() failed", ret);
+        return -ERROR_UMS_FAIL;
+    }
 
     list_del(&process->list);
     kfree(process);
     process_list.process_count--;
     printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process count = %d\n", process_list.process_count);
 
-    // delete_process_entry(process->pid);
-
-    return 0;
+    return ret;
 }
 
 int create_completion_list(void)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [CREATE CL]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [CREATE CL]\n");
 
-    int ret;
+    int ret = 0;
     process_t *process;
     completion_list_t *completion_list;
 
     process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        return -ERROR_PROCESS_NOT_INITIALIZED;
+    }
+
     completion_list = kmalloc(sizeof(completion_list_t), GFP_KERNEL);
     completion_list->id = process->cl_list.cl_count;
     list_add_tail(&completion_list->list, &process->cl_list.list);
@@ -88,20 +134,29 @@ int create_completion_list(void)
 
 int create_worker_thread(worker_thread_params_t *params)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [CREATE WT]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [CREATE WT]\n");
 
     worker_thread_params_t tmp_params;
-    int ret;
+    int ret = 0;
     process_t *process;
     worker_thread_context_t *worker_thread_context;
 
-    process = get_process_with_pid(current->tgid);    
+    process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        return -ERROR_PROCESS_NOT_INITIALIZED;
+    }
     worker_thread_context = kmalloc(sizeof(worker_thread_context_t), GFP_KERNEL);
     worker_thread_context->id = process->worker_thread_list.worker_thread_count;
     list_add_tail(&worker_thread_context->list, &process->worker_thread_list.list);
     process->worker_thread_list.worker_thread_count++;
 
-    copy_from_user(&tmp_params, params, sizeof(worker_thread_params_t));
+    ret = copy_from_user(&tmp_params, params, sizeof(worker_thread_params_t));
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] failed to copy %d bytes of params", ret);
+        return -ERROR_UMS_FAIL;
+    }
     worker_thread_context->entry_point = tmp_params.function;
     worker_thread_context->created_by = process->pid;
     worker_thread_context->run_by = -1;
@@ -126,43 +181,71 @@ int create_worker_thread(worker_thread_params_t *params)
 
 int add_to_completion_list(add_wt_params_t *params)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [ADD WT TO CL]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [ADD WT TO CL]\n");
 
     add_wt_params_t tmp_params;
+    int ret = 0;
     process_t *process;
     completion_list_t *completion_list;
     worker_thread_context_t *worker_thread_context;
 
-    copy_from_user(&tmp_params, params, sizeof(add_wt_params_t));
-    process = get_process_with_pid(current->tgid);
-    completion_list = get_cl_with_id(process, tmp_params.completion_list_id);
-    worker_thread_context = get_wt_with_id(process, tmp_params.worker_thread_id);
+    ret = copy_from_user(&tmp_params, params, sizeof(add_wt_params_t));
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] failed to copy %d bytes of params", ret);
+        return -ERROR_UMS_FAIL;
+    }
 
+    process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        return -ERROR_PROCESS_NOT_INITIALIZED;
+    }
+    completion_list = get_cl_with_id(process, tmp_params.completion_list_id);
+    if (completion_list == NULL)
+    {
+        return -ERROR_COMPLETION_LIST_NOT_FOUND;
+    }
+    worker_thread_context = get_wt_with_id(process, tmp_params.worker_thread_id);
+    if (worker_thread_context == NULL)
+    {
+        return -ERROR_WORKER_THREAD_NOT_FOUND;
+    }
+    
     worker_thread_context->cl_id = tmp_params.completion_list_id;
     list_add_tail(&worker_thread_context->wt_list, &completion_list->wt_list);
     completion_list->worker_thread_count++;
     
     printk(KERN_DEBUG UMS_LOG "[ADD WT TO CL] completion list id = %d, worker thread id = %d\n", completion_list->id, worker_thread_context->id);
 
-    return 0;
+    return ret;
 }
 
 int create_ums_thread(ums_thread_params_t *params)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [CREATE UMST]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [CREATE UMST]\n");
 
     ums_thread_params_t tmp_params;
-    int ret;
+    int ret = 0;
     process_t *process;
     ums_thread_context_t *ums_thread_context;
 
     process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        return -ERROR_PROCESS_NOT_INITIALIZED;
+    }
     ums_thread_context = kmalloc(sizeof(ums_thread_context_t), GFP_KERNEL);
     ums_thread_context->id = process->ums_thread_list.ums_thread_count;
     list_add_tail(&ums_thread_context->list, &process->ums_thread_list.list);
     process->ums_thread_list.ums_thread_count++;
 
-    copy_from_user(&tmp_params, params, sizeof(ums_thread_params_t));
+    ret = copy_from_user(&tmp_params, params, sizeof(ums_thread_params_t));
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] failed to copy %d bytes of params", ret);
+        return -ERROR_UMS_FAIL;
+    }
     ums_thread_context->entry_point = tmp_params.function;
     ums_thread_context->cl_id = tmp_params.completion_list_id;
     ums_thread_context->wt_id = -1;
@@ -178,6 +261,10 @@ int create_ums_thread(ums_thread_params_t *params)
     create_umst_entry(process->pid, ums_thread_context->id);
 
     completion_list_t *completion_list = get_cl_with_id(process, ums_thread_context->cl_id);
+    if (completion_list == NULL)
+    {
+        return -ERROR_COMPLETION_LIST_NOT_FOUND;
+    }
     worker_thread_context_t *worker_thread_context = NULL;
     worker_thread_context_t *temp = NULL;
     list_for_each_entry_safe(worker_thread_context, temp, &completion_list->wt_list, wt_list) {
@@ -190,18 +277,27 @@ int create_ums_thread(ums_thread_params_t *params)
 
 int convert_to_ums_thread(unsigned int ums_thread_id)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [CONVERT TO UMST]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [CONVERT TO UMST]\n");
 
+    int ret = 0;
     process_t *process;
     ums_thread_context_t *ums_thread_context;
 
     process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        return -ERROR_PROCESS_NOT_INITIALIZED;
+    }
     ums_thread_context = get_umst_with_id(process, ums_thread_id);
+    if (ums_thread_context == NULL)
+    {
+        return -ERROR_UMS_THREAD_NOT_FOUND;
+    }
 
     if (ums_thread_context->state == RUNNING)
     {
         printk(KERN_ALERT UMS_LOG "[ERROR] umst is already RUNNING\n");
-        return -1;
+        return -ERROR_UMS_THREAD_ALREADY_RUNNING;
     }
 
     ums_thread_context->run_by = current->pid;
@@ -218,18 +314,27 @@ int convert_to_ums_thread(unsigned int ums_thread_id)
 
     printk(KERN_DEBUG UMS_LOG "[CONVERT TO UMST] ums thread id = %d, current pid = %d\n", ums_thread_context->id, current->pid);
 
-    return 0;
+    return ret;
 }
 
 int convert_from_ums_thread()
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [CONVERT FROM UMST]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [CONVERT FROM UMST]\n");
 
+    int ret = 0;
     process_t *process;
     ums_thread_context_t *ums_thread_context;
 
     process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        return -ERROR_PROCESS_NOT_INITIALIZED;
+    }
     ums_thread_context = get_umst_run_by_pid(process, current->pid);
+    if (ums_thread_context == NULL)
+    {
+        return -ERROR_UMS_THREAD_NOT_FOUND;
+    }
 
     ums_thread_context->run_by = -1;
     ums_thread_context->state = IDLE;
@@ -239,26 +344,47 @@ int convert_from_ums_thread()
 
     printk(KERN_DEBUG UMS_LOG "[CONVERT FROM UMST] ums thread id = %d, current pid = %d\n", ums_thread_context->id, current->pid);
 
-    // delete_umst_entry(ums_thread_context->id);
-
-    return 0;
+    return ret;
 }
 
 int dequeue_completion_list_items(int *read_wt_list)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [DEQUEUE CL]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [DEQUEUE CL]\n");
     
+    int ret = 0;
     process_t *process;
     ums_thread_context_t *ums_thread_context;
     completion_list_t *completion_list;
 
     process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        return -ERROR_PROCESS_NOT_INITIALIZED;
+    }
     ums_thread_context = get_umst_run_by_pid(process, current->pid);
+    if (ums_thread_context == NULL)
+    {
+        return -ERROR_UMS_THREAD_NOT_FOUND;
+    }
     completion_list = get_cl_with_id(process, ums_thread_context->cl_id);
+    if (completion_list == NULL)
+    {
+        return -ERROR_COMPLETION_LIST_NOT_FOUND;
+    }
 
     int list_of_wt[completion_list->worker_thread_count];
-    get_ready_wt_list(completion_list, list_of_wt);
-    copy_to_user(read_wt_list, &list_of_wt, sizeof(int)*completion_list->worker_thread_count);
+    ret = get_ready_wt_list(completion_list, list_of_wt);
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] get_ready_wt_list() failed");
+        return -ERROR_UMS_FAIL;
+    }
+    ret = copy_to_user(read_wt_list, &list_of_wt, sizeof(int)*completion_list->worker_thread_count);
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] failed to copy %d bytes of params", ret);
+        return -ERROR_UMS_FAIL;
+    }
 
     int i;
     for (i = 0; i < completion_list->worker_thread_count; ++i)
@@ -268,20 +394,33 @@ int dequeue_completion_list_items(int *read_wt_list)
     }
     printk(KERN_DEBUG UMS_LOG "[DEQUEUE CL] ums thread id = %d, cl id = %d, cl size = %d\n", ums_thread_context->id, completion_list->id, completion_list->worker_thread_count);
     
-    return 0;
+    return ret;
 }
 
 int switch_to_worker_thread(unsigned int worker_thread_id)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [SWITCH TO WT]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [SWITCH TO WT]\n");
 
+    int ret = 0;
     process_t *process;
     ums_thread_context_t *ums_thread_context;
     worker_thread_context_t *worker_thread_context;
 
     process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        return -ERROR_PROCESS_NOT_INITIALIZED;
+    }
     ums_thread_context = get_umst_run_by_pid(process, current->pid);
+    if (ums_thread_context == NULL)
+    {
+        return -ERROR_UMS_THREAD_NOT_FOUND;
+    }
     worker_thread_context = get_wt_with_id(process, worker_thread_id);
+    if (worker_thread_context == NULL)
+    {
+        return -ERROR_WORKER_THREAD_NOT_FOUND;
+    }
 
     if (worker_thread_context->state == BUSY)
     {
@@ -307,20 +446,33 @@ int switch_to_worker_thread(unsigned int worker_thread_id)
 
     printk(KERN_DEBUG UMS_LOG "[SWITCH TO WT] ums thread id = %d, wt id = %d\n", ums_thread_context->id, worker_thread_id);
 
-    return 0;
+    return ret;
 }
 
 int switch_back_to_ums_thread(yield_reason_t yield_reason)
 {
-    printk(KERN_DEBUG UMS_LOG "--------- [SWITCH BACK TO UMST]\n");
+    printk(KERN_DEBUG UMS_LOG "--------- Invoking [SWITCH BACK TO UMST]\n");
 
+    int ret = 0;
     process_t *process;
     ums_thread_context_t *ums_thread_context;
     worker_thread_context_t *worker_thread_context;
 
     process = get_process_with_pid(current->tgid);
+    if (process == NULL)
+    {
+        return -ERROR_PROCESS_NOT_INITIALIZED;
+    }
     ums_thread_context = get_umst_run_by_pid(process, current->pid);
+    if (ums_thread_context == NULL)
+    {
+        return -ERROR_UMS_THREAD_NOT_FOUND;
+    }
     worker_thread_context = get_wt_run_by_umst_id(process, ums_thread_context->id);
+    if (worker_thread_context == NULL)
+    {
+        return -ERROR_WORKER_THREAD_NOT_FOUND;
+    }
 
     if (yield_reason == FINISH)
     {
@@ -353,7 +505,7 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason)
 
     printk(KERN_DEBUG UMS_LOG "[SWITCH BACK TO UMST] ums thread id = %d, wt id = %d, yield reason = %d\n", ums_thread_context->id, worker_thread_context->id, yield_reason);
 
-    return 0;
+    return ret;
 }
 
 /* 
