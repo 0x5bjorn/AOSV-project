@@ -18,6 +18,12 @@
  *
  */
 
+/**
+ * @brief This file is a header of the module entry point
+ *
+ * @file module.h
+ * @author Sultan Umarbaev <name.sul27@gmail.com>
+ */
 
 #pragma once
 

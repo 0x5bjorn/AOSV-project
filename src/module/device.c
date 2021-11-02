@@ -18,6 +18,12 @@
  *
  */
 
+/**
+ * @brief This file contains the implementation of the functions of the char device part
+ *
+ * @file device.c
+ * @author Sultan Umarbaev <name.sul27@gmail.com>
+ */
 
 #include "device.h"
 

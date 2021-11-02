@@ -18,6 +18,14 @@
  *
  */
 
+/**
+ * @brief This file is a header of the char device part of the module
+ *
+ * This file contains the macros and function declarations of the char device part
+ * 
+ * @file device.h
+ * @author Sultan Umarbaev <name.sul27@gmail.com>
+ */
 
 #pragma once
 

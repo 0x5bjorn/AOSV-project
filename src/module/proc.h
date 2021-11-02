@@ -18,6 +18,15 @@
  *
  */
 
+/**
+ * @brief This file is a header of the /proc part of the module
+ *
+ * This file contains all data structures, macros, error codes 
+ * and function declarations of the /proc part
+ * 
+ * @file proc.h
+ * @author Sultan Umarbaev <name.sul27@gmail.com>
+ */
 
 #pragma once
 
@@ -28,7 +37,9 @@
 
 #define UMS_PROC_LOG "UMS proc: "
 
-#define PROC_BUFFER_SIZE 100
+#define ERROR_PROC_FAIL 1
+#define ERROR_PROCESS_ENTRY_NOT_FOUND 601
+#define ERROR_UMST_ENTRY_NOT_FOUND 602
 
 /* 
  * Structs

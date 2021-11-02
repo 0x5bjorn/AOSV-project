@@ -18,6 +18,26 @@
  *
  */
 
+/**
+ * @brief This file contains definitions of ioctl commands
+ *
+ * This file is also included in the library
+ * Defined ioctl commands are mapped with the library functions:
+ * - UMS_DEV_INIT_UMS_PROCESS           <-> init_ums()
+ * - UMS_DEV_EXIT_UMS_PROCESS           <-> exit_ums()
+ * - UMS_DEV_CREATE_COMPLETION_LIST     <-> create_completion_list()
+ * - UMS_DEV_CREATE_WORKER_THREAD       <-> create_worker_thread()
+ * - UMS_DEV_ADD_TO_COMPLETION_LIST     <-> add_worker_thread()
+ * - UMS_DEV_CREATE_UMS_THREAD          <-> enter_ums_scheduling_mode()
+ * - UMS_DEV_CONVERT_TO_UMS_THREAD      <-> convert_to_ums_thread()
+ * - UMS_DEV_CONVERT_FROM_UMS_THREAD    <-> exit_ums_scheduling_mode()
+ * - UMS_DEV_DEQUEUE_CL_ITEMS           <-> dequeue_completion_list_items()
+ * - UMS_DEV_SWITCH_TO_WORKER_THREAD    <-> execute_worker_thread()
+ * - UMS_DEV_SWITCH_BACK_TO_UMS_THREAD  <-> worker_thread_yield()
+ *
+ * @file device_shared.h
+ * @author Sultan Umarbaev <name.sul27@gmail.com>
+ */
 
 #pragma once
 

@@ -18,6 +18,15 @@
  *
  */
 
+/**
+ * @brief This file is a header of the main module functionality
+ *
+ * This file contains all main data structures, macros, error codes 
+ * and function declarations of the module
+ * 
+ * @file ums.h
+ * @author Sultan Umarbaev <name.sul27@gmail.com>
+ */
 
 #pragma once
 
@@ -37,7 +46,6 @@
 
 #define UMS_LOG "UMS: "
 
-#define ERROR_UMS_SUCCESS 0
 #define ERROR_UMS_FAIL 1
 #define ERROR_PROCESS_ALREADY_INITIALIZED 500
 #define ERROR_PROCESS_NOT_INITIALIZED 501

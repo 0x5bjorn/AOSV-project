@@ -18,6 +18,12 @@
  *
  */
 
+/**
+ * @brief This file contains the implementation of all main functions of the module
+ *
+ * @file ums.c
+ * @author Sultan Umarbaev <name.sul27@gmail.com>
+ */
 
 #include "ums.h"
 

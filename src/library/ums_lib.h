@@ -1,3 +1,32 @@
+/**
+ * Copyright (C) 2021 Sultan Umarbaev <name.sul27@gmail.com>
+ *
+ * This file is part of UMS implementation (Library).
+ *
+ * UMS implementation (Library) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * UMS implementation (Library) is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with UMS implementation (Library).  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/**
+ * @brief This file is a header of the library
+ *
+ * This file contains all the data structures and function declarations of library
+ * 
+ * @file ums_lib.h
+ * @author Sultan Umarbaev <name.sul27@gmail.com>
+ */
+
 #pragma once
 
 #include <stdio.h>
@@ -37,7 +66,6 @@ typedef struct ums_thread_list {
 typedef struct completion_list {
 	unsigned int id;
 	unsigned int worker_thread_count;
-    // unsigned int worker_thread_id[worker_thread_count];
 	struct list_head list;
 } completion_list_t;
 
@@ -68,6 +96,7 @@ int exit_ums_scheduling_mode(void);
 int dequeue_completion_list_items(int *ready_wt_list);
 int execute_worker_thread(int *ready_wt_list, int size, unsigned int worker_thread_id);
 int worker_thread_yield(yield_reason_t yield_reason);
+
 int get_next_ready_item(int *ready_wt_list, int size);
 int check_ready_wt_list(int *ready_wt_list, int size);
 

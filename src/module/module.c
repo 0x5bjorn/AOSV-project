@@ -18,6 +18,12 @@
  *
  */
 
+/**
+ * @brief This file contains the entry point of the module
+ *
+ * @file module.c
+ * @author Sultan Umarbaev <name.sul27@gmail.com>
+ */
 
 #include "module.h"
 
