@@ -43,43 +43,80 @@
 #define UMS_DEVICE_PATH "/dev/umsdevice"
 #define UMS_LIB_LOG "UMS lib: "
 
-#define STACK_SIZE 4096
+#define MIN_STACK_SIZE 4096
 
 /* 
  * Structs
  */
+
+/**
+ * @brief The global list of completion lists
+ * 
+ * The purpose of this list is to track and store all completion lists created by the program
+ *
+ */
 typedef struct cl_list {
 	struct list_head list;
-	unsigned int cl_count;
+	unsigned int cl_count;		/**< The number of elements(completion lists) in the list */
 } cl_list_t;
 
+/**
+ * @brief The global list of worker threads
+ * 
+ * The purpose of this list is to track and store all worker threads created by the program
+ *
+ */
 typedef struct worker_thread_list {
 	struct list_head list;
-	unsigned int worker_thread_count;
+	unsigned int worker_thread_count;		/**< The number of elements(worker threads) in the list */
 } worker_thread_list_t;
 
+/**
+ * @brief The global list of ums threads(schedulers)
+ * 
+ * The purpose of this list is to track and store all ums threads(schedulers) created by the program
+ *
+ */
 typedef struct ums_thread_list {
 	struct list_head list;
-	unsigned int ums_thread_count;
+	unsigned int ums_thread_count;		/**< The number of elements(ums threads) in the list */
 } ums_thread_list_t;
 
+/**
+ * @brief The completion list of worker threads
+ * 
+ * This is a node in the @ref cl_list.
+ *
+ */
 typedef struct completion_list {
-	unsigned int id;
-	unsigned int worker_thread_count;
-	struct list_head list;
+	unsigned int id;						/**< Unique id of the completion list */
+	unsigned int worker_thread_count;		/**< The number of elements(worker threads) in this completion list */
+	struct list_head list;					
 } completion_list_t;
-
+`
+/**
+ * @brief The worker thread
+ * 
+ * This is a node in the @ref worker_thread_list.
+ *
+ */
 typedef struct worker_thread {
-	unsigned int id;
-    worker_thread_params_t *params;
-	struct list_head list;
+	unsigned int id;					/**< Unique id of the worker thread */
+    worker_thread_params_t *params;		/**< @see worker_thread_params_t*/
+	struct list_head list;				
 } worker_thread_t;
 
+/**
+ * @brief The ums thread(scheduler)
+ * 
+ * This is a node in the @ref ums_thread_list.
+ *
+ */
 typedef struct ums_thread {
-	unsigned int id;
-	pthread_t pt;
-    ums_thread_params_t *params;
-	struct list_head list;
+	unsigned int id;					/**< Unique id of the ums thread */
+	pthread_t pt;						/**< pthread which entered ums scheduling mode */
+    ums_thread_params_t *params;		/**< @see ums_thread_params_t*/
+	struct list_head list;				
 } ums_thread_t;
 
 /* 

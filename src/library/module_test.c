@@ -76,44 +76,44 @@ int main(int argc, char **argv)
 
 	// for (int i = 0; i<3; ++i)
 	// {
-	// 	int wt_id = create_worker_thread(worker1_func, NULL, STACK_SIZE);
+	// 	int wt_id = create_worker_thread(worker1_func, NULL, MIN_STACK_SIZE);
 	// 	ret = add_worker_thread(cl1, wt_id);
 	// }
 
-	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, STACK_SIZE));
+	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, MIN_STACK_SIZE));
 	for (int i = 0; i<2; ++i)
 	{
-		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		int wt_id = create_worker_thread(worker2_func, (void *)5, MIN_STACK_SIZE);
 		ret = add_worker_thread(cl2, wt_id);
 	}
-	ret = add_worker_thread(cl1, create_worker_thread(worker2_func, NULL, STACK_SIZE));
+	ret = add_worker_thread(cl1, create_worker_thread(worker2_func, NULL, MIN_STACK_SIZE));
 	for (int i = 0; i<2; ++i)
 	{
-		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		int wt_id = create_worker_thread(worker2_func, (void *)5, MIN_STACK_SIZE);
 		ret = add_worker_thread(cl2, wt_id);
 	}
-	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, STACK_SIZE));
+	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, MIN_STACK_SIZE));
 	for (int i = 0; i<2; ++i)
 	{
-		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		int wt_id = create_worker_thread(worker2_func, (void *)5, MIN_STACK_SIZE);
 		ret = add_worker_thread(cl2, wt_id);
 	}
-	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, STACK_SIZE));
+	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, MIN_STACK_SIZE));
 	for (int i = 0; i<2; ++i)
 	{
-		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		int wt_id = create_worker_thread(worker2_func, (void *)5, MIN_STACK_SIZE);
 		ret = add_worker_thread(cl2, wt_id);
 	}
-	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, STACK_SIZE));
+	ret = add_worker_thread(cl1, create_worker_thread(worker1_func, NULL, MIN_STACK_SIZE));
 	for (int i = 0; i<2; ++i)
 	{
-		int wt_id = create_worker_thread(worker2_func, (void *)5, STACK_SIZE);
+		int wt_id = create_worker_thread(worker2_func, (void *)5, MIN_STACK_SIZE);
 		ret = add_worker_thread(cl2, wt_id);
 	}
 
 	for (int i = 0; i<2; ++i)
 	{
-		int wt_id = create_worker_thread(worker2_func, (void *)8, STACK_SIZE);
+		int wt_id = create_worker_thread(worker2_func, (void *)8, MIN_STACK_SIZE);
 		ret = add_worker_thread(cl1, wt_id);
 	}
 
