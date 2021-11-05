@@ -51,7 +51,15 @@ ums_thread_list_t ums_thread_list = {
 /* 
  * Implementations
  */
-int init_ums()
+
+/**
+ * @brief Initialize/enable UMS in the program
+ *
+ * In order to start utilizing UMS mechanism, we need to enable UMS for the program/process.
+ * 
+ * @return @c int exit code; 0 for success, otherwise a corresponding error code
+ */
+int init_ums(void)
 {
     fd = open_dev();
 
@@ -67,7 +75,14 @@ int init_ums()
     return ret;
 }
 
-int exit_ums()
+/**
+ * @brief Exit/disable UMS in the program
+ *
+ * Clean up all created by the library data structures from the memory. 
+ * 
+ * @return @c int exit code; 0 for success, otherwise a corresponding error code
+ */
+int exit_ums(void)
 {
     if (list_empty(&ums_thread_list.list))
     {
@@ -106,7 +121,14 @@ end:
     return ret;
 }
 
-int create_completion_list()
+/**
+ * @brief Create completion list
+ *
+ * Create a new completion list and return a corresponding id.
+ * 
+ * @return completion list id
+ */
+int create_completion_list(void)
 {
     completion_list_t *completion_list;
 
@@ -129,6 +151,18 @@ int create_completion_list()
     return ret;
 }
 
+/**
+ * @brief Create worker thread
+ *
+ * Create a new worker thread and return a corresponding id.
+
+ * @param function; the address of the starting function of the worker thread
+ * @param args; the address of arguments allocated by the user passed to 
+ * the function (first parameter)
+ * @param stack_size; the stack size that is used for calculating the stack address 
+ * after memory allocation with malloc function
+ * @return worker thread id
+ */
 int create_worker_thread(void (*function)(void *), void *args, unsigned long stack_size)
 {
     worker_thread_t *worker_thread;
@@ -160,6 +194,15 @@ int create_worker_thread(void (*function)(void *), void *args, unsigned long sta
     return ret;
 }
 
+/**
+ * @brief Add worker thread to completion list
+ *
+ * Fill the completion list with worker threads.
+ * 
+ * @param completion_list_id; the id of completion list to which worker thread is added
+ * @param worker_thread_id; the id of worker thread that is added
+ * @return @c int exit code; 0 for success, otherwise a corresponding error code
+ */
 int add_worker_thread(unsigned int completion_list_id, unsigned int worker_thread_id)
 {
     completion_list_t *completion_list = get_cl_with_id(completion_list_id);
@@ -188,6 +231,16 @@ int add_worker_thread(unsigned int completion_list_id, unsigned int worker_threa
     return ret;
 }
 
+/**
+ * @brief Enter UMS scheduling mode
+ *
+ * Create ums thread(scheduler) and pthread which will be converted to ums thread create earlier.
+ * 
+ * @param function; an entry point function for the ums thread(scheduler), scheduling function
+ * @param completion_list_id; the id of completion list with worker threads to be executed by 
+ * ums thread(scheduler)
+ * @return @c int exit code; 0 for success, otherwise a corresponding error code
+ */
 int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion_list_id)
 {
     ums_thread_t *ums_thread;
@@ -225,6 +278,14 @@ int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion
     return ret;
 }
 
+/**
+ * @brief Convert pthread into ums thread(scheduler)
+ *
+ * Convert current thread into ums thread(scheduler). In this case this function is passed to 
+ * pthread, therefore newly created pthread is converted into ums thread(scheduler).
+ * 
+ * @param ums_thread_id; the id of ums thread(scheduler) into which to convert
+ */
 void *convert_to_ums_thread(void *ums_thread_id)
 {
     unsigned int *ums_id = (unsigned int *)ums_thread_id;
@@ -248,6 +309,13 @@ void *convert_to_ums_thread(void *ums_thread_id)
     pthread_exit(NULL);
 }
 
+/**
+ * @brief Exit UMS scheduling mode
+ *
+ * Convert from ums thread(scheduler) back to pthread.
+ * 
+ * @return @c int exit code; 0 for success, otherwise a corresponding error code
+ */
 int exit_ums_scheduling_mode(void)
 {
     fd = open_dev();
@@ -264,6 +332,15 @@ int exit_ums_scheduling_mode(void)
     return ret;
 }
 
+/**
+ * @brief Dequeue completion list 
+ *
+ * Obtain a set of currently available worker threads to be run. 
+ * 
+ * @param ready_wt_list; the pointer to an allocated array of integers which will be filled with
+ * ready to run worker thread ids
+ * @return @c int exit code; 0 for success, otherwise a corresponding error code
+ */
 int dequeue_completion_list_items(int *ready_wt_list)
 {
     fd = open_dev();
@@ -280,6 +357,15 @@ int dequeue_completion_list_items(int *ready_wt_list)
     return ret;
 }
 
+/**
+ * @brief Execute specific worker thread
+ *
+ * Execute worker thread given the id.
+ * 
+ * @param ready_wt_list; the pointer to an allocated array of integers which will be filled with
+ * ready to run worker thread ids
+ * @return @c int exit code; 0 for success, otherwise a corresponding error code
+ */
 int execute_worker_thread(int *ready_wt_list, int size, unsigned int worker_thread_id)
 {
     fd = open_dev();
@@ -322,6 +408,15 @@ int execute_worker_thread(int *ready_wt_list, int size, unsigned int worker_thre
     return ret;
 }
 
+/**
+ * @brief Pause or finish worker thread 
+ *
+ * Pause or finish worker thread deppending on the passed reason.
+ * 
+ * @param yield_reason; reason which defines if worker thread should be paused or finished, 
+ * @see @c yield_reason_t
+ * @return @c int exit code; 0 for success, otherwise a corresponding error code
+ */
 int worker_thread_yield(yield_reason_t yield_reason)
 {
     fd = open_dev();
@@ -385,7 +480,7 @@ int close_dev(void)
     return fd;
 }
 
-int get_wt_count_in_current_umst_cl()
+int get_wt_count_in_current_umst_cl(void)
 {
     pthread_t current_pt = pthread_self();
     ums_thread_t *ums_thread = get_umst_run_by_pthread(current_pt);

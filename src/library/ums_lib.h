@@ -102,7 +102,7 @@ typedef struct completion_list {
  */
 typedef struct worker_thread {
 	unsigned int id;					/**< Unique id of the worker thread */
-    worker_thread_params_t *params;		/**< @see worker_thread_params_t*/
+    worker_thread_params_t *params;		/**< @see @c worker_thread_params_t*/
 	struct list_head list;				
 } worker_thread_t;
 
@@ -115,16 +115,16 @@ typedef struct worker_thread {
 typedef struct ums_thread {
 	unsigned int id;					/**< Unique id of the ums thread */
 	pthread_t pt;						/**< pthread which entered ums scheduling mode */
-    ums_thread_params_t *params;		/**< @see ums_thread_params_t*/
+    ums_thread_params_t *params;		/**< @see @c ums_thread_params_t*/
 	struct list_head list;				
 } ums_thread_t;
 
 /* 
  * Functions
  */
-int init_ums();
-int exit_ums();
-int create_completion_list();
+int init_ums(void);
+int exit_ums(void);
+int create_completion_list(void);
 int create_worker_thread(void (*function)(void *), void *args, unsigned long stack_size);
 int add_worker_thread(unsigned int completion_list_id, unsigned int worker_thread_id);
 int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion_list_id);
@@ -142,7 +142,7 @@ int check_ready_wt_list(int *ready_wt_list, int size);
  */
 int open_dev(void);
 int close_dev(void);
-int get_wt_count_in_current_umst_cl();
+int get_wt_count_in_current_umst_cl(void);
 completion_list_t *get_cl_with_id(unsigned int completion_list_id);
 worker_thread_t *get_wt_with_id(unsigned int worker_thread_id);
 ums_thread_t *get_umst_run_by_pthread(pthread_t current_pt);
