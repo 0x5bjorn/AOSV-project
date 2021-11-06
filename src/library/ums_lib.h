@@ -50,7 +50,7 @@
  */
 
 /**
- * @brief The global list of completion lists
+ * @brief The list of completion lists
  * 
  * The purpose of this list is to track and store all completion lists created by the program
  *
@@ -61,7 +61,7 @@ typedef struct cl_list {
 } cl_list_t;
 
 /**
- * @brief The global list of worker threads
+ * @brief The list of worker threads
  * 
  * The purpose of this list is to track and store all worker threads created by the program
  *
@@ -72,7 +72,7 @@ typedef struct worker_thread_list {
 } worker_thread_list_t;
 
 /**
- * @brief The global list of ums threads(schedulers)
+ * @brief The list of ums threads(schedulers)
  * 
  * The purpose of this list is to track and store all ums threads(schedulers) created by the program
  *
@@ -93,7 +93,7 @@ typedef struct completion_list {
 	unsigned int worker_thread_count;		/**< The number of elements(worker threads) in this completion list */
 	struct list_head list;					
 } completion_list_t;
-`
+
 /**
  * @brief The worker thread
  * 
@@ -146,9 +146,9 @@ int get_wt_count_in_current_umst_cl(void);
 completion_list_t *get_cl_with_id(unsigned int completion_list_id);
 worker_thread_t *get_wt_with_id(unsigned int worker_thread_id);
 ums_thread_t *get_umst_run_by_pthread(pthread_t current_pt);
-int free_ums_thread(void);
-int free_completion_list(void);
-int free_worker_thread(void);
+int free_ums_thread_list(void);
+int free_cl_list(void);
+int free_worker_thread_list(void);
 
 __attribute__((constructor)) void constructor(void);
 __attribute__((destructor)) void destructor(void);
