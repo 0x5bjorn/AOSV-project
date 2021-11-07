@@ -46,56 +46,102 @@
 
 #define UMS_LOG "UMS: "
 
-#define ERROR_UMS_FAIL 1
-#define ERROR_PROCESS_ALREADY_INITIALIZED 500
-#define ERROR_PROCESS_NOT_INITIALIZED 501
-#define ERROR_COMPLETION_LIST_NOT_FOUND 502
-#define ERROR_WORKER_THREAD_NOT_FOUND 503
-#define ERROR_UMS_THREAD_NOT_FOUND 504
-#define ERROR_UMS_THREAD_ALREADY_RUNNING 505
+#define ERROR_UMS_FAIL 1							///<
+#define ERROR_PROCESS_ALREADY_INITIALIZED 500		///<
+#define ERROR_PROCESS_NOT_INITIALIZED 501			///<
+#define ERROR_COMPLETION_LIST_NOT_FOUND 502			///<
+#define ERROR_WORKER_THREAD_NOT_FOUND 503			///<
+#define ERROR_UMS_THREAD_NOT_FOUND 504				///<
+#define ERROR_UMS_THREAD_ALREADY_RUNNING 505		///<
 
 /* 
  * Structs
  */
+
+/**
+ * @brief The list of processes that initialized/enabled UMS mechanism
+ * 
+ * The purpose of this list is to store all processes that initialized/enabled UMS mechanism
+ *
+ */
 typedef struct process_list {
     struct list_head list;
-    unsigned int process_count;
+    unsigned int process_count;		/**< The number of elements(processes) in the list */
 } process_list_t;
 
+/**
+ * @brief The list of completion lists
+ * 
+ * The purpose of this list is to store all completion lists created by the process
+ *
+ */
 typedef struct cl_list {
 	struct list_head list;
-	unsigned int cl_count;
+	unsigned int cl_count;			/**< The number of elements(completion lists) in the list */
 } cl_list_t;
 
+/**
+ * @brief The list of worker threads
+ * 
+ * The purpose of this list is to store all worker threads created by the process
+ *
+ */
 typedef struct worker_thread_list {
 	struct list_head list;
-	unsigned int worker_thread_count;
+	unsigned int worker_thread_count;		/**< The number of elements(worker threads) in the list */
 } worker_thread_list_t;
 
+/**
+ * @brief The list of ums threads(schedulers)
+ * 
+ * The purpose of this list is to store all ums threads(schedulers) created by the process
+ *
+ */
 typedef struct ums_thread_list {
 	struct list_head list;
-	unsigned int ums_thread_count;
+	unsigned int ums_thread_count;		/**< The number of elements(ums threads) in the list */
 } ums_thread_list_t;
 
+/**
+ * @brief The process that initialized/enabled UMS mechanism
+ * 
+ * This is a node in the @ref process_list. This is a process that initialized/enabled UMS mechanism.
+ * Each such process has 3 lists:
+ *  - list of completion lists
+ *  - list of ums threads(schedulers)
+ *  - list of worker threads
+ *
+ */
 typedef struct process {
-    pid_t pid;
-    cl_list_t cl_list;
-	worker_thread_list_t worker_thread_list;
-	ums_thread_list_t ums_thread_list;
+    pid_t pid;									/**< The PID of the main thread, so the TGID of every thread of the process */
+    cl_list_t cl_list;							/**< A list of completion list created in this process environment */
+	worker_thread_list_t worker_thread_list;	/**< A list of worker thread created in this process environment */
+	ums_thread_list_t ums_thread_list;			/**< A list of ums thread(schedulers) created in this process environment */
 	struct list_head list;
 } process_t;
 
+/**
+ * @brief The completion list of worker threads
+ * 
+ * This is a node in the @ref process::cl_list. This is a description of the completion list.
+ *
+ */
 typedef struct completion_list {
-	struct list_head list;
-	struct list_head wt_list;
-	unsigned int id;
-	unsigned int worker_thread_count;
+	struct list_head list;					/**< This list structure is related to the list of completion lists in the process */
+	struct list_head wt_list;				/**< This list structure is related to the list of worker threads that it contains */
+	unsigned int id;						/**< Unique id of the completion list */
+	unsigned int worker_thread_count;		/**< The number of worker threads in this completion list */
 } completion_list_t;
 
+
+/**
+ * @brief The state of the worker thread
+ *
+ */
 typedef enum worker_state {
-	BUSY,
-	READY,
-    FINISHED
+	BUSY,			/**< The worker thread is busy because it is being runned */
+	READY,			/**< The worker thread is ready and can be switched to run */
+    FINISHED		/**< The worker thread is finished because it has completed its task */
 } worker_state_t;
 
 typedef struct worker_thread_context {

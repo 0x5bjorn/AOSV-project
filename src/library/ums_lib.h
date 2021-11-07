@@ -52,7 +52,7 @@
 /**
  * @brief The list of completion lists
  * 
- * The purpose of this list is to track and store all completion lists created by the program
+ * The purpose of this list is to store all completion lists created by the program
  *
  */
 typedef struct cl_list {
@@ -63,7 +63,7 @@ typedef struct cl_list {
 /**
  * @brief The list of worker threads
  * 
- * The purpose of this list is to track and store all worker threads created by the program
+ * The purpose of this list is to store all worker threads created by the program
  *
  */
 typedef struct worker_thread_list {
@@ -74,7 +74,7 @@ typedef struct worker_thread_list {
 /**
  * @brief The list of ums threads(schedulers)
  * 
- * The purpose of this list is to track and store all ums threads(schedulers) created by the program
+ * The purpose of this list is to store all ums threads(schedulers) created by the program
  *
  */
 typedef struct ums_thread_list {
@@ -90,7 +90,7 @@ typedef struct ums_thread_list {
  */
 typedef struct completion_list {
 	unsigned int id;						/**< Unique id of the completion list */
-	unsigned int worker_thread_count;		/**< The number of elements(worker threads) in this completion list */
+	unsigned int worker_thread_count;		/**< The number of worker threads in this completion list */
 	struct list_head list;					
 } completion_list_t;
 
