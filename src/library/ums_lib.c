@@ -234,7 +234,7 @@ int add_worker_thread(unsigned int completion_list_id, unsigned int worker_threa
 /**
  * @brief Enter UMS scheduling mode
  *
- * Create ums thread(scheduler) and pthread which will be converted to ums thread create earlier.
+ * Create ums thread(scheduler) and pthread which will be converted to ums thread created earlier.
  * 
  * @param function an entry point function for the ums thread(scheduler), scheduling function
  * @param completion_list_id the id of completion list with worker threads to be executed by 
@@ -282,7 +282,7 @@ int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion
  * @brief Convert pthread into ums thread(scheduler)
  *
  * Convert current thread into ums thread(scheduler). In this case this function is passed to 
- * pthread, therefore newly created pthread is converted into ums thread(scheduler).
+ * pthread, therefore the created pthread is converted into ums thread(scheduler).
  * 
  * @param @c int the id of ums thread(scheduler) into which to convert
  */

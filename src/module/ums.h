@@ -144,41 +144,58 @@ typedef enum worker_state {
     FINISHED		/**< The worker thread is finished because it has completed its task */
 } worker_state_t;
 
+/**
+ * @brief The worker thread
+ * 
+ * This is a node in the @ref process::worker_thread_list. This is a description of worker thread.
+ *
+ */
 typedef struct worker_thread_context {
-	unsigned int id;
-	struct list_head list;
-	struct list_head wt_list;
-	unsigned long entry_point;
-	unsigned int cl_id;
-	pid_t created_by;
-	unsigned int run_by;
-	worker_state_t state;
-	unsigned long running_time;
-	unsigned int switch_count;
-	struct timespec64 last_switch_time;
-	struct pt_regs regs;
-	struct fpu fpu_regs;
+	unsigned int id;						/**< Unique id of the worker thread */
+	struct list_head list;					/**< This list structure is related to the list of worker threads in the process */
+	struct list_head wt_list;				/**< This list structure is related to the list of worker threads in completion list */
+	unsigned long entry_point;				/**< The starting function of the worker thread */
+	unsigned int cl_id;						/**< The id of the completion list which contains the worker thread */
+	pid_t created_by;						/**< The PID of the process that created the worker thread */
+	unsigned int run_by;					/**< The id of the ums thread(scheduler) that is currently running the worker thread */
+	worker_state_t state;					/**< The current state of the worker thread */
+	unsigned long running_time;				/**< The total running time of the worker thread */
+	unsigned int switch_count;				/**< The number of switches to the worker thread */
+	struct timespec64 last_switch_time;		/**< The time of the last switch to the worker thread */
+	struct pt_regs regs;					/**< The current snapshot of cpu registers */
+	struct fpu fpu_regs;					/**< The current snapshot of fpu registers */
 } worker_thread_context_t;
 
+/**
+ * @brief The state of the ums thread(scheduler)
+ *
+ */
 typedef enum ums_state {
     RUNNING,
 	IDLE
 } ums_state_t;
 
+/**
+ * @brief The ums thread(scheduler)
+ * 
+ * This is a node in the @ref process::ums_thread_list. This is a description of ums thread(scheduler).
+ *
+ */
 typedef struct ums_thread_context {
-	unsigned int id;
-	struct list_head list;
-	unsigned long entry_point;
-	unsigned int cl_id;
-	unsigned int wt_id;
-	pid_t created_by;
-	pid_t run_by;
-	ums_state_t state;
-	unsigned int switch_count;
-	struct timespec64 last_switch_time;
-	struct pt_regs regs;
-	struct fpu fpu_regs;
-	struct pt_regs ret_regs;
+	unsigned int id;						/**< Unique id of the ums thread(scheduler) */
+	struct list_head list;					
+	unsigned long entry_point;				/**< The starting function of the ums thread(scheduler), i.e. scheduling function */
+	unsigned int cl_id;						/**< The id of the completion list associated to the ums thread(scheduler) */
+	unsigned int wt_id;						/**< The id of the worker thread that is currently run by the ums thread(scheduler) */
+	pid_t created_by;						/**< The PID of the process that created the ums thread(scheduler) */
+	pid_t run_by;							/**< The PID of the thread that is currently running the ums thread(scheduler) */
+	ums_state_t state;						/**< The current state of the ums thread(scheduler) */
+	unsigned int switch_count;				/**< The number of switches to the ums thread(scheduler) */
+	struct timespec64 last_switch_time;		/**< The time of the last switch to the ums thread(scheduler) */
+	struct pt_regs regs;					/**< The current snapshot of cpu registers */
+	struct fpu fpu_regs;					/**< The current snapshot of fpu registers */
+	struct pt_regs ret_regs;				/**< The snapshot of cpu registers of the pthread that switched to the ums thread(scheduler).
+												 This is needed when thread exits UMS scheduling mode and converts back to the pthread */
 } ums_thread_context_t;
 
 /* 

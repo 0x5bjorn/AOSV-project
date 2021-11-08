@@ -102,7 +102,7 @@ typedef struct completion_list {
  */
 typedef struct worker_thread {
 	unsigned int id;					/**< Unique id of the worker thread */
-    worker_thread_params_t *params;		/**< @see @c worker_thread_params_t*/
+    worker_thread_params_t *params;		/**< @ref worker_thread_params_t*/
 	struct list_head list;				
 } worker_thread_t;
 
@@ -115,7 +115,7 @@ typedef struct worker_thread {
 typedef struct ums_thread {
 	unsigned int id;					/**< Unique id of the ums thread */
 	pthread_t pt;						/**< pthread which entered ums scheduling mode */
-    ums_thread_params_t *params;		/**< @see @c ums_thread_params_t*/
+    ums_thread_params_t *params;		/**< @ref ums_thread_params_t*/
 	struct list_head list;				
 } ums_thread_t;
 
