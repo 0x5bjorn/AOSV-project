@@ -38,6 +38,22 @@ process_list_t process_list = {
 /* 
  * Implementations
  */
+
+/**
+ * @brief Initialize/enable UMS in the process
+ *
+ * First, we check if the process has already enabled UMS.
+ * In order to start utilizing UMS mechanism, we need to enable UMS for the process.
+ * By this we create process element in the @ref process_list which contains all processes that enbled
+ * UMS mechanism.
+ * If not, we create @ref process_t and initialize:
+ *  - @ref process::cl_list - A list of completion list in the process environment
+ *  - @ref process::worker_thread_list - A list of worker thread in the process environment
+ *  - @ref process::ums_thread_list - A list of ums thread(schedulers) in the process environment
+ * Additionaly, we create /proc/ums/<PID> entry
+ * 
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int init_ums_process(void)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [INIT UMS]\n");
@@ -69,6 +85,18 @@ int init_ums_process(void)
     return 0;
 }
 
+/**
+ * @brief Exit/disable UMS in the process
+ *
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Only after that we perfom deletion/memory free procedure:
+ * Clean up memory allocated for the data structures that are associated with the process.
+ * In particular delete every element in the @ref process::cl_list, @ref process::wroker_thread_list, 
+ * @ref process::ums_thread_list and after that delete the process itself from @ref process_list
+ * which contains all processes that enbled UMS.
+ * 
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int exit_ums_process(void)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [EXIT UMS]\n");
@@ -82,22 +110,22 @@ int exit_ums_process(void)
     }
     
     printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process pid = %d\n", process->pid);
-    ret = free_worker_thread(process);
+    ret = free_process_worker_thread_list(process);
     if (ret != 0)
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] free_worker_thread() failed", ret);
+        printk(KERN_ALERT UMS_LOG "[ERROR] free_process_worker_thread_list() failed", ret);
         return -ERROR_UMS_FAIL;
     }
-    ret = free_completion_list(process);
+    ret = free_process_cl_list(process);
     if (ret != 0)
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] free_completion_list() failed", ret);
+        printk(KERN_ALERT UMS_LOG "[ERROR] free_process_cl_list() failed", ret);
         return -ERROR_UMS_FAIL;
     }
-    ret = free_ums_thread(process);
+    ret = free_process_ums_thread_list(process);
     if (ret != 0)
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] free_ums_thread() failed", ret);
+        printk(KERN_ALERT UMS_LOG "[ERROR] free_process_ums_thread_list() failed", ret);
         return -ERROR_UMS_FAIL;
     }
 
@@ -109,6 +137,17 @@ int exit_ums_process(void)
     return ret;
 }
 
+/**
+ * @brief Create completion list
+ *
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Then we perform all necessary creation steps:
+ * Create a new completion list and return a corresponding id. Add the completion list to 
+ * @ref process::cl_list and initialize @ref completion_list::wt_list for storing worker threads.
+ * Set completion_list::id to the current number of completion lists in @ref process::cl_list.
+ * 
+ * @return @c int completion list id
+ */
 int create_completion_list(void)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [CREATE CL]\n");
@@ -138,6 +177,30 @@ int create_completion_list(void)
     return ret;
 }
 
+/**
+ * @brief Create worker thread
+ *
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Then we perform all necessary creation steps:
+ * Create a new worker thread and return a corresponding id. Add the worker thread to 
+ * @ref process::worker_thread_list. Assign to structure all initial values and the ones passed by 
+ * @ref params parameter, hence:
+ *  - worker_thread_context::id is to the current number of worker threads in @ref process::worker_thread_list
+ *  - worker_thread_context::entry_point is set to the starting function passed by params::function
+ *  - worker_thread_context::created_by is set to @ref process::pid
+ *  - worker_thread_context::run_by is set to -1 because no scheduler is running the worker thread
+ *  - worker_thread_context::state is set to @ref worker_state_t::READY
+ *  - worker_thread_context::running_time is set to 0
+ *  - worker_thread_context::switch_count is set to 0
+ *  - worker_thread_context::regs is set to the values of @c task_pt_regs(current) function
+ *  - worker_thread_context::regs::ip is set to @ref params::function, the starting function of the worker thread
+ *  - worker_thread_context::regs::di is set to @ref params::function_args, the arguments to the function 
+ *  - worker_thread_context::regs::sp is set to @ref params::stack_address
+ *  - worker_thread_context::regs::bp is set to @ref params::stack_address
+ *  - worker_thread_context::fpu_regs is set to the values of @c copy_fxregs_to_kernel() function
+ * 
+ * @return @c int worker thread id
+ */
 int create_worker_thread(worker_thread_params_t *params)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [CREATE WT]\n");
@@ -185,6 +248,17 @@ int create_worker_thread(worker_thread_params_t *params)
     return ret;
 }
 
+/**
+ * @brief Add worker thread to completion list
+ *
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Then we perform all necessary addition steps:
+ * Check if exists and get completion list with requested @ref params::completion_list_id from @ref process::cl_list.
+ * Check if exists and get worker thread with requested @ref params::worker_thread_id from @ref process::worker_thread_list.
+ * Set worker_thread_context::cl_id to completion_list::id and add the worker thread to @ref completion_list::wt_list.
+ * 
+ * @return @c int completion list id
+ */
 int add_to_completion_list(add_wt_params_t *params)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [ADD WT TO CL]\n");
@@ -663,7 +737,7 @@ ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid)
     return ums_thread_context;
 }
 
-int free_ums_thread(process_t *process)
+int free_process_ums_thread_list(process_t *process)
 {
     if (list_empty(&process->ums_thread_list.list))
     {
@@ -684,7 +758,7 @@ int free_ums_thread(process_t *process)
     return 0;
 }
 
-int free_completion_list(process_t *process)
+int free_process_cl_list(process_t *process)
 {
     if (list_empty(&process->cl_list.list))
     {
@@ -705,7 +779,7 @@ int free_completion_list(process_t *process)
     return 0;
 }
 
-int free_worker_thread(process_t *process)
+int free_process_worker_thread_list(process_t *process)
 {
     if (list_empty(&process->worker_thread_list.list))
     {

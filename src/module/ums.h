@@ -223,7 +223,7 @@ int get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt
 worker_thread_context_t *get_wt_run_by_umst_id(process_t *process, unsigned int ums_thread_id);
 ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thread_id);
 ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid);
-int free_ums_thread(process_t *process);
-int free_completion_list(process_t *process);
-int free_worker_thread(process_t *process);
+int free_process_ums_thread_list(process_t *process);
+int free_process_cl_list(process_t *process);
+int free_process_worker_thread_list(process_t *process);
 unsigned long get_wt_running_time(worker_thread_context_t *worker_thread_context);

@@ -53,7 +53,7 @@ ums_thread_list_t ums_thread_list = {
  */
 
 /**
- * @brief Initialize/enable UMS in the program
+ * @brief Initialize/enable UMS in the program/process
  *
  * In order to start utilizing UMS mechanism, we need to enable UMS for the program/process.
  * 
@@ -76,7 +76,7 @@ int init_ums(void)
 }
 
 /**
- * @brief Exit/disable UMS in the program
+ * @brief Exit/disable UMS in the program/process
  *
  * Clean up all created by the library data structures from the memory. 
  * 
@@ -124,7 +124,7 @@ end:
 /**
  * @brief Create completion list
  *
- * Create a new completion list and return a corresponding id.
+ * Create a new completion list and return a corresponding id. Add the completion list to @ref cl_list
  * 
  * @return @c int completion list id
  */
