@@ -50,7 +50,7 @@ process_list_t process_list = {
  *  - @ref process::cl_list - A list of completion list in the process environment
  *  - @ref process::worker_thread_list - A list of worker thread in the process environment
  *  - @ref process::ums_thread_list - A list of ums thread(schedulers) in the process environment
- * Additionaly, we create /proc/ums/<PID> entry
+ * Additionaly, we create /proc/ums/<PID> and /proc/ums/<PID>/schedulers entries
  * 
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
@@ -186,7 +186,7 @@ int create_completion_list(void)
  * @ref process::worker_thread_list. Assign to structure all initial values and the ones passed by 
  * @ref params parameter, hence:
  *  - worker_thread_context::id is to the current number of worker threads in @ref process::worker_thread_list
- *  - worker_thread_context::entry_point is set to the starting function passed by params::function
+ *  - worker_thread_context::entry_point is set to the starting function passed by @ref params::function
  *  - worker_thread_context::created_by is set to @ref process::pid
  *  - worker_thread_context::run_by is set to -1 because no scheduler is running the worker thread
  *  - worker_thread_context::state is set to @ref worker_state_t::READY
@@ -257,7 +257,7 @@ int create_worker_thread(worker_thread_params_t *params)
  * Check if exists and get worker thread with requested @ref params::worker_thread_id from @ref process::worker_thread_list.
  * Set worker_thread_context::cl_id to completion_list::id and add the worker thread to @ref completion_list::wt_list.
  * 
- * @return @c int completion list id
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
 int add_to_completion_list(add_wt_params_t *params)
 {
@@ -301,6 +301,28 @@ int add_to_completion_list(add_wt_params_t *params)
     return ret;
 }
 
+/**
+ * @brief Create ums thread(scheduler)
+ *
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Then we perform all necessary creation steps:
+ * Create a new ums thread(scheduler) and add the ums thread(scheduler) to @ref process::ums_thread_list.
+ * Assign to structure all initial values and the ones passed by @ref params parameter, hence:
+ *  - ums_thread_context::id is to the current number of ums threads in @ref process::ums_thread_list
+ *  - ums_thread_context::entry_point is set to the starting function passed by @ref params::function
+ *  - ums_thread_context::cl_id is set to @ref params.completion_list_id
+ *  - ums_thread_context::wt_id is set to -1, no worker thread is currently run by ums thread(scheduler)
+ *  - ums_thread_context::created_by is set to @ref process::pid
+ *  - ums_thread_context::run_by is set to -1, no thread is currently running the ums thread(scheduler)
+ *  - ums_thread_context::state is set to @ref ums_state_t::IDLE
+ *  - ums_thread_context::switch_count is set to 0
+ * Additionaly, we create /proc/ums/<PID>/schedulers/<ID>, /proc/ums/<PID>/schedulers/<ID>/workers and
+ * /proc/ums/<PID>/schedulers/<ID>/info entries for ums thread(scheduler).
+ * As well as /proc/ums/<PID>/schedulers/<ID>/workers and /proc/ums/<PID>/schedulers/<ID>/workers/<ID>
+ * entries for each worker thread in the competion list associated with ums thread(scheduler).
+ * 
+ * @return @c int ums thread(scheduler) id
+ */
 int create_ums_thread(ums_thread_params_t *params)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [CREATE UMST]\n");
@@ -348,13 +370,33 @@ int create_ums_thread(ums_thread_params_t *params)
     worker_thread_context_t *worker_thread_context = NULL;
     worker_thread_context_t *temp = NULL;
     list_for_each_entry_safe(worker_thread_context, temp, &completion_list->wt_list, wt_list) {
-        printk(KERN_DEBUG UMS_LOG "umst id = %d, cl id = %d, wt id = %d\n", ums_thread_context->id, ums_thread_context->cl_id, worker_thread_context->id);
         create_wt_entry(ums_thread_context->id, worker_thread_context->id);
     }
 
     return ret;
 }
 
+/**
+ * @brief Convert thread into ums thread(scheduler)
+ * 
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Then we perform all necessary convertion steps:
+ * Check if exists and get ums thread(scheduler) with requested ums_thread_id from @ref process::ums_thread_list.
+ * Check if this ums thread(scheduler) is IDLE and not currently run by other thread.
+ * Save the context of the current thread:
+ *  - ums_thread_context::run_by is set to @c current->pid
+ *  - ums_thread_context::state is set to @ref ums_state_t::RUNNING
+ *  - ums_thread_context::switch_count is increased by 1
+ *  - ums_thread_context::last_switch_time is set to current time by @ref ktime_get_real_ts64()
+ *  - ums_thread_context::regs is set to the values of @c task_pt_regs(current) function
+ *  - ums_thread_context::fpu_regs is set to the values of @c copy_fxregs_to_kernel() function
+ *  - ums_thread_context::ret_regs is set to @ref ums_thread_context::regs
+ *  - ums_thread_context::regs::ip is set to @ref ums_thread_context::entry_point
+ * Then, perform context switch operation:
+ *  - switch current @c pt_regs structure to @ref ums_thread_context::regs
+ * 
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int convert_to_ums_thread(unsigned int ums_thread_id)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [CONVERT TO UMST]\n");
@@ -397,6 +439,21 @@ int convert_to_ums_thread(unsigned int ums_thread_id)
     return ret;
 }
 
+/**
+ * @brief Convert back from ums thread(scheduler)
+ * 
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Then we perform all necessary convertion steps:
+ * Check if exists and get ums thread(scheduler) run by @c current->pid thread from @ref process::ums_thread_list.
+ * Assign to structure necessary values: 
+ *  - ums_thread_context::run_by is set to -1
+ *  - ums_thread_context::state is set to @ref ums_state_t::IDLE
+ * Then, perform context switch operation:
+ *  - switch current @c pt_regs and @c fpu structures to 
+ *    @ref ums_thread_context::regs and @ref ums_thread_context::fpu_regs
+ * 
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int convert_from_ums_thread()
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [CONVERT FROM UMST]\n");
@@ -427,6 +484,20 @@ int convert_from_ums_thread()
     return ret;
 }
 
+/**
+ * @brief Dequeue completion list items
+ *
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Then we perform all necessary dequeue steps:
+ * Check if exists and get ums thread(scheduler) run by @c current->pid thread from @ref process::ums_thread_list.
+ * Check if exists and get completion list associated with ums thread(scheduler) by @ref ums_thread_context::cl_id.
+ * Allocated temporary array of integers and fill it with rnnable worker thread ids with the help
+ * of auxiliary function @ref get_ready_wt_list(). Copy data from temporary array into array allocated by user.
+ * 
+ * @param ready_wt_list the pointer to an allocated by user array of integers which will be filled with
+ * ready to run worker thread ids
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int dequeue_completion_list_items(int *read_wt_list)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [DEQUEUE CL]\n");
@@ -477,6 +548,34 @@ int dequeue_completion_list_items(int *read_wt_list)
     return ret;
 }
 
+/**
+ * @brief Switch to worker thread
+ * 
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Then we perform all necessary convertion steps:
+ * Check if exists and get ums thread(scheduler) run by @c current->pid thread from @ref process::ums_thread_list.
+ * Check if exists and get worker thread with requested @ref params::worker_thread_id 
+ * from @ref process::worker_thread_list. Check if this worker thread is not BUSY and/or FINISHED.
+ * Save the context of the ums thread(scheduler):
+ *  - ums_thread_context::wt_id is set to @ref worker_thread_context::id
+ *  - ums_thread_context::regs is set to the values of @c task_pt_regs(current) function
+ *  - ums_thread_context::ret_regs is set to @ref ums_thread_context::regs
+ *  - ums_thread_context::fpu_regs is set to the values of @c copy_fxregs_to_kernel() function
+ * Then, perform context switch operation:
+ *  - worker_thread_context::run_by is set to @ref ums_thread_context::id
+ *  - worker_thread_context::state is set to @ref worker_state_t::BUSY
+ *  - worker_thread_context::switch_count is increased by 1
+ *  - worker_thread_context::last_switch_time is set to current time by @c ktime_get_real_ts64()
+ *  - switch current @c pt_regs and @c fpu structures to 
+ *    @ref worker_thread_context::regs and @ref worker_thread_context::fpu_regs
+ * 
+ * **NOTE**: If worker thread is BUSY function returns 2, if it is FINISHED it returns 1. 
+ * These cases are not considered as real ERROR but handled as a special cases in userspace. 
+ * In case of BUSY thread, scheduler in userspace will try to switch to next READY worker thread. 
+ * For the case of FINISHED worker thread, scheduler in userpace will update list of ready worker threads.
+ * 
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int switch_to_worker_thread(unsigned int worker_thread_id)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [SWITCH TO WT]\n");
@@ -529,6 +628,30 @@ int switch_to_worker_thread(unsigned int worker_thread_id)
     return ret;
 }
 
+/**
+ * @brief Convert back from worker thread
+ * 
+ * First, we check if process that invokes this function is the one that enabled UMS.
+ * Then we perform all necessary convertion steps:
+ * Check if exists and get ums thread(scheduler) run by @c current->pid thread from @ref process::ums_thread_list.
+ * Check if exists and get worker thread run by @ref ums_thread_context::id from @ref process::worker_thread_list. 
+ * Check if the yield reason is not @ref yield_reason_t::BUSY or @ref yield_reason_t::FINISHED.
+ * Then, perform context sacing and context switch operations:
+ *  - worker_thread_context::run_by is set to -1
+ *  - worker_thread_context::state is set to @ref worker_state_t::BUSY or @ref worker_state_t::FINISHED
+ *  - worker_thread_context::running_time is set to time by auxiiary function @ref get_wt_running_time()
+ *  - worker_thread_context::regs is set to the values of @c task_pt_regs(current) function
+ *  - worker_thread_context::fpu_regs is set to the values of @c copy_fxregs_to_kernel() function
+ * 
+ *  - ums_thread_context::wt_id is set to -1
+ *  - ums_thread_context::switch_count is increased by 1
+ *  - ums_thread_context::last_switch_time is set to current time by @c ktime_get_real_ts64()
+ *  - switch current @c pt_regs and @c fpu structures to 
+ *    @ref ums_thread_context::regs and @ref ums_thread_context::fpu_regs
+ * 
+ * @param yield_reason reason which defines if worker thread should be paused or finished, @ref yield_reason_t
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int switch_back_to_ums_thread(yield_reason_t yield_reason)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [SWITCH BACK TO UMST]\n");

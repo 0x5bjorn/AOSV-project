@@ -124,7 +124,7 @@ end:
 /**
  * @brief Create completion list
  *
- * Create a new completion list and return a corresponding id. Add the completion list to @ref cl_list
+ * Create a new completion list and return a corresponding id. Add the completion list to @ref cl_list.
  * 
  * @return @c int completion list id
  */
@@ -197,8 +197,6 @@ int create_worker_thread(void (*function)(void *), void *args, unsigned long sta
 /**
  * @brief Add worker thread to completion list
  *
- * Fill the completion list with worker threads.
- * 
  * @param completion_list_id the id of completion list to which worker thread is added
  * @param worker_thread_id the id of worker thread that is added
  * @return @c int exit code 0 for success, otherwise a corresponding error code
@@ -237,7 +235,7 @@ int add_worker_thread(unsigned int completion_list_id, unsigned int worker_threa
  * Create ums thread(scheduler) and pthread which will be converted to ums thread created earlier.
  * 
  * @param function an entry point function for the ums thread(scheduler), scheduling function
- * @param completion_list_id the id of completion list with worker threads to be executed by 
+ * @param completion_list_id the id of completion list with worker threads associated with 
  * ums thread(scheduler)
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
@@ -281,8 +279,8 @@ int enter_ums_scheduling_mode(void (*function)(void *), unsigned long completion
 /**
  * @brief Convert pthread into ums thread(scheduler)
  *
- * Convert current thread into ums thread(scheduler). In this case this function is passed to 
- * pthread, therefore the created pthread is converted into ums thread(scheduler).
+ * Convert current thread into ums thread(scheduler). This function is passed to @ref pthread_create(),
+ * therefore the created pthread is converted into ums thread(scheduler).
  * 
  * @param @c int the id of ums thread(scheduler) into which to convert
  */
