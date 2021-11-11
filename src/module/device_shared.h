@@ -45,26 +45,43 @@
 
 #define UMS_DEV_IOCTL_MAGIC 'R'
 
+/**
+ * @brief Parameters passed by the library and user for worker thread creation
+ *
+ */
 typedef struct worker_thread_params {
-    unsigned long function;
-    unsigned long function_args;
-    unsigned long stack_address;
-    unsigned long stack_size;
+    unsigned long function;             /**< The pointer to starting function of the worker thread passed by the user */
+    unsigned long function_args;        /**< The pointer to arguments for function */
+    unsigned long stack_address;        /**< The starting address of the stack allocated by the library */
+    unsigned long stack_size;           /**< The size of the allocated stack */
 } worker_thread_params_t;
 
+/**
+ * @brief Parameters passed by the library and user for adding worker thread to completion list
+ *
+ */
 typedef struct add_wt_params {
-    unsigned int completion_list_id;
-    unsigned int worker_thread_id;
+    unsigned int completion_list_id;    /**< The id of the completion list to which is added */
+    unsigned int worker_thread_id;      /**< The id of the worker thread which is being added */
 } add_wt_params_t;
 
+/**
+ * @brief Parameters passed by the library and user for ums thread(scheduler) creation
+ *
+ */
 typedef struct ums_thread_params {
-    unsigned long function;
-    unsigned int completion_list_id;
+    unsigned long function;             /**< The pointer to starting function of the ums thread(scheduler) passed by the user */
+    unsigned int completion_list_id;    /**< The id of the completion list associated to ums thread(scheduler) */
 } ums_thread_params_t;
 
+/**
+ * @brief Parameters passed by the library and user for worker thread yield function
+ *
+ */
 typedef enum yield_reason {
-    FINISH,
-	PAUSE
+    FINISH,         /**< The yield reason is FINSIH when worker thread has finished its task */
+	PAUSE           /**< The yield reason is PAUSE when worker thread hasn't finished its task but for some
+                         reason is requested to be blocked/paused until next invokation */
 } yield_reason_t;
 
 #define UMS_DEV_INIT_UMS_PROCESS            _IO(UMS_DEV_IOCTL_MAGIC, 0)

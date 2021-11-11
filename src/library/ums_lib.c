@@ -360,7 +360,8 @@ int dequeue_completion_list_items(int *ready_wt_list)
  *
  * Execute worker thread given the id. The return result from ioctl call defines if requested 
  * worker thread is currently busy and handled by another ums thread(scheduler) or worker thread 
- * was already finished before.
+ * was already finished before. If it is busy then scheduler will try to execute next available thread
+ * from @ref ready_wt_list. However, if it was already finished before @ref ready_wt_list will be updated.
  * 
  * @param ready_wt_list the pointer to an array of ready to run worker thread ids
  * @param size the size of the array
@@ -414,8 +415,7 @@ int execute_worker_thread(int *ready_wt_list, int size, unsigned int worker_thre
  *
  * Pause or finish worker thread deppending on the passed reason.
  * 
- * @param yield_reason reason which defines if worker thread should be paused or finished, 
- * @see @c yield_reason_t
+ * @param yield_reason reason which defines if worker thread should be paused or finished, @ref yield_reason_t
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
 int worker_thread_yield(yield_reason_t yield_reason)

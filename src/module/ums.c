@@ -199,6 +199,7 @@ int create_completion_list(void)
  *  - worker_thread_context::regs::bp is set to @ref params::stack_address
  *  - worker_thread_context::fpu_regs is set to the values of @c copy_fxregs_to_kernel() function
  * 
+ * @param params pointer to data structure shared to user space to pass parameters
  * @return @c int worker thread id
  */
 int create_worker_thread(worker_thread_params_t *params)
@@ -257,6 +258,7 @@ int create_worker_thread(worker_thread_params_t *params)
  * Check if exists and get worker thread with requested @ref params::worker_thread_id from @ref process::worker_thread_list.
  * Set worker_thread_context::cl_id to completion_list::id and add the worker thread to @ref completion_list::wt_list.
  * 
+ * @param params pointer to data structure shared to user space to pass parameters
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
 int add_to_completion_list(add_wt_params_t *params)
@@ -320,7 +322,8 @@ int add_to_completion_list(add_wt_params_t *params)
  * /proc/ums/<PID>/schedulers/<ID>/info entries for ums thread(scheduler).
  * As well as /proc/ums/<PID>/schedulers/<ID>/workers and /proc/ums/<PID>/schedulers/<ID>/workers/<ID>
  * entries for each worker thread in the competion list associated with ums thread(scheduler).
- * 
+ *  
+ * @param params pointer to data structure shared to user space to pass parameters
  * @return @c int ums thread(scheduler) id
  */
 int create_ums_thread(ums_thread_params_t *params)
@@ -395,6 +398,7 @@ int create_ums_thread(ums_thread_params_t *params)
  * Then, perform context switch operation:
  *  - switch current @c pt_regs structure to @ref ums_thread_context::regs
  * 
+ * @param ums_thread_id
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
 int convert_to_ums_thread(unsigned int ums_thread_id)
@@ -454,7 +458,7 @@ int convert_to_ums_thread(unsigned int ums_thread_id)
  * 
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
-int convert_from_ums_thread()
+int convert_from_ums_thread(void)
 {
     printk(KERN_DEBUG UMS_LOG "--------- Invoking [CONVERT FROM UMST]\n");
 
@@ -574,6 +578,7 @@ int dequeue_completion_list_items(int *read_wt_list)
  * In case of BUSY thread, scheduler in userspace will try to switch to next READY worker thread. 
  * For the case of FINISHED worker thread, scheduler in userpace will update list of ready worker threads.
  * 
+ * @param worker_thread_id
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
 int switch_to_worker_thread(unsigned int worker_thread_id)

@@ -27,8 +27,6 @@
 
 #include "device.h"
 
-// static int is_device_open = 0;
-
 spinlock_t spinlock;
 DEFINE_SPINLOCK(spinlock);
 unsigned long sl_irq_flags;
@@ -54,19 +52,23 @@ static struct miscdevice mdev;
  */
 static int open_device(struct inode *inode, struct file *file)
 {
-    // if (is_device_open) return -EBUSY;
-    // is_device_open++;
     try_module_get(THIS_MODULE);
     return 0;
 }
 
 static int close_device(struct inode *inode, struct file *file)
 {
-    // is_device_open++;
     module_put(THIS_MODULE);
     return 0;
 }
 
+/**
+ * @brief The main function handler of the ioctl calls of the module.
+ *
+ * @param file the pointer to file strcture
+ * @param cmd the command number
+ * @param arg the pointer to arguments passed from user space
+ */
 static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
 {
     int ret;
@@ -121,6 +123,12 @@ static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
 /*
  * init and exit device impl-s
  */
+
+/**
+ * @brief Init/register the UMS device
+ * 
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int init_device(void)
 {
     mdev.minor = 0;
@@ -141,6 +149,10 @@ int init_device(void)
     return ret;
 }
 
+/**
+ * @brief Exit/deregister the UMS device
+ *
+ */
 void exit_device(void)
 {
     misc_deregister(&mdev);

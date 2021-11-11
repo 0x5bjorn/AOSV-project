@@ -32,6 +32,13 @@ MODULE_DESCRIPTION("UMS module");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("1.0.0");
 
+/**
+ * @brief The init function of the UMS module
+ *
+ * This is the entry point of the UMS module. Initialize device and proc parts of the module.
+ *
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 static int __init ums_module_init(void)
 {
 	int ret = init_device();
@@ -40,6 +47,12 @@ static int __init ums_module_init(void)
 	return ret;
 }
 
+/**
+ * @brief The exit function of the module
+ *
+ * This function finishes the work of the module and deregisters device and proc parts of the module.
+ * 
+ */
 static void __exit ums_module_exit(void)
 {
 	exit_device();

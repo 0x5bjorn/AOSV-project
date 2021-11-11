@@ -171,8 +171,8 @@ typedef struct worker_thread_context {
  *
  */
 typedef enum ums_state {
-    RUNNING,
-	IDLE
+    RUNNING,		/**< The ums thread(scheduler) is running when thread is converted to it */
+	IDLE			/**< The ums thread(scheduler) is idle when no thread is running it */
 } ums_state_t;
 
 /**
