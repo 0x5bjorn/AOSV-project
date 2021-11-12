@@ -113,7 +113,7 @@ typedef struct ums_thread_list {
  *
  */
 typedef struct process {
-    pid_t pid;									/**< The PID of the main thread, so the TGID of every thread of the process */
+    pid_t pid;									/**< The PID of the main thread, hence the TGID of every thread of the process */
     cl_list_t cl_list;							/**< A list of completion list created in this process environment */
 	worker_thread_list_t worker_thread_list;	/**< A list of worker thread created in this process environment */
 	ums_thread_list_t ums_thread_list;			/**< A list of ums thread(schedulers) created in this process environment */

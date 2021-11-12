@@ -39,45 +39,83 @@
 
 #define ERROR_PROC_FAIL 1
 #define ERROR_PROCESS_ENTRY_NOT_FOUND 601
-#define ERROR_UMST_ENTRY_NOT_FOUND 602
+#define ERROR_PROCESS_ENTRY_ALREADY_EXISTS 602
+#define ERROR_UMST_ENTRY_NOT_FOUND 603
 
 /* 
  * Structs
  */
+
+/**
+ * @brief The list of process entries in /proc/ums/<PID>
+ * 
+ * The purpose of this list is to store all process entries in /proc/ums/<PID>
+ *
+ */
 typedef struct process_entry_list {
     struct list_head list;
-    unsigned int process_entry_count;
+    unsigned int process_entry_count;			/**< The number of process entries in the list */
 } process_entry_list_t;
 
+/**
+ * @brief The list of scheduler entries in /proc/ums/<PID>/schedulers
+ * 
+ * The purpose of this list is to store all scheduler entries in /proc/ums/<PID>/schedulers
+ *
+ */
 typedef struct ums_thread_entry_list {
 	struct list_head list;
-	unsigned int ums_thread_entry_count;
+	unsigned int ums_thread_entry_count;		/**< The number of scheduler entries in the list */
 } ums_thread_entry_list_t;
 
+/**
+ * @brief The list of worker thread entries in /proc/ums/<PID>/schedulers/<ID>/workers
+ * 
+ * The purpose of this list is to store all worker thread entries in /proc/ums/<PID>/schedulers/<ID>/workers
+ *
+ */
 typedef struct worker_thread_entry_list {
 	struct list_head list;
-	unsigned int worker_thread_entry_count;
+	unsigned int worker_thread_entry_count;		/**< The number of elements(completion lists) in the list */
 } worker_thread_entry_list_t;
 
+/**
+ * @brief The process entry structure
+ * 
+ * This is a node in the @ref process_entry_list_t. This is a description of the process entry.
+ *
+ */
 typedef struct process_entry {
-    pid_t pid;
+    pid_t pid;									/**< The PID of the process */
 	struct list_head list;
-	struct proc_dir_entry *entry;
-    struct proc_dir_entry *schedulers_entry;
+	struct proc_dir_entry *entry;				/**< The entry of the process */
+    struct proc_dir_entry *schedulers_entry;	/**< The entry of schedulers, child of process_entry::entry */
 } process_entry_t;
 
+/**
+ * @brief The scheduler entry structure
+ * 
+ * This is a node in the @ref ums_thread_entry_list_t. This is a description of the scheduler entry.
+ *
+ */
 typedef struct ums_thread_entry {
-	unsigned int id;
+	unsigned int id;							/**< Unique id of the worker thread */
 	struct list_head list;
-	struct proc_dir_entry *entry;
-    struct proc_dir_entry *workers_entry;
-    struct proc_dir_entry *info_entry;
+	struct proc_dir_entry *entry;				/**< The entry of the scheduler */
+    struct proc_dir_entry *workers_entry;		/**< The entry of workers, child of ums_thread_entry::entry */
+    struct proc_dir_entry *info_entry;			/**< The entry containing statistics about scheduler, child of ums_thread_entry::entry */
 } ums_thread_entry_t;
 
+/**
+ * @brief The scheduler entry structure
+ * 
+ * This is a node in the @ref ums_thread_entry_list_t. This is a description of the scheduler entry.
+ *
+ */
 typedef struct worker_thread_entry {
-	unsigned int id;
+	unsigned int id;					/**< Unique id of the worker thread */
 	struct list_head list;
-	struct proc_dir_entry *entry;
+	struct proc_dir_entry *entry;		/**< The entry of the worker thread, which contains statistics about it */
 } worker_thread_entry_t;
 
 /*

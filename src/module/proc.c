@@ -73,6 +73,14 @@ static struct proc_dir_entry *ums_entry;
 /* 
  * Implementations
  */
+
+/**
+ * @brief Init initial proc files for the module
+ *
+ * Create /proc/ums entry at the start of the module
+ *
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int init_proc(void)
 {
     printk(KERN_INFO UMS_PROC_LOG "init proc\n");
@@ -81,6 +89,15 @@ int init_proc(void)
     return 0;
 }
 
+/**
+ * @brief Exit/delete allocated structures and entries of the proc part of the module 
+ *
+ * Remove /proc/ums entry. Clean up memory allocated for the data structures that are associated in proc part:
+ *  - @ref process_entry_list
+ *  - @ref ums_thread_entry_list
+ *  - @ref worker_thread_entry_list
+ *
+ */
 void exit_proc(void)
 {
     printk(KERN_INFO UMS_PROC_LOG "exit proc\n");
@@ -111,11 +128,25 @@ void exit_proc(void)
     }
 }
 
+/**
+ * @brief Create /proc/ums/<PID> entry
+ *
+ * First, we check if the process entry already exists.
+ * Create @ref process_entry_t and add it to @ref process_entry_list that enabled UMS mechanism. 
+ * Create /proc/ums/<PID> and /proc/ums/<PID>/schedulers entries.
+ *
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int create_process_entry(pid_t pid)
 {
     printk(KERN_DEBUG UMS_PROC_LOG "--------- Invoking [INIT PROCESS ENTRY]\n");
 
     process_entry_t *process_entry;
+    process_entry = get_process_entry_with_pid(pid);
+    if (process_entry != NULL)
+    {
+        return -ERROR_PROCESS_ENTRY_ALREADY_EXISTS;
+    }
 
     process_entry = kmalloc(sizeof(process_entry_t), GFP_KERNEL);
     process_entry->pid = pid;
@@ -146,6 +177,16 @@ int create_process_entry(pid_t pid)
     return 0;
 }
 
+/**
+ * @brief Create /proc/ums/<PID>/schedulers/<ID> entry
+ *
+ * First, we check if current process has process entry in /proc/ums.
+ * Create @ref ums_thread_entry_t and add it to @ref ums_thread_entry_list.
+ * Create /proc/ums/<PID>/schedulers/<ID>, /proc/ums/<PID>/schedulers/<ID>/workers and
+ * /proc/ums/<PID>/schedulers/<ID>/info entries.
+ *
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int create_umst_entry(pid_t pid, unsigned int umst_id)
 {
     printk(KERN_DEBUG UMS_PROC_LOG "--------- Invoking [INIT UMST ENTRY]\n");
@@ -195,6 +236,15 @@ int create_umst_entry(pid_t pid, unsigned int umst_id)
     return 0;
 }
 
+/**
+ * @brief Create /proc/ums/<PID>/schedulers/<ID>/workers/<ID> entry
+ *
+ * First, we check if current process has process entry in /proc/ums.
+ * Create @ref worker_thread_entry_t and add it to @ref worker_thread_entry_list.
+ * Create /proc/ums/<PID>/schedulers/<ID>/workers/<ID> entry.
+ *
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int create_wt_entry(unsigned int umst_id, unsigned int wt_id)
 {
     printk(KERN_DEBUG UMS_PROC_LOG "--------- Invoking [INIT WT ENTRY]\n");
@@ -233,6 +283,14 @@ int create_wt_entry(unsigned int umst_id, unsigned int wt_id)
 /*
  * Static function impl-s
  */
+
+/**
+ * @brief Open /proc/ums/<PID>/schedulers/<ID>/info entry operation.
+ *
+ * @param inode
+ * @param file
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 static int open_umst_entry(struct inode *inode, struct file *file)
 {
     int ret = 0;
@@ -267,10 +325,21 @@ static int open_umst_entry(struct inode *inode, struct file *file)
     }
 
     ret = single_open(file, show_umst_entry, ums_thread_context);
+    if (ret < 0)
+    {
+        printk(KERN_ALERT UMS_PROC_LOG "[ERROR] open_umst_entry()\n", umst_id);
+    }
 
     return ret;
 }
 
+/**
+ * @brief Open /proc/ums/<PID>/schedulers/<ID>/workers/<ID> entry operation.
+ *
+ * @param inode
+ * @param file
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 static int open_wt_entry(struct inode *inode, struct file *file)
 {
     int ret = 0;
@@ -303,10 +372,21 @@ static int open_wt_entry(struct inode *inode, struct file *file)
     }
 
     ret = single_open(file, show_wt_entry, worker_thread_context);
+    if (ret < 0)
+    {
+        printk(KERN_ALERT UMS_PROC_LOG "[ERROR] open_wt_entry()\n", wt_id);
+    }
 
     return ret;
 }
 
+/**
+ * @brief Show the statistics data of scheduler at each "step" of a sequence
+ *
+ * @param sf
+ * @param v
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 static int show_umst_entry(struct seq_file *sf, void *v)
 {
     ums_thread_context_t *ums_thread_context = (ums_thread_context_t *)sf->private;
@@ -330,6 +410,13 @@ static int show_umst_entry(struct seq_file *sf, void *v)
     return 0;
 }
 
+/**
+ * @brief Show the statistics data of worker thread at each "step" of a sequence
+ *
+ * @param sf
+ * @param v
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 static int show_wt_entry(struct seq_file *sf, void *v)
 {
     worker_thread_context_t *worker_thread_context = (worker_thread_context_t *)sf->private;
