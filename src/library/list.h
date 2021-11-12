@@ -1,8 +1,28 @@
 /**
- * https://www.mcs.anl.gov/~kazutomo/list/list.h
- * I grub it from linux kernel source code and fix it for user space
- * program. Of course, this is a GPL licensed header file.
+ * Copyright (C) 2021 Sultan Umarbaev <name.sul27@gmail.com>
  *
+ * This file is part of UMS implementation (Kernel Module).
+ *
+ * UMS implementation (Kernel Module) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * UMS implementation (Kernel Module) is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with UMS implementation (Kernel Module).  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/**
+ * @brief This file is the implementation of the list structure for user space environment:
+ * https://www.mcs.anl.gov/~kazutomo/list/list.h
+ * "I grub it from linux kernel source code and fix it for user space
+ * program. Of course, this is a GPL licensed header file.
  * Here is a recipe to cook list.h for user space program
  *
  * 1. copy list.h from linux/include/list.h
@@ -12,8 +32,12 @@
  *     - prefetch() and rcu related functions
  * 3. add macro offsetof() and container_of
  *
- * - kazutomo@mcs.anl.gov
+ * - kazutomo@mcs.anl.gov"
+ *
+ * @file list.h
+ * @author kazutomo@mcs.anl.gov
  */
+
 #ifndef _LINUX_LIST_H
 #define _LINUX_LIST_H
 #include <stdio.h>

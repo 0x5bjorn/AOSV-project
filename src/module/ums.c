@@ -719,6 +719,13 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason)
 /* 
  * Auxiliary function impl-s
  */
+
+/**
+ * @brief Get process structure from @ref process_list with specific PID
+ * 
+ * @param req_pid the PID of the current process
+ * @return @c process_t the pointer to process structure
+ */
 process_t *get_process_with_pid(pid_t req_pid)
 {
     if (list_empty(&process_list.list))
@@ -739,6 +746,13 @@ process_t *get_process_with_pid(pid_t req_pid)
     return process;
 }
 
+/**
+ * @brief Get completion list from @ref process::cl_list with specific id
+ * 
+ * @param process the pointer to the process structure of the current process
+ * @param completion_list_id the id of the completion list requested to be retrieved
+ * @return @c completion_list_t the pointer to completion list
+ */
 completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_list_id)
 {
     if (list_empty(&process->cl_list.list))
@@ -759,6 +773,13 @@ completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_li
     return completion_list;
 }
 
+/**
+ * @brief Get worker thread from @ref process::worker_thread_list with specific id
+ * 
+ * @param process the pointer to the process structure of the current process
+ * @param worker_thread_id the id of the worker thread requested to be retrieved
+ * @return @c worker_thread_context_t the pointer to worker thread
+ */
 worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_thread_id)
 {
     if (list_empty(&process->worker_thread_list.list))
@@ -779,6 +800,13 @@ worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_
     return worker_thread_context;
 }
 
+/**
+ * @brief Fill the array of integers with ready worker thread ids from completion list
+ * 
+ * @param completion_list the pointer to the completion list from which to get worker thread ids
+ * @param ready_wt_list the pointer to the array of integers that will be filled
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt_list)
 {
     if (list_empty(&completion_list->wt_list))
@@ -805,6 +833,13 @@ int get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt
     return 0;
 }
 
+/**
+ * @brief Get worker thread from @ref process::worker_thread_list run by specific ums thread(scheduler)
+ * 
+ * @param process the pointer to the process structure of the current process
+ * @param ums_thread_id the id of the ums thread(scheduler) that runs worker thread
+ * @return @c worker_thread_context_t the pointer to worker thread
+ */
 worker_thread_context_t *get_wt_run_by_umst_id(process_t *process, unsigned int ums_thread_id)
 {
     if (list_empty(&process->worker_thread_list.list))
@@ -825,6 +860,13 @@ worker_thread_context_t *get_wt_run_by_umst_id(process_t *process, unsigned int 
     return worker_thread_context;
 }
 
+/**
+ * @brief Get ums thread(scheduler) from @ref process::ums_thread_list with specific id
+ * 
+ * @param process the pointer to the process structure of the current process
+ * @param ums_thread_id the id of the ums thread(scheduler) requested to be retrieved
+ * @return @c ums_thread_context_t the pointer to ums thread(scheduler)
+ */
 ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thread_id)
 {
     if (list_empty(&process->ums_thread_list.list))
@@ -845,6 +887,13 @@ ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thre
     return ums_thread_context;
 }
 
+/**
+ * @brief Get ums thread(scheduler) from @ref process::ums_thread_list run by specific thread
+ * 
+ * @param process the pointer to the process structure of the current process
+ * @param req_pid the PID of the thread that runs ums thread(scheduler)
+ * @return @c ums_thread_context_t the pointer to ums thread(scheduler)
+ */
 ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid)
 {
     if (list_empty(&process->ums_thread_list.list))
@@ -865,6 +914,14 @@ ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid)
     return ums_thread_context;
 }
 
+/**
+ * @brief Clean the list of ums threads(schedulers)
+ * 
+ * Delete and free each item in the list of ums threads(schedulers)
+ * 
+ * @param process the pointer to the process structure of the current process
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int free_process_ums_thread_list(process_t *process)
 {
     if (list_empty(&process->ums_thread_list.list))
@@ -886,6 +943,14 @@ int free_process_ums_thread_list(process_t *process)
     return 0;
 }
 
+/**
+ * @brief Clean the list of completion lists
+ * 
+ * Delete and free each item in the list of completion lists
+ * 
+ * @param process the pointer to the process structure of the current process
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int free_process_cl_list(process_t *process)
 {
     if (list_empty(&process->cl_list.list))
@@ -907,6 +972,14 @@ int free_process_cl_list(process_t *process)
     return 0;
 }
 
+/**
+ * @brief Clean the list of worker threads
+ * 
+ * Delete and free each item in the list of worker threads
+ * 
+ * @param process the pointer to the process structure of the current process
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int free_process_worker_thread_list(process_t *process)
 {
     if (list_empty(&process->worker_thread_list.list))
@@ -929,6 +1002,12 @@ int free_process_worker_thread_list(process_t *process)
     return 0;
 }
 
+/**
+ * @brief Calculate the total runnning time of the worker thread
+ *
+ * @param worker_thread_context the pointer to the worker thread which time to be calculated
+ * @return @c unsigned @c long calculated running time
+ */
 unsigned long get_wt_running_time(worker_thread_context_t *worker_thread_context)
 {
     struct timespec64 current_timespec;

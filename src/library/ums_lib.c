@@ -523,7 +523,7 @@ int get_wt_count_in_current_umst_cl(void)
 /**
  * @brief Get completion list from @ref cl_list_t
  * 
- * @param completion_list_id id of the completion list requested to retrieve
+ * @param completion_list_id id of the completion list requested to be retrieved
  * @return @c completion_list_t the pointer to completion list with specific id
  */
 completion_list_t *get_cl_with_id(unsigned int completion_list_id)
@@ -549,7 +549,7 @@ completion_list_t *get_cl_with_id(unsigned int completion_list_id)
 /**
  * @brief Get worker thread from @ref worker_thread_list_t
  * 
- * @param worker_thread_id id of the worker thread requested to retrieve
+ * @param worker_thread_id id of the worker thread requested to be retrieved
  * @return @c worker_thread_t the pointer to worker thread with specific id
  */
 worker_thread_t *get_wt_with_id(unsigned int worker_thread_id)
@@ -575,7 +575,7 @@ worker_thread_t *get_wt_with_id(unsigned int worker_thread_id)
 /**
  * @brief Get ums thread(scheduler) from @ref ums_thread_list_t
  * 
- * @param ums_thread_id id of the ums thread(scheduler) requested to retrieve
+ * @param ums_thread_id id of the ums thread(scheduler) requested to be retrieved
  * @return @c ums_thread_t the pointer to ums thread(scheduler) with specific id
  */
 ums_thread_t *get_umst_run_by_pthread(pthread_t current_pt)

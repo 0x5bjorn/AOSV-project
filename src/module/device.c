@@ -38,6 +38,9 @@ static int open_device(struct inode *, struct file *);
 static int close_device(struct inode *, struct file *);
 static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg);
 
+/*
+ * Variables
+ */
 // File operations for the module
 static struct file_operations fops = {
     .open = open_device,
@@ -68,6 +71,7 @@ static int close_device(struct inode *inode, struct file *file)
  * @param file the pointer to file strcture
  * @param cmd the command number
  * @param arg the pointer to arguments passed from user space
+ * @return @c int command return result
  */
 static long ioctl_device(struct file *file, unsigned int cmd, unsigned long arg)
 {
