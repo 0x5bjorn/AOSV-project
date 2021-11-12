@@ -447,6 +447,13 @@ static int show_wt_entry(struct seq_file *sf, void *v)
 /* 
  * Auxiliary function impl-s
  */
+
+/**
+ * @brief Get process entry structure from @ref process_entry_list with specific PID
+ * 
+ * @param req_pid the PID of the current process
+ * @return @c process_entry_t the pointer to process entry structure
+ */
 process_entry_t *get_process_entry_with_pid(pid_t req_pid)
 {
     if (list_empty(&process_entry_list.list))
@@ -467,6 +474,12 @@ process_entry_t *get_process_entry_with_pid(pid_t req_pid)
     return process_entry;
 }
 
+/**
+ * @brief Get scheduler entry structure from @ref ums_thread_entry_list with specific id
+ * 
+ * @param req_pid the id of the current scheduler
+ * @return @c ums_thread_entry_t the pointer to scheduler entry structure
+ */
 ums_thread_entry_t *get_ums_thread_entry_with_pid(unsigned int id)
 {
     if (list_empty(&ums_thread_entry_list.list))
