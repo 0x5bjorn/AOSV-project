@@ -47,7 +47,7 @@
  */
 
 /**
- * @brief The list of process entries in /proc/ums/<PID>
+ * @brief The list of process entries in /proc/ums
  * 
  * The purpose of this list is to store all process entries in /proc/ums/<PID>
  *
@@ -80,9 +80,9 @@ typedef struct worker_thread_entry_list {
 } worker_thread_entry_list_t;
 
 /**
- * @brief The process entry structure
+ * @brief The structure for process entry /proc/ums/<PID>
  * 
- * This is a node in the @ref process_entry_list_t. This is a description of the process entry.
+ * This is a node in the @ref process_entry_list. This is a description of the process entry.
  *
  */
 typedef struct process_entry {
@@ -93,13 +93,13 @@ typedef struct process_entry {
 } process_entry_t;
 
 /**
- * @brief The scheduler entry structure
+ * @brief The structure for scheduler entry /proc/ums/<PID>/schedulers/<ID>
  * 
- * This is a node in the @ref ums_thread_entry_list_t. This is a description of the scheduler entry.
+ * This is a node in the @ref ums_thread_entry_list. This is a description of the scheduler entry.
  *
  */
 typedef struct ums_thread_entry {
-	unsigned int id;							/**< Unique id of the worker thread */
+	unsigned int id;							/**< Unique id of the scheduler */
 	struct list_head list;
 	struct proc_dir_entry *entry;				/**< The entry of the scheduler */
     struct proc_dir_entry *workers_entry;		/**< The entry of workers, child of ums_thread_entry::entry */
@@ -107,9 +107,9 @@ typedef struct ums_thread_entry {
 } ums_thread_entry_t;
 
 /**
- * @brief The scheduler entry structure
+ * @brief The structure for worker thread entry /proc/ums/<PID>/schedulers/<ID>/workers/<ID>
  * 
- * This is a node in the @ref ums_thread_entry_list_t. This is a description of the scheduler entry.
+ * This is a node in the @ref worker_thread_entry_list. This is a description of the worker thread entry.
  *
  */
 typedef struct worker_thread_entry {

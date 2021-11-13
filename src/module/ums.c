@@ -398,7 +398,7 @@ int create_ums_thread(ums_thread_params_t *params)
  * Then, perform context switch operation:
  *  - switch current @c pt_regs structure to @ref ums_thread_context::regs
  * 
- * @param ums_thread_id
+ * @param ums_thread_id the id of the ums thread(scheduler) to be converted to
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
 int convert_to_ums_thread(unsigned int ums_thread_id)
@@ -578,7 +578,7 @@ int dequeue_completion_list_items(int *read_wt_list)
  * In case of BUSY thread, scheduler in userspace will try to switch to next READY worker thread. 
  * For the case of FINISHED worker thread, scheduler in userpace will update list of ready worker threads.
  * 
- * @param worker_thread_id
+ * @param worker_thread_id the id of the worker thread to be switched to
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
 int switch_to_worker_thread(unsigned int worker_thread_id)
