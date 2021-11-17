@@ -399,7 +399,7 @@ int execute_worker_thread(int *ready_wt_list, int size, unsigned int worker_thre
 
     if (ret == 1)
     {
-        printf(UMS_LIB_LOG "[ERROR] worker thread with id = %d is FINISHED\n", worker_thread_id);
+        printf(UMS_LIB_LOG "[WARNING] worker thread with id = %d is FINISHED\n", worker_thread_id);
         int i = 0;
         while (i < size && ready_wt_list[i] != worker_thread_id) ++i;
         ready_wt_list[i] = -1;
@@ -530,20 +530,21 @@ completion_list_t *get_cl_with_id(unsigned int completion_list_id)
 {
     if (list_empty(&cl_list.list))
     {
-        printf(UMS_LIB_LOG "[ERROR] Empty cl list\n");
         return NULL;
     }
 
+    completion_list_t *result = NULL;
     completion_list_t *completion_list = NULL;
     completion_list_t *temp = NULL;
     list_for_each_entry_safe(completion_list, temp, &cl_list.list, list) {
         if (completion_list->id == completion_list_id)
         {
+            result = completion_list;
             break;
         }
     }
 
-    return completion_list;
+    return result;
 }
 
 /**
@@ -556,20 +557,21 @@ worker_thread_t *get_wt_with_id(unsigned int worker_thread_id)
 {
     if (list_empty(&worker_thread_list.list))
     {
-        printf(UMS_LIB_LOG "[ERROR] Empty wt list\n");
         return NULL;
     }
 
+    worker_thread_t *result = NULL;
     worker_thread_t *worker_thread = NULL;
     worker_thread_t *temp = NULL;
     list_for_each_entry_safe(worker_thread, temp, &worker_thread_list.list, list) {
         if (worker_thread->id == worker_thread_id)
         {
+            result = worker_thread;
             break;
         }
     }
 
-    return worker_thread;
+    return result;
 }
 
 /**
@@ -582,20 +584,21 @@ ums_thread_t *get_umst_run_by_pthread(pthread_t current_pt)
 {
     if (list_empty(&ums_thread_list.list))
     {
-        printf(UMS_LIB_LOG "[ERROR] Empty wt list\n");
         return NULL;
     }
 
+    ums_thread_t *result = NULL;
     ums_thread_t *ums_thread = NULL;
     ums_thread_t *temp = NULL;
     list_for_each_entry_safe(ums_thread, temp, &ums_thread_list.list, list) {
         if (pthread_equal(ums_thread->pt, current_pt))
         {
+            result = ums_thread;
             break;
         }
     }
 
-    return ums_thread;
+    return result;
 }
 
 /**
@@ -609,7 +612,6 @@ int free_ums_thread_list(void)
 {
     if (list_empty(&ums_thread_list.list))
     {
-        printf(UMS_LIB_LOG "[ERROR] Empty umst list\n");
         return -1;
     }
 
@@ -636,7 +638,6 @@ int free_cl_list(void)
 {
     if (list_empty(&cl_list.list))
     {
-        printf(UMS_LIB_LOG "[ERROR] Empty cl list\n");
         return -1;
     }
 
@@ -662,7 +663,6 @@ int free_worker_thread_list(void)
 {
     if (list_empty(&worker_thread_list.list))
     {
-        printf(UMS_LIB_LOG "[ERROR] Empty wt list\n");
         return -1;
     }
 

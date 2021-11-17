@@ -730,20 +730,21 @@ process_t *get_process_with_pid(pid_t req_pid)
 {
     if (list_empty(&process_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty process list\n");
         return NULL;
     }
 
+    process_t *result = NULL;
     process_t *process = NULL;
     process_t *temp = NULL;
     list_for_each_entry_safe(process, temp, &process_list.list, list) {
         if (process->pid == req_pid)
         {
+            result = process;
             break;
         }
     }
 
-    return process;
+    return result;
 }
 
 /**
@@ -757,20 +758,21 @@ completion_list_t *get_cl_with_id(process_t *process, unsigned int completion_li
 {
     if (list_empty(&process->cl_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty cl list\n");
         return NULL;
     }
 
+    completion_list_t *result = NULL;
     completion_list_t *completion_list = NULL;
     completion_list_t *temp = NULL;
     list_for_each_entry_safe(completion_list, temp, &process->cl_list.list, list) {
         if (completion_list->id == completion_list_id)
         {
+            result = completion_list;
             break;
         }
     }
 
-    return completion_list;
+    return result;
 }
 
 /**
@@ -784,20 +786,21 @@ worker_thread_context_t *get_wt_with_id(process_t *process, unsigned int worker_
 {
     if (list_empty(&process->worker_thread_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty wt list\n");
         return NULL;
     }
 
+    worker_thread_context_t *result = NULL;
     worker_thread_context_t *worker_thread_context = NULL;
     worker_thread_context_t *temp = NULL;
     list_for_each_entry_safe(worker_thread_context, temp, &process->worker_thread_list.list, list) {
         if (worker_thread_context->id == worker_thread_id)
         {
+            result = worker_thread_context;
             break;
         }
     }
 
-    return worker_thread_context;
+    return result;
 }
 
 /**
@@ -811,7 +814,6 @@ int get_ready_wt_list(completion_list_t *completion_list, unsigned int *ready_wt
 {
     if (list_empty(&completion_list->wt_list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] No worker threads in completion list\n");
         return -1;
     }
 
@@ -844,20 +846,21 @@ worker_thread_context_t *get_wt_run_by_umst_id(process_t *process, unsigned int 
 {
     if (list_empty(&process->worker_thread_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty wt list\n");
         return NULL;
     }
 
+    worker_thread_context_t *result = NULL;
     worker_thread_context_t *worker_thread_context = NULL;
     worker_thread_context_t *temp = NULL;
     list_for_each_entry_safe(worker_thread_context, temp, &process->worker_thread_list.list, list) {
         if (worker_thread_context->run_by == ums_thread_id)
         {
+            result = worker_thread_context;
             break;
         }
     }
 
-    return worker_thread_context;
+    return result;
 }
 
 /**
@@ -871,20 +874,21 @@ ums_thread_context_t *get_umst_with_id(process_t *process, unsigned int ums_thre
 {
     if (list_empty(&process->ums_thread_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty umst list\n");
         return NULL;
     }
 
+    ums_thread_context_t *result = NULL;
     ums_thread_context_t *ums_thread_context = NULL;
     ums_thread_context_t *temp = NULL;
     list_for_each_entry_safe(ums_thread_context, temp, &process->ums_thread_list.list, list) {
         if (ums_thread_context->id == ums_thread_id)
         {
+            result = ums_thread_context;
             break;
         }
     }
 
-    return ums_thread_context;
+    return result;
 }
 
 /**
@@ -898,20 +902,21 @@ ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid)
 {
     if (list_empty(&process->ums_thread_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty umst list\n");
         return NULL;
     }
 
+    ums_thread_context_t *result = NULL;
     ums_thread_context_t *ums_thread_context = NULL;
     ums_thread_context_t *temp = NULL;
     list_for_each_entry_safe(ums_thread_context, temp, &process->ums_thread_list.list, list) {
         if (ums_thread_context->run_by == req_pid)
         {
+            result = ums_thread_context;
             break;
         }
     }
 
-    return ums_thread_context;
+    return result;
 }
 
 /**
@@ -926,7 +931,6 @@ int free_process_ums_thread_list(process_t *process)
 {
     if (list_empty(&process->ums_thread_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty umst list\n");
         return -1;
     }
 
@@ -955,7 +959,6 @@ int free_process_cl_list(process_t *process)
 {
     if (list_empty(&process->cl_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty cl list\n");
         return -1;
     }
 
@@ -984,7 +987,6 @@ int free_process_worker_thread_list(process_t *process)
 {
     if (list_empty(&process->worker_thread_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty wt list\n");
         return -1;
     }
 

@@ -100,6 +100,7 @@ typedef struct process_entry {
  */
 typedef struct ums_thread_entry {
 	unsigned int id;							/**< Unique id of the scheduler */
+    pid_t created_by;							/**< The PID of the process associated with scheduler entry*/
 	struct list_head list;
 	struct proc_dir_entry *entry;				/**< The entry of the scheduler */
     struct proc_dir_entry *workers_entry;		/**< The entry of workers, child of ums_thread_entry::entry */
@@ -131,4 +132,4 @@ int create_wt_entry(unsigned int umst_id, unsigned int wt_id);
  * Auxiliary functions
  */
 process_entry_t *get_process_entry_with_pid(pid_t req_pid);
-ums_thread_entry_t *get_ums_thread_entry_with_pid(unsigned int id);
+ums_thread_entry_t *get_ums_thread_entry_with_id(pid_t req_pid, unsigned int id);

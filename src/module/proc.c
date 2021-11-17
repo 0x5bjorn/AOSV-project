@@ -139,7 +139,7 @@ void exit_proc(void)
  */
 int create_process_entry(pid_t pid)
 {
-    printk(KERN_DEBUG UMS_PROC_LOG "--------- Invoking [INIT PROCESS ENTRY]\n");
+    printk(KERN_DEBUG UMS_PROC_LOG "--------- Invoking [CREATE PROCESS ENTRY]\n");
 
     process_entry_t *process_entry;
     process_entry = get_process_entry_with_pid(pid);
@@ -172,7 +172,7 @@ int create_process_entry(pid_t pid)
         return -ERROR_PROC_FAIL;
     }
 
-    printk(KERN_DEBUG UMS_PROC_LOG "[INIT PROCESS ENTRY] name = %d, process entry count = %d\n", process_entry->pid, process_entry_list.process_entry_count);
+    printk(KERN_DEBUG UMS_PROC_LOG "[CREATE PROCESS ENTRY] name = %d, process entry count = %d\n", process_entry->pid, process_entry_list.process_entry_count);
 
     return 0;
 }
@@ -189,7 +189,7 @@ int create_process_entry(pid_t pid)
  */
 int create_umst_entry(pid_t pid, unsigned int umst_id)
 {
-    printk(KERN_DEBUG UMS_PROC_LOG "--------- Invoking [INIT UMST ENTRY]\n");
+    printk(KERN_DEBUG UMS_PROC_LOG "--------- Invoking [CREATE UMST ENTRY]\n");
 
     process_entry_t *process_entry;
     ums_thread_entry_t *ums_thread_entry;
@@ -202,6 +202,7 @@ int create_umst_entry(pid_t pid, unsigned int umst_id)
 
     ums_thread_entry = kmalloc(sizeof(ums_thread_entry_t), GFP_KERNEL);
     ums_thread_entry->id = umst_id;
+    ums_thread_entry->created_by = pid;
     list_add_tail(&ums_thread_entry->list, &ums_thread_entry_list.list);
     ums_thread_entry_list.ums_thread_entry_count++;
 
@@ -231,7 +232,7 @@ int create_umst_entry(pid_t pid, unsigned int umst_id)
         return -ERROR_PROC_FAIL;
     }
 
-    printk(KERN_DEBUG UMS_PROC_LOG "[INIT UMST ENTRY] name = %d, umst entry count = %d\n", ums_thread_entry->id, ums_thread_entry_list.ums_thread_entry_count);
+    printk(KERN_DEBUG UMS_PROC_LOG "[CREATE UMST ENTRY] name = %d, umst entry count = %d\n", ums_thread_entry->id, ums_thread_entry_list.ums_thread_entry_count);
 
     return 0;
 }
@@ -247,12 +248,12 @@ int create_umst_entry(pid_t pid, unsigned int umst_id)
  */
 int create_wt_entry(unsigned int umst_id, unsigned int wt_id)
 {
-    printk(KERN_DEBUG UMS_PROC_LOG "--------- Invoking [INIT WT ENTRY]\n");
+    printk(KERN_DEBUG UMS_PROC_LOG "--------- Invoking [CREATE WT ENTRY]\n");
 
     ums_thread_entry_t *ums_thread_entry;
     worker_thread_entry_t *worker_thread_entry;
 
-    ums_thread_entry = get_ums_thread_entry_with_pid(umst_id);
+    ums_thread_entry = get_ums_thread_entry_with_id(current->tgid, umst_id);
     if (ums_thread_entry == NULL)
     {
         return -ERROR_UMST_ENTRY_NOT_FOUND;
@@ -275,7 +276,7 @@ int create_wt_entry(unsigned int umst_id, unsigned int wt_id)
         return -ERROR_PROC_FAIL;
     }
 
-    printk(KERN_DEBUG UMS_PROC_LOG "[INIT WT ENTRY] name = %d, wt entry count = %d\n", worker_thread_entry->id, ums_thread_entry_list.ums_thread_entry_count);
+    printk(KERN_DEBUG UMS_PROC_LOG "[CREATE WT ENTRY] name = %d, wt entry count = %d\n", worker_thread_entry->id, worker_thread_entry_list.worker_thread_entry_count);
 
     return 0;
 }
@@ -451,51 +452,54 @@ static int show_wt_entry(struct seq_file *sf, void *v)
 /**
  * @brief Get process entry structure from @ref process_entry_list with specific PID
  * 
- * @param req_pid the PID of the current process
+ * @param req_pid the PID of the process
  * @return @c process_entry_t the pointer to process entry structure
  */
 process_entry_t *get_process_entry_with_pid(pid_t req_pid)
 {
     if (list_empty(&process_entry_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty process entry list\n");
         return NULL;
     }
 
+    process_entry_t *result = NULL;
     process_entry_t *process_entry = NULL;
     process_entry_t *temp = NULL;
     list_for_each_entry_safe(process_entry, temp, &process_entry_list.list, list) {
         if (process_entry->pid == req_pid)
         {
+            result = process_entry;
             break;
         }
     }
 
-    return process_entry;
+    return result;
 }
 
 /**
  * @brief Get scheduler entry structure from @ref ums_thread_entry_list with specific id
  * 
- * @param req_pid the id of the current scheduler
+ * @param req_pid the pid that created the scheduler
+ * @param id the id of the scheduler
  * @return @c ums_thread_entry_t the pointer to scheduler entry structure
  */
-ums_thread_entry_t *get_ums_thread_entry_with_pid(unsigned int id)
+ums_thread_entry_t *get_ums_thread_entry_with_id(pid_t req_pid, unsigned int id)
 {
     if (list_empty(&ums_thread_entry_list.list))
     {
-        printk(KERN_ALERT UMS_LOG "[ERROR] Empty process entry list\n");
         return NULL;
     }
 
+    ums_thread_entry_t *result = NULL;
     ums_thread_entry_t *ums_thread_entry = NULL;
     ums_thread_entry_t *temp = NULL;
     list_for_each_entry_safe(ums_thread_entry, temp, &ums_thread_entry_list.list, list) {
-        if (ums_thread_entry->id == id)
+        if (ums_thread_entry->created_by == req_pid && ums_thread_entry->id == id)
         {
+            result = ums_thread_entry;
             break;
         }
     }
 
-    return ums_thread_entry;
+    return result;
 }
