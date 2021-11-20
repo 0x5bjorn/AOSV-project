@@ -405,8 +405,7 @@ static int show_umst_entry(struct seq_file *sf, void *v)
         seq_printf(sf, "%-25s : IDLE\n", "state");
     }
     seq_printf(sf, "%-25s : %u\n", "creator pid", (unsigned int)ums_thread_context->created_by);
-    seq_printf(sf, "%-25s : %lu\n", "switching time (ms)", ums_thread_context->switching_time);
-    seq_printf(sf, "%-25s : %lu\n", "average switching time (ms)", ums_thread_context->avg_switching_time);
+    seq_printf(sf, "%-25s : %lu\n", "avg switching time (ns)", ums_thread_context->avg_switching_time);
     seq_printf(sf, "%-25s : %u\n", "switch count", ums_thread_context->switch_count);
     seq_printf(sf, "%-25s : %lu\n", "last switch time (ns)", ums_thread_context->last_switch_time.tv_nsec);
 
@@ -440,7 +439,7 @@ static int show_wt_entry(struct seq_file *sf, void *v)
         seq_printf(sf, "%-25s : FINISHED\n", "state");
     }
     seq_printf(sf, "%-25s : %u\n", "creator pid", (unsigned int)worker_thread_context->created_by);
-    seq_printf(sf, "%-25s : %lu\n", "running time (ms)", worker_thread_context->running_time);
+    seq_printf(sf, "%-25s : %lu\n", "running time (ns)", worker_thread_context->running_time);
     seq_printf(sf, "%-25s : %u\n", "switch count", worker_thread_context->switch_count);
     seq_printf(sf, "%-25s : %lu\n", "last switch time (ns)", worker_thread_context->last_switch_time.tv_nsec);
 

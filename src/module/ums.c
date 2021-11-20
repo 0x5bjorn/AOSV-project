@@ -89,11 +89,8 @@ int init_ums_process(void)
  * @brief Exit/disable UMS in the process
  *
  * First, we check if process that invokes this function is the one that enabled UMS.
- * Only after that we perfom deletion/memory free procedure:
- * Clean up memory allocated for the data structures that are associated with the process.
- * In particular delete every element in the @ref process::cl_list, @ref process::wroker_thread_list, 
- * @ref process::ums_thread_list and after that delete the process itself from @ref process_list
- * which contains all processes that enbled UMS.
+ * Only after that we clean up memory allocated for the data structures that are associated 
+ * with the process by @ref free_process() funciton.
  * 
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
@@ -116,6 +113,12 @@ int exit_ums_process(void)
     return ret;
 }
 
+/**
+ * @brief Clean/free the list of processes @ref process_list
+ * 
+ * Delete and free each item in the list of processes @ref process_list.
+ * 
+ */
 void exit_ums(void)
 {
     process_t *process = NULL;
@@ -550,9 +553,14 @@ int dequeue_completion_list_items(int *read_wt_list)
  * from @ref process::worker_thread_list. Check if this worker thread is not BUSY and/or FINISHED.
  * Save the context of the ums thread(scheduler):
  *  - ums_thread_context::wt_id is set to @ref worker_thread_context::id
+ *  - ums_thread_context::switch_count is increased by 1
+ *  - ums_thread_context::last_switch_time is set to current time by @c ktime_get_real_ts64()
  *  - ums_thread_context::regs is set to the values of @c task_pt_regs(current) function
  *  - ums_thread_context::ret_regs is set to @ref ums_thread_context::regs
  *  - ums_thread_context::fpu_regs is set to the values of @c copy_fxregs_to_kernel() function
+ *  - ums_thread_context::switch_count is increased by 1
+ *  - ums_thread_context::switching_time is set by an auxiliary function @ref get_umst_switching_time()
+ * 
  * Then, perform context switch operation:
  *  - worker_thread_context::run_by is set to @ref ums_thread_context::id
  *  - worker_thread_context::state is set to @ref worker_state_t::BUSY
@@ -608,7 +616,6 @@ int switch_to_worker_thread(unsigned int worker_thread_id)
     ums_thread_context->wt_id = worker_thread_id;
     ums_thread_context->switch_count++;
     ktime_get_real_ts64(&ums_thread_context->last_switch_time);
-    ums_thread_context->switching_time = get_umst_switching_time(ums_thread_context);
     memcpy(&ums_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
     copy_fxregs_to_kernel(&ums_thread_context->fpu_regs);
 
@@ -618,6 +625,9 @@ int switch_to_worker_thread(unsigned int worker_thread_id)
     ktime_get_real_ts64(&worker_thread_context->last_switch_time);
     memcpy(task_pt_regs(current), &worker_thread_context->regs, sizeof(struct pt_regs));
     copy_kernel_to_fxregs(&worker_thread_context->fpu_regs.state.fxsave);
+
+    ums_thread_context->switching_time = get_umst_switching_time(ums_thread_context);
+    ums_thread_context->avg_switching_time = ums_thread_context->switching_time/ums_thread_context->switch_count;
 
     printk(KERN_DEBUG UMS_LOG "[SWITCH TO WT] ums thread id = %d, wt id = %d\n", ums_thread_context->id, worker_thread_id);
 
@@ -632,16 +642,14 @@ int switch_to_worker_thread(unsigned int worker_thread_id)
  * Check if exists and get ums thread(scheduler) run by @c current->pid thread from @ref process::ums_thread_list.
  * Check if exists and get worker thread run by @ref ums_thread_context::id from @ref process::worker_thread_list. 
  * Check if the yield reason is not @ref yield_reason_t::BUSY or @ref yield_reason_t::FINISHED.
- * Then, perform context sacing and context switch operations:
+ * Then, perform context saving and context switch operations:
  *  - worker_thread_context::run_by is set to -1
  *  - worker_thread_context::state is set to @ref worker_state_t::BUSY or @ref worker_state_t::FINISHED
- *  - worker_thread_context::running_time is set to time by auxiiary function @ref get_wt_running_time()
+ *  - worker_thread_context::running_time is set by auxiiary function @ref get_wt_running_time()
  *  - worker_thread_context::regs is set to the values of @c task_pt_regs(current) function
  *  - worker_thread_context::fpu_regs is set to the values of @c copy_fxregs_to_kernel() function
  * 
  *  - ums_thread_context::wt_id is set to -1
- *  - ums_thread_context::switch_count is increased by 1
- *  - ums_thread_context::last_switch_time is set to current time by @c ktime_get_real_ts64()
  *  - switch current @c pt_regs and @c fpu structures to 
  *    @ref ums_thread_context::regs and @ref ums_thread_context::fpu_regs
  * 
@@ -991,6 +999,16 @@ int free_process_worker_thread_list(process_t *process)
     return 0;
 }
 
+/**
+ * @brief Clean/delete/free process structure
+ * 
+ * Delete and free specific process. In particular, delete every element in the @ref process::cl_list, 
+ * @ref process::wroker_thread_list, @ref process::ums_thread_list and after that delete the process 
+ * itself from @ref process_list which contains all processes that enbled UMS.
+ * 
+ * @param process the pointer to the process structure of the process to be deleted
+ * @return @c int exit code 0 for success, otherwise a corresponding error code
+ */
 int free_process(process_t *process)
 {
     int ret = 0;
@@ -1035,18 +1053,18 @@ unsigned long get_wt_running_time(worker_thread_context_t *worker_thread_context
     unsigned long running_time;
 
     ktime_get_real_ts64(&current_timespec);
-    current_time = current_timespec.tv_sec * 1000 + current_timespec.tv_nsec / 1000000;
-    worker_thread_time = worker_thread_context->last_switch_time.tv_sec * 1000 + worker_thread_context->last_switch_time.tv_nsec / 1000000;
+    current_time = current_timespec.tv_sec * 1000000000 + current_timespec.tv_nsec;
+    worker_thread_time = worker_thread_context->last_switch_time.tv_sec * 1000000000 + worker_thread_context->last_switch_time.tv_nsec;
     running_time = worker_thread_context->running_time + (current_time - worker_thread_time);
 
     return running_time;
 }
 
 /**
- * @brief Calculate the switching time of the ums thread
+ * @brief Calculate the total switching time of the ums thread
  *
  * @param ums_thread_context the pointer to the ums thread which swithcing time to be calculated
- * @return @c unsigned @c long calculated switching time
+ * @return @c unsigned @c long calculated total switching time
  */
 unsigned long get_umst_switching_time(ums_thread_context_t *ums_thread_context)
 {
@@ -1056,8 +1074,8 @@ unsigned long get_umst_switching_time(ums_thread_context_t *ums_thread_context)
     unsigned long switching_time;
 
     ktime_get_real_ts64(&current_timespec);
-    current_time = current_timespec.tv_sec * 1000 + current_timespec.tv_nsec / 1000000;
-    ums_thread_time = ums_thread_context->last_switch_time.tv_sec * 1000 + ums_thread_context->last_switch_time.tv_nsec / 1000000;
+    current_time = current_timespec.tv_sec * 1000000000 + current_timespec.tv_nsec;
+    ums_thread_time = ums_thread_context->last_switch_time.tv_sec * 1000000000 + ums_thread_context->last_switch_time.tv_nsec;
     switching_time = ums_thread_context->switching_time + (current_time - ums_thread_time);
 
     return switching_time;

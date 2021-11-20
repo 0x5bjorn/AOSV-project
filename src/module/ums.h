@@ -192,7 +192,7 @@ typedef struct ums_thread_context {
 	ums_state_t state;						/**< The current state of the ums thread(scheduler) */
 	unsigned int switch_count;				/**< The number of switches to the ums thread(scheduler) */
 	struct timespec64 last_switch_time;		/**< The time of the last switch to the ums thread(scheduler) */
-	unsigned long switching_time;			/**< The switching time of the ums thread(scheduler) */
+	unsigned long switching_time;			/**< The total switching time of the ums thread(scheduler) */
 	unsigned long avg_switching_time;		/**< The average switching time of the ums thread(scheduler) */
 	struct pt_regs regs;					/**< The current snapshot of cpu registers */
 	struct fpu fpu_regs;					/**< The current snapshot of fpu registers */

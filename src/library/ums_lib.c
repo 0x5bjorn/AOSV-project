@@ -77,17 +77,20 @@ int init_ums(void)
 
 /**
  * @brief Exit/disable UMS in the program/process
- *
- * Clean up all created by the library data structures from the memory. 
+ * 
+ * Synchronize the execution of the ums threads(schedulers).
  * 
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
 int exit_ums(void)
 {
+    int ret = 0;
+
     if (list_empty(&ums_thread_list.list))
     {
         printf(UMS_LIB_LOG "[ERROR] Empty umst list\n");
-        goto end;
+        ret = -1;
+        return ret;
     }
 
     ums_thread_t *ums_thread = NULL;
@@ -97,24 +100,18 @@ int exit_ums(void)
         if(ret < 0)
         {
             printf(UMS_LIB_LOG "[ERROR] pthread join error %d\n", errno);
-            goto end;
+            return ret;
         }
     }
 
-    fd = open_dev();
+    // fd = open_dev();
 
-    int ret = ioctl(fd, UMS_DEV_EXIT_UMS_PROCESS);
-    if (ret < 0)
-    {
-        printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
-        goto end;
-    }
-
-end:
-    close_dev();
-    free_ums_thread_list();
-    free_cl_list();
-    free_worker_thread_list();
+    // ret = ioctl(fd, UMS_DEV_EXIT_UMS_PROCESS);
+    // if (ret < 0)
+    // {
+    //     printf(UMS_LIB_LOG "[ERROR] ioctl errno %d\n", errno);
+    //     return ret;
+    // }
 
     printf(UMS_LIB_LOG "[EXIT UMS]\n");
 
@@ -679,15 +676,29 @@ int free_worker_thread_list(void)
     return 0;
 }
 
+/**
+ * @brief Clean memory
+ * 
+ * Clean up all created by the library data structures from the memory. 
+ * 
+ */
+void clean_memory()
+{
+    close_dev();
+    free_ums_thread_list();
+    free_cl_list();
+    free_worker_thread_list();
+}
+
 __attribute__((constructor))
 void constructor(void)
 {
-    printf(UMS_LIB_LOG "init() constructor called\n");
+    printf(UMS_LIB_LOG "constructor called\n");
 }
 
 __attribute__((destructor))
 void destructor(void)
 {
-    exit_ums();
-    printf(UMS_LIB_LOG "exit() destructor called\n");
+    clean_memory();
+    printf(UMS_LIB_LOG "destructor called\n");
 }

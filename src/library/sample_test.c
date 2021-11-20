@@ -121,5 +121,7 @@ int main(int argc, char **argv)
 
 	ret = enter_ums_scheduling_mode(scheduling_func2, cl1);
 
+	ret = exit_ums();
+
 	return 0;
 }

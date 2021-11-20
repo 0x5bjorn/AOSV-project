@@ -149,6 +149,7 @@ ums_thread_t *get_umst_run_by_pthread(pthread_t current_pt);
 int free_ums_thread_list(void);
 int free_cl_list(void);
 int free_worker_thread_list(void);
+void clean_memory(void);
 
 __attribute__((constructor)) void constructor(void);
 __attribute__((destructor)) void destructor(void);
