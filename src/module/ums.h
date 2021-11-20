@@ -192,6 +192,8 @@ typedef struct ums_thread_context {
 	ums_state_t state;						/**< The current state of the ums thread(scheduler) */
 	unsigned int switch_count;				/**< The number of switches to the ums thread(scheduler) */
 	struct timespec64 last_switch_time;		/**< The time of the last switch to the ums thread(scheduler) */
+	unsigned long switching_time;			/**< The switching time of the ums thread(scheduler) */
+	unsigned long avg_switching_time;		/**< The average switching time of the ums thread(scheduler) */
 	struct pt_regs regs;					/**< The current snapshot of cpu registers */
 	struct fpu fpu_regs;					/**< The current snapshot of fpu registers */
 	struct pt_regs ret_regs;				/**< The snapshot of cpu registers of the pthread that switched to the ums thread(scheduler).
@@ -203,6 +205,7 @@ typedef struct ums_thread_context {
  */
 int init_ums_process(void);
 int exit_ums_process(void);
+void exit_ums(void);
 int create_completion_list(void);
 int create_worker_thread(worker_thread_params_t *params);
 int add_to_completion_list(add_wt_params_t *params);
@@ -226,4 +229,6 @@ ums_thread_context_t *get_umst_run_by_pid(process_t *process, pid_t req_pid);
 int free_process_ums_thread_list(process_t *process);
 int free_process_cl_list(process_t *process);
 int free_process_worker_thread_list(process_t *process);
+int free_process(process_t *process);
 unsigned long get_wt_running_time(worker_thread_context_t *worker_thread_context);
+unsigned long get_umst_switching_time(ums_thread_context_t *ums_thread_context);

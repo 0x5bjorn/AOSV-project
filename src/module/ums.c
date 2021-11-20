@@ -110,31 +110,19 @@ int exit_ums_process(void)
     }
     
     printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process pid = %d\n", process->pid);
-    ret = free_process_worker_thread_list(process);
-    if (ret != 0)
-    {
-        printk(KERN_ALERT UMS_LOG "[ERROR] free_process_worker_thread_list() failed", ret);
-        return -ERROR_UMS_FAIL;
-    }
-    ret = free_process_cl_list(process);
-    if (ret != 0)
-    {
-        printk(KERN_ALERT UMS_LOG "[ERROR] free_process_cl_list() failed", ret);
-        return -ERROR_UMS_FAIL;
-    }
-    ret = free_process_ums_thread_list(process);
-    if (ret != 0)
-    {
-        printk(KERN_ALERT UMS_LOG "[ERROR] free_process_ums_thread_list() failed", ret);
-        return -ERROR_UMS_FAIL;
-    }
-
-    list_del(&process->list);
-    kfree(process);
-    process_list.process_count--;
+    ret = free_process(process);
     printk(KERN_DEBUG UMS_LOG "[EXIT UMS] process count = %d\n", process_list.process_count);
 
     return ret;
+}
+
+void exit_ums(void)
+{
+    process_t *process = NULL;
+    process_t *temp = NULL;
+    list_for_each_entry_safe(process, temp, &process_list.list, list) {
+        free_process(process);
+    }
 }
 
 /**
@@ -618,6 +606,9 @@ int switch_to_worker_thread(unsigned int worker_thread_id)
     }
 
     ums_thread_context->wt_id = worker_thread_id;
+    ums_thread_context->switch_count++;
+    ktime_get_real_ts64(&ums_thread_context->last_switch_time);
+    ums_thread_context->switching_time = get_umst_switching_time(ums_thread_context);
     memcpy(&ums_thread_context->regs, task_pt_regs(current), sizeof(struct pt_regs));
     copy_fxregs_to_kernel(&ums_thread_context->fpu_regs);
 
@@ -691,8 +682,6 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason)
         copy_fxregs_to_kernel(&worker_thread_context->fpu_regs);
 
         ums_thread_context->wt_id = -1;
-        ums_thread_context->switch_count++;
-        ktime_get_real_ts64(&ums_thread_context->last_switch_time);
         memcpy(task_pt_regs(current), &ums_thread_context->regs, sizeof(struct pt_regs));
         copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
     }
@@ -705,8 +694,6 @@ int switch_back_to_ums_thread(yield_reason_t yield_reason)
         copy_fxregs_to_kernel(&worker_thread_context->fpu_regs);
 
         ums_thread_context->wt_id = -1;
-        ums_thread_context->switch_count++;
-        ktime_get_real_ts64(&ums_thread_context->last_switch_time);
         memcpy(task_pt_regs(current), &ums_thread_context->regs, sizeof(struct pt_regs));
         copy_kernel_to_fxregs(&ums_thread_context->fpu_regs.state.fxsave);
     }
@@ -1004,10 +991,40 @@ int free_process_worker_thread_list(process_t *process)
     return 0;
 }
 
+int free_process(process_t *process)
+{
+    int ret = 0;
+
+    ret = free_process_worker_thread_list(process);
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] free_process_worker_thread_list() failed", ret);
+        return -ERROR_UMS_FAIL;
+    }
+    ret = free_process_cl_list(process);
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] free_process_cl_list() failed", ret);
+        return -ERROR_UMS_FAIL;
+    }
+    ret = free_process_ums_thread_list(process);
+    if (ret != 0)
+    {
+        printk(KERN_ALERT UMS_LOG "[ERROR] free_process_ums_thread_list() failed", ret);
+        return -ERROR_UMS_FAIL;
+    }
+
+    list_del(&process->list);
+    kfree(process);
+    process_list.process_count--;
+
+    return ret;
+}
+
 /**
  * @brief Calculate the total runnning time of the worker thread
  *
- * @param worker_thread_context the pointer to the worker thread which time to be calculated
+ * @param worker_thread_context the pointer to the worker thread which running time to be calculated
  * @return @c unsigned @c long calculated running time
  */
 unsigned long get_wt_running_time(worker_thread_context_t *worker_thread_context)
@@ -1023,4 +1040,25 @@ unsigned long get_wt_running_time(worker_thread_context_t *worker_thread_context
     running_time = worker_thread_context->running_time + (current_time - worker_thread_time);
 
     return running_time;
+}
+
+/**
+ * @brief Calculate the switching time of the ums thread
+ *
+ * @param ums_thread_context the pointer to the ums thread which swithcing time to be calculated
+ * @return @c unsigned @c long calculated switching time
+ */
+unsigned long get_umst_switching_time(ums_thread_context_t *ums_thread_context)
+{
+    struct timespec64 current_timespec;
+    unsigned long current_time;
+    unsigned long ums_thread_time;
+    unsigned long switching_time;
+
+    ktime_get_real_ts64(&current_timespec);
+    current_time = current_timespec.tv_sec * 1000 + current_timespec.tv_nsec / 1000000;
+    ums_thread_time = ums_thread_context->last_switch_time.tv_sec * 1000 + ums_thread_context->last_switch_time.tv_nsec / 1000000;
+    switching_time = ums_thread_context->switching_time + (current_time - ums_thread_time);
+
+    return switching_time;
 }

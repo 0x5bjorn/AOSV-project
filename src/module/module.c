@@ -55,8 +55,9 @@ static int __init ums_module_init(void)
  */
 static void __exit ums_module_exit(void)
 {
-	exit_device();
+	exit_ums();
 	exit_proc();
+	exit_device();
 	printk(KERN_INFO "UMS Module: Module unloaded\n");
 }
 

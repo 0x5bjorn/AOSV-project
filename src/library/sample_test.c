@@ -23,7 +23,7 @@ void worker1_func()
 void worker2_func(void *a)
 {
 	printf("worker thread 2: a = %d\n", a);
-	
+
 	for (int i = 0; i<300; ++i)
 	{
 		int a = 52 * i;
@@ -40,8 +40,8 @@ void scheduling_func1()
 	int ready_wt_list[wt_count];
 	dequeue_completion_list_items(ready_wt_list);
 
-    while (check_ready_wt_list(ready_wt_list, wt_count))
-    {
+	while (check_ready_wt_list(ready_wt_list, wt_count))
+	{
 		int id = get_next_ready_item(ready_wt_list, wt_count);
 		execute_worker_thread(ready_wt_list, wt_count, id);
 	}
@@ -57,8 +57,8 @@ void scheduling_func2()
 	int ready_wt_list[wt_count];
 	dequeue_completion_list_items(ready_wt_list);
 
-    while (check_ready_wt_list(ready_wt_list, wt_count))
-    {
+	while (check_ready_wt_list(ready_wt_list, wt_count))
+	{
 		int id = get_next_ready_item(ready_wt_list, wt_count);
 		execute_worker_thread(ready_wt_list, wt_count, id);
 	}
@@ -120,8 +120,6 @@ int main(int argc, char **argv)
 	ret = enter_ums_scheduling_mode(scheduling_func1, cl1);
 
 	ret = enter_ums_scheduling_mode(scheduling_func2, cl1);
-
-	ret = exit_ums();
 
 	return 0;
 }
