@@ -1,0 +1,321 @@
+\hypertarget{list_8h_source}{}\doxysection{list.\+h}
+\mbox{\hyperlink{list_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#ifndef \_LINUX\_LIST\_H}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#define \_LINUX\_LIST\_H}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{49 }
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define offsetof(TYPE, MEMBER) ((size\_t) \&((TYPE *)0)-\/>MEMBER)}}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#define container\_of(ptr, type, member) (\{                      \(\backslash\)}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{        const typeof( ((type *)0)-\/>member ) *\_\_mptr = (ptr);    \(\backslash\)}}
+\DoxyCodeLine{64 \textcolor{preprocessor}{        (type *)( (char *)\_\_mptr -\/ offsetof(type,member) );\})}}
+\DoxyCodeLine{68 \textcolor{comment}{/*}}
+\DoxyCodeLine{69 \textcolor{comment}{ * These are non-\/NULL pointers that will result in page faults}}
+\DoxyCodeLine{70 \textcolor{comment}{ * under normal circumstances, used to verify that nobody uses}}
+\DoxyCodeLine{71 \textcolor{comment}{ * non-\/initialized list entries.}}
+\DoxyCodeLine{72 \textcolor{comment}{ */}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#define LIST\_POISON1  ((void *) 0x00100100)}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#define LIST\_POISON2  ((void *) 0x00200200)}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{85 \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} \{}
+\DoxyCodeLine{86     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} *next, *prev;}
+\DoxyCodeLine{87 \};}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#define LIST\_HEAD\_INIT(name) \{ \&(name), \&(name) \}}}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{91 \textcolor{preprocessor}{\#define LIST\_HEAD(name) \(\backslash\)}}
+\DoxyCodeLine{92 \textcolor{preprocessor}{    struct list\_head name = LIST\_HEAD\_INIT(name)}}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#define INIT\_LIST\_HEAD(ptr) do \{ \(\backslash\)}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{    (ptr)-\/>next = (ptr); (ptr)-\/>prev = (ptr); \(\backslash\)}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98 \textcolor{comment}{/*}}
+\DoxyCodeLine{99 \textcolor{comment}{ * Insert a new entry between two known consecutive entries.}}
+\DoxyCodeLine{100 \textcolor{comment}{ *}}
+\DoxyCodeLine{101 \textcolor{comment}{ * This is only for internal list manipulation where we know}}
+\DoxyCodeLine{102 \textcolor{comment}{ * the prev/next entries already!}}
+\DoxyCodeLine{103 \textcolor{comment}{ */}}
+\DoxyCodeLine{104 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \_\_list\_add(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *\textcolor{keyword}{new},}
+\DoxyCodeLine{105                   \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *prev,}
+\DoxyCodeLine{106                   \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *next)}
+\DoxyCodeLine{107 \{}
+\DoxyCodeLine{108     next-\/>prev = \textcolor{keyword}{new};}
+\DoxyCodeLine{109     \textcolor{keyword}{new}-\/>next = next;}
+\DoxyCodeLine{110     \textcolor{keyword}{new}-\/>prev = prev;}
+\DoxyCodeLine{111     prev-\/>next = \textcolor{keyword}{new};}
+\DoxyCodeLine{112 \}}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{122 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} list\_add(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *\textcolor{keyword}{new}, \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *head)}
+\DoxyCodeLine{123 \{}
+\DoxyCodeLine{124     \_\_list\_add(\textcolor{keyword}{new}, head, head-\/>next);}
+\DoxyCodeLine{125 \}}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{135 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} list\_add\_tail(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *\textcolor{keyword}{new}, \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *head)}
+\DoxyCodeLine{136 \{}
+\DoxyCodeLine{137     \_\_list\_add(\textcolor{keyword}{new}, head-\/>prev, head);}
+\DoxyCodeLine{138 \}}
+\DoxyCodeLine{139 }
+\DoxyCodeLine{140 }
+\DoxyCodeLine{141 \textcolor{comment}{/*}}
+\DoxyCodeLine{142 \textcolor{comment}{ * Delete a list entry by making the prev/next entries}}
+\DoxyCodeLine{143 \textcolor{comment}{ * point to each other.}}
+\DoxyCodeLine{144 \textcolor{comment}{ *}}
+\DoxyCodeLine{145 \textcolor{comment}{ * This is only for internal list manipulation where we know}}
+\DoxyCodeLine{146 \textcolor{comment}{ * the prev/next entries already!}}
+\DoxyCodeLine{147 \textcolor{comment}{ */}}
+\DoxyCodeLine{148 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \_\_list\_del(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} * prev, \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} * next)}
+\DoxyCodeLine{149 \{}
+\DoxyCodeLine{150     next-\/>prev = prev;}
+\DoxyCodeLine{151     prev-\/>next = next;}
+\DoxyCodeLine{152 \}}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{160 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} list\_del(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *entry)}
+\DoxyCodeLine{161 \{}
+\DoxyCodeLine{162     \_\_list\_del(entry-\/>prev, entry-\/>next);}
+\DoxyCodeLine{163     entry-\/>next = LIST\_POISON1;}
+\DoxyCodeLine{164     entry-\/>prev = LIST\_POISON2;}
+\DoxyCodeLine{165 \}}
+\DoxyCodeLine{166 }
+\DoxyCodeLine{167 }
+\DoxyCodeLine{168 }
+\DoxyCodeLine{173 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} list\_del\_init(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *entry)}
+\DoxyCodeLine{174 \{}
+\DoxyCodeLine{175     \_\_list\_del(entry-\/>prev, entry-\/>next);}
+\DoxyCodeLine{176     INIT\_LIST\_HEAD(entry);}
+\DoxyCodeLine{177 \}}
+\DoxyCodeLine{178 }
+\DoxyCodeLine{184 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} list\_move(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *list, \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *head)}
+\DoxyCodeLine{185 \{}
+\DoxyCodeLine{186         \_\_list\_del(list-\/>prev, list-\/>next);}
+\DoxyCodeLine{187         list\_add(list, head);}
+\DoxyCodeLine{188 \}}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{195 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} list\_move\_tail(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *list,}
+\DoxyCodeLine{196                   \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *head)}
+\DoxyCodeLine{197 \{}
+\DoxyCodeLine{198         \_\_list\_del(list-\/>prev, list-\/>next);}
+\DoxyCodeLine{199         list\_add\_tail(list, head);}
+\DoxyCodeLine{200 \}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{206 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int} list\_empty(\textcolor{keyword}{const} \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *head)}
+\DoxyCodeLine{207 \{}
+\DoxyCodeLine{208     \textcolor{keywordflow}{return} head-\/>next == head;}
+\DoxyCodeLine{209 \}}
+\DoxyCodeLine{210 }
+\DoxyCodeLine{211 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \_\_list\_splice(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *list,}
+\DoxyCodeLine{212                  \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *head)}
+\DoxyCodeLine{213 \{}
+\DoxyCodeLine{214     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} *first = list-\/>next;}
+\DoxyCodeLine{215     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} *last = list-\/>prev;}
+\DoxyCodeLine{216     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} *at = head-\/>next;}
+\DoxyCodeLine{217 }
+\DoxyCodeLine{218     first-\/>prev = head;}
+\DoxyCodeLine{219     head-\/>next = first;}
+\DoxyCodeLine{220 }
+\DoxyCodeLine{221     last-\/>next = at;}
+\DoxyCodeLine{222     at-\/>prev = last;}
+\DoxyCodeLine{223 \}}
+\DoxyCodeLine{224 }
+\DoxyCodeLine{230 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} list\_splice(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *list, \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *head)}
+\DoxyCodeLine{231 \{}
+\DoxyCodeLine{232     \textcolor{keywordflow}{if} (!list\_empty(list))}
+\DoxyCodeLine{233         \_\_list\_splice(list, head);}
+\DoxyCodeLine{234 \}}
+\DoxyCodeLine{235 }
+\DoxyCodeLine{243 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} list\_splice\_init(\textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *list,}
+\DoxyCodeLine{244                     \textcolor{keyword}{struct} \mbox{\hyperlink{structlist__head}{list\_head}} *head)}
+\DoxyCodeLine{245 \{}
+\DoxyCodeLine{246     \textcolor{keywordflow}{if} (!list\_empty(list)) \{}
+\DoxyCodeLine{247         \_\_list\_splice(list, head);}
+\DoxyCodeLine{248         INIT\_LIST\_HEAD(list);}
+\DoxyCodeLine{249     \}}
+\DoxyCodeLine{250 \}}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{258 \textcolor{preprocessor}{\#define list\_entry(ptr, type, member) \(\backslash\)}}
+\DoxyCodeLine{259 \textcolor{preprocessor}{    container\_of(ptr, type, member)}}
+\DoxyCodeLine{260 }
+\DoxyCodeLine{267 \textcolor{preprocessor}{\#define list\_for\_each(pos, head) \(\backslash\)}}
+\DoxyCodeLine{268 \textcolor{preprocessor}{  for (pos = (head)-\/>next; pos != (head);   \(\backslash\)}}
+\DoxyCodeLine{269 \textcolor{preprocessor}{       pos = pos-\/>next)}}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{281 \textcolor{preprocessor}{\#define \_\_list\_for\_each(pos, head) \(\backslash\)}}
+\DoxyCodeLine{282 \textcolor{preprocessor}{    for (pos = (head)-\/>next; pos != (head); pos = pos-\/>next)}}
+\DoxyCodeLine{283 }
+\DoxyCodeLine{289 \textcolor{preprocessor}{\#define list\_for\_each\_prev(pos, head) \(\backslash\)}}
+\DoxyCodeLine{290 \textcolor{preprocessor}{    for (pos = (head)-\/>prev; prefetch(pos-\/>prev), pos != (head); \(\backslash\)}}
+\DoxyCodeLine{291 \textcolor{preprocessor}{            pos = pos-\/>prev)}}
+\DoxyCodeLine{292 }
+\DoxyCodeLine{299 \textcolor{preprocessor}{\#define list\_for\_each\_safe(pos, n, head) \(\backslash\)}}
+\DoxyCodeLine{300 \textcolor{preprocessor}{    for (pos = (head)-\/>next, n = pos-\/>next; pos != (head); \(\backslash\)}}
+\DoxyCodeLine{301 \textcolor{preprocessor}{        pos = n, n = pos-\/>next)}}
+\DoxyCodeLine{302 }
+\DoxyCodeLine{309 \textcolor{preprocessor}{\#define list\_for\_each\_entry(pos, head, member)              \(\backslash\)}}
+\DoxyCodeLine{310 \textcolor{preprocessor}{    for (pos = list\_entry((head)-\/>next, typeof(*pos), member);  \(\backslash\)}}
+\DoxyCodeLine{311 \textcolor{preprocessor}{         \&pos-\/>member != (head);                    \(\backslash\)}}
+\DoxyCodeLine{312 \textcolor{preprocessor}{         pos = list\_entry(pos-\/>member.next, typeof(*pos), member))}}
+\DoxyCodeLine{313 }
+\DoxyCodeLine{320 \textcolor{preprocessor}{\#define list\_for\_each\_entry\_reverse(pos, head, member)          \(\backslash\)}}
+\DoxyCodeLine{321 \textcolor{preprocessor}{    for (pos = list\_entry((head)-\/>prev, typeof(*pos), member);  \(\backslash\)}}
+\DoxyCodeLine{322 \textcolor{preprocessor}{         \&pos-\/>member != (head);    \(\backslash\)}}
+\DoxyCodeLine{323 \textcolor{preprocessor}{         pos = list\_entry(pos-\/>member.prev, typeof(*pos), member))}}
+\DoxyCodeLine{324 }
+\DoxyCodeLine{332 \textcolor{preprocessor}{\#define list\_prepare\_entry(pos, head, member) \(\backslash\)}}
+\DoxyCodeLine{333 \textcolor{preprocessor}{    ((pos) ? : list\_entry(head, typeof(*pos), member))}}
+\DoxyCodeLine{334 }
+\DoxyCodeLine{342 \textcolor{preprocessor}{\#define list\_for\_each\_entry\_continue(pos, head, member)         \(\backslash\)}}
+\DoxyCodeLine{343 \textcolor{preprocessor}{    for (pos = list\_entry(pos-\/>member.next, typeof(*pos), member);  \(\backslash\)}}
+\DoxyCodeLine{344 \textcolor{preprocessor}{         \&pos-\/>member != (head);    \(\backslash\)}}
+\DoxyCodeLine{345 \textcolor{preprocessor}{         pos = list\_entry(pos-\/>member.next, typeof(*pos), member))}}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{354 \textcolor{preprocessor}{\#define list\_for\_each\_entry\_safe(pos, n, head, member)          \(\backslash\)}}
+\DoxyCodeLine{355 \textcolor{preprocessor}{    for (pos = list\_entry((head)-\/>next, typeof(*pos), member),  \(\backslash\)}}
+\DoxyCodeLine{356 \textcolor{preprocessor}{        n = list\_entry(pos-\/>member.next, typeof(*pos), member); \(\backslash\)}}
+\DoxyCodeLine{357 \textcolor{preprocessor}{         \&pos-\/>member != (head);                    \(\backslash\)}}
+\DoxyCodeLine{358 \textcolor{preprocessor}{         pos = n, n = list\_entry(n-\/>member.next, typeof(*n), member))}}
+\DoxyCodeLine{359 }
+\DoxyCodeLine{368 \textcolor{preprocessor}{\#define list\_for\_each\_entry\_safe\_continue(pos, n, head, member)         \(\backslash\)}}
+\DoxyCodeLine{369 \textcolor{preprocessor}{    for (pos = list\_entry(pos-\/>member.next, typeof(*pos), member),      \(\backslash\)}}
+\DoxyCodeLine{370 \textcolor{preprocessor}{        n = list\_entry(pos-\/>member.next, typeof(*pos), member);     \(\backslash\)}}
+\DoxyCodeLine{371 \textcolor{preprocessor}{         \&pos-\/>member != (head);                        \(\backslash\)}}
+\DoxyCodeLine{372 \textcolor{preprocessor}{         pos = n, n = list\_entry(n-\/>member.next, typeof(*n), member))}}
+\DoxyCodeLine{373 }
+\DoxyCodeLine{382 \textcolor{preprocessor}{\#define list\_for\_each\_entry\_safe\_reverse(pos, n, head, member)      \(\backslash\)}}
+\DoxyCodeLine{383 \textcolor{preprocessor}{    for (pos = list\_entry((head)-\/>prev, typeof(*pos), member),  \(\backslash\)}}
+\DoxyCodeLine{384 \textcolor{preprocessor}{        n = list\_entry(pos-\/>member.prev, typeof(*pos), member); \(\backslash\)}}
+\DoxyCodeLine{385 \textcolor{preprocessor}{         \&pos-\/>member != (head);                    \(\backslash\)}}
+\DoxyCodeLine{386 \textcolor{preprocessor}{         pos = n, n = list\_entry(n-\/>member.prev, typeof(*n), member))}}
+\DoxyCodeLine{387 }
+\DoxyCodeLine{388 }
+\DoxyCodeLine{389 }
+\DoxyCodeLine{390 }
+\DoxyCodeLine{391 \textcolor{comment}{/*}}
+\DoxyCodeLine{392 \textcolor{comment}{ * Double linked lists with a single pointer list head.}}
+\DoxyCodeLine{393 \textcolor{comment}{ * Mostly useful for hash tables where the two pointer list head is}}
+\DoxyCodeLine{394 \textcolor{comment}{ * too wasteful.}}
+\DoxyCodeLine{395 \textcolor{comment}{ * You lose the ability to access the tail in O(1).}}
+\DoxyCodeLine{396 \textcolor{comment}{ */}}
+\DoxyCodeLine{397 }
+\DoxyCodeLine{398 \textcolor{keyword}{struct }\mbox{\hyperlink{structhlist__head}{hlist\_head}} \{}
+\DoxyCodeLine{399     \textcolor{keyword}{struct }\mbox{\hyperlink{structhlist__node}{hlist\_node}} *first;}
+\DoxyCodeLine{400 \};}
+\DoxyCodeLine{401 }
+\DoxyCodeLine{402 \textcolor{keyword}{struct }\mbox{\hyperlink{structhlist__node}{hlist\_node}} \{}
+\DoxyCodeLine{403     \textcolor{keyword}{struct }\mbox{\hyperlink{structhlist__node}{hlist\_node}} *next, **pprev;}
+\DoxyCodeLine{404 \};}
+\DoxyCodeLine{405 }
+\DoxyCodeLine{406 \textcolor{preprocessor}{\#define HLIST\_HEAD\_INIT \{ .first = NULL \}}}
+\DoxyCodeLine{407 \textcolor{preprocessor}{\#define HLIST\_HEAD(name) struct hlist\_head name = \{  .first = NULL \}}}
+\DoxyCodeLine{408 \textcolor{preprocessor}{\#define INIT\_HLIST\_HEAD(ptr) ((ptr)-\/>first = NULL)}}
+\DoxyCodeLine{409 \textcolor{preprocessor}{\#define INIT\_HLIST\_NODE(ptr) ((ptr)-\/>next = NULL, (ptr)-\/>pprev = NULL)}}
+\DoxyCodeLine{410 }
+\DoxyCodeLine{411 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int} hlist\_unhashed(\textcolor{keyword}{const} \textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__node}{hlist\_node}} *h)}
+\DoxyCodeLine{412 \{}
+\DoxyCodeLine{413     \textcolor{keywordflow}{return} !h-\/>pprev;}
+\DoxyCodeLine{414 \}}
+\DoxyCodeLine{415 }
+\DoxyCodeLine{416 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int} hlist\_empty(\textcolor{keyword}{const} \textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__head}{hlist\_head}} *h)}
+\DoxyCodeLine{417 \{}
+\DoxyCodeLine{418     \textcolor{keywordflow}{return} !h-\/>first;}
+\DoxyCodeLine{419 \}}
+\DoxyCodeLine{420 }
+\DoxyCodeLine{421 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \_\_hlist\_del(\textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__node}{hlist\_node}} *n)}
+\DoxyCodeLine{422 \{}
+\DoxyCodeLine{423     \textcolor{keyword}{struct }\mbox{\hyperlink{structhlist__node}{hlist\_node}} *next = n-\/>next;}
+\DoxyCodeLine{424     \textcolor{keyword}{struct }\mbox{\hyperlink{structhlist__node}{hlist\_node}} **pprev = n-\/>pprev;}
+\DoxyCodeLine{425     *pprev = next;}
+\DoxyCodeLine{426     \textcolor{keywordflow}{if} (next)}
+\DoxyCodeLine{427         next-\/>pprev = pprev;}
+\DoxyCodeLine{428 \}}
+\DoxyCodeLine{429 }
+\DoxyCodeLine{430 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} hlist\_del(\textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__node}{hlist\_node}} *n)}
+\DoxyCodeLine{431 \{}
+\DoxyCodeLine{432     \_\_hlist\_del(n);}
+\DoxyCodeLine{433     n-\/>next = LIST\_POISON1;}
+\DoxyCodeLine{434     n-\/>pprev = LIST\_POISON2;}
+\DoxyCodeLine{435 \}}
+\DoxyCodeLine{436 }
+\DoxyCodeLine{437 }
+\DoxyCodeLine{438 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} hlist\_del\_init(\textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__node}{hlist\_node}} *n)}
+\DoxyCodeLine{439 \{}
+\DoxyCodeLine{440     \textcolor{keywordflow}{if} (n-\/>pprev)  \{}
+\DoxyCodeLine{441         \_\_hlist\_del(n);}
+\DoxyCodeLine{442         INIT\_HLIST\_NODE(n);}
+\DoxyCodeLine{443     \}}
+\DoxyCodeLine{444 \}}
+\DoxyCodeLine{445 }
+\DoxyCodeLine{446 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} hlist\_add\_head(\textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__node}{hlist\_node}} *n, \textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__head}{hlist\_head}} *h)}
+\DoxyCodeLine{447 \{}
+\DoxyCodeLine{448     \textcolor{keyword}{struct }\mbox{\hyperlink{structhlist__node}{hlist\_node}} *first = h-\/>first;}
+\DoxyCodeLine{449     n-\/>next = first;}
+\DoxyCodeLine{450     \textcolor{keywordflow}{if} (first)}
+\DoxyCodeLine{451         first-\/>pprev = \&n-\/>next;}
+\DoxyCodeLine{452     h-\/>first = n;}
+\DoxyCodeLine{453     n-\/>pprev = \&h-\/>first;}
+\DoxyCodeLine{454 \}}
+\DoxyCodeLine{455 }
+\DoxyCodeLine{456 }
+\DoxyCodeLine{457 }
+\DoxyCodeLine{458 \textcolor{comment}{/* next must be != NULL */}}
+\DoxyCodeLine{459 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} hlist\_add\_before(\textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__node}{hlist\_node}} *n,}
+\DoxyCodeLine{460                     \textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__node}{hlist\_node}} *next)}
+\DoxyCodeLine{461 \{}
+\DoxyCodeLine{462     n-\/>pprev = next-\/>pprev;}
+\DoxyCodeLine{463     n-\/>next = next;}
+\DoxyCodeLine{464     next-\/>pprev = \&n-\/>next;}
+\DoxyCodeLine{465     *(n-\/>pprev) = n;}
+\DoxyCodeLine{466 \}}
+\DoxyCodeLine{467 }
+\DoxyCodeLine{468 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} hlist\_add\_after(\textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__node}{hlist\_node}} *n,}
+\DoxyCodeLine{469                     \textcolor{keyword}{struct} \mbox{\hyperlink{structhlist__node}{hlist\_node}} *next)}
+\DoxyCodeLine{470 \{}
+\DoxyCodeLine{471     next-\/>next = n-\/>next;}
+\DoxyCodeLine{472     n-\/>next = next;}
+\DoxyCodeLine{473     next-\/>pprev = \&n-\/>next;}
+\DoxyCodeLine{474 }
+\DoxyCodeLine{475     \textcolor{keywordflow}{if}(next-\/>next)}
+\DoxyCodeLine{476         next-\/>next-\/>pprev  = \&next-\/>next;}
+\DoxyCodeLine{477 \}}
+\DoxyCodeLine{478 }
+\DoxyCodeLine{479 }
+\DoxyCodeLine{480 }
+\DoxyCodeLine{481 \textcolor{preprocessor}{\#define hlist\_entry(ptr, type, member) container\_of(ptr,type,member)}}
+\DoxyCodeLine{482 }
+\DoxyCodeLine{483 \textcolor{preprocessor}{\#define hlist\_for\_each(pos, head) \(\backslash\)}}
+\DoxyCodeLine{484 \textcolor{preprocessor}{    for (pos = (head)-\/>first; pos \&\& (\{ prefetch(pos-\/>next); 1; \}); \(\backslash\)}}
+\DoxyCodeLine{485 \textcolor{preprocessor}{         pos = pos-\/>next)}}
+\DoxyCodeLine{486 }
+\DoxyCodeLine{487 \textcolor{preprocessor}{\#define hlist\_for\_each\_safe(pos, n, head) \(\backslash\)}}
+\DoxyCodeLine{488 \textcolor{preprocessor}{    for (pos = (head)-\/>first; pos \&\& (\{ n = pos-\/>next; 1; \}); \(\backslash\)}}
+\DoxyCodeLine{489 \textcolor{preprocessor}{         pos = n)}}
+\DoxyCodeLine{490 }
+\DoxyCodeLine{498 \textcolor{preprocessor}{\#define hlist\_for\_each\_entry(tpos, pos, head, member)            \(\backslash\)}}
+\DoxyCodeLine{499 \textcolor{preprocessor}{    for (pos = (head)-\/>first;                    \(\backslash\)}}
+\DoxyCodeLine{500 \textcolor{preprocessor}{         pos \&\& (\{ prefetch(pos-\/>next); 1;\}) \&\&          \(\backslash\)}}
+\DoxyCodeLine{501 \textcolor{preprocessor}{        (\{ tpos = hlist\_entry(pos, typeof(*tpos), member); 1;\}); \(\backslash\)}}
+\DoxyCodeLine{502 \textcolor{preprocessor}{         pos = pos-\/>next)}}
+\DoxyCodeLine{503 }
+\DoxyCodeLine{510 \textcolor{preprocessor}{\#define hlist\_for\_each\_entry\_continue(tpos, pos, member)         \(\backslash\)}}
+\DoxyCodeLine{511 \textcolor{preprocessor}{    for (pos = (pos)-\/>next;                      \(\backslash\)}}
+\DoxyCodeLine{512 \textcolor{preprocessor}{         pos \&\& (\{ prefetch(pos-\/>next); 1;\}) \&\&          \(\backslash\)}}
+\DoxyCodeLine{513 \textcolor{preprocessor}{        (\{ tpos = hlist\_entry(pos, typeof(*tpos), member); 1;\}); \(\backslash\)}}
+\DoxyCodeLine{514 \textcolor{preprocessor}{         pos = pos-\/>next)}}
+\DoxyCodeLine{515 }
+\DoxyCodeLine{522 \textcolor{preprocessor}{\#define hlist\_for\_each\_entry\_from(tpos, pos, member)             \(\backslash\)}}
+\DoxyCodeLine{523 \textcolor{preprocessor}{    for (; pos \&\& (\{ prefetch(pos-\/>next); 1;\}) \&\&            \(\backslash\)}}
+\DoxyCodeLine{524 \textcolor{preprocessor}{        (\{ tpos = hlist\_entry(pos, typeof(*tpos), member); 1;\}); \(\backslash\)}}
+\DoxyCodeLine{525 \textcolor{preprocessor}{         pos = pos-\/>next)}}
+\DoxyCodeLine{526 }
+\DoxyCodeLine{535 \textcolor{preprocessor}{\#define hlist\_for\_each\_entry\_safe(tpos, pos, n, head, member)        \(\backslash\)}}
+\DoxyCodeLine{536 \textcolor{preprocessor}{    for (pos = (head)-\/>first;                    \(\backslash\)}}
+\DoxyCodeLine{537 \textcolor{preprocessor}{         pos \&\& (\{ n = pos-\/>next; 1; \}) \&\&               \(\backslash\)}}
+\DoxyCodeLine{538 \textcolor{preprocessor}{        (\{ tpos = hlist\_entry(pos, typeof(*tpos), member); 1;\}); \(\backslash\)}}
+\DoxyCodeLine{539 \textcolor{preprocessor}{         pos = n)}}
+\DoxyCodeLine{540 }
+\DoxyCodeLine{541 }
+\DoxyCodeLine{542 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

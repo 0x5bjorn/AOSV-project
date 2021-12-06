@@ -6,23 +6,24 @@ void worker1_func()
 {
 	int a = 88;
 
-	printf("worker thread 1\n");
+	printf("worker thread 1 example routine started\n");
 
 	for (int i = 0; i<500; ++i)
 	{
 		int a = 25 * i;
 	}
 
+	printf("worker thread 1 example routine paused\n");
 	worker_thread_yield(PAUSE);
 
-	printf("worker thread 1 repeat, local a = %d\n", a);
+	printf("worker thread 1 example routine repeat, local a = %d\n", a);
 
 	worker_thread_yield(FINISH);
 }
 
 void worker2_func(void *a)
 {
-	printf("worker thread 2: a = %d\n", a);
+	printf("worker thread 2 example routine with function parameter: a = %d\n", a);
 
 	for (int i = 0; i<300; ++i)
 	{
@@ -34,7 +35,7 @@ void worker2_func(void *a)
 
 void scheduling_func1()
 {
-	printf("scheduler 1\n");
+	printf("scheduler 1 example routine started\n");
 
 	int wt_count = get_wt_count_in_current_umst_cl();
 	int ready_wt_list[wt_count];
@@ -45,13 +46,15 @@ void scheduling_func1()
 		int id = get_next_ready_item(ready_wt_list, wt_count);
 		execute_worker_thread(ready_wt_list, wt_count, id);
 	}
+
+	printf("scheduler 1 example routine finished\n");
 
 	exit_ums_scheduling_mode();
 }
 
 void scheduling_func2()
 {
-	printf("scheduler 2\n");
+	printf("scheduler 2 example routine started\n");
 
 	int wt_count = get_wt_count_in_current_umst_cl();
 	int ready_wt_list[wt_count];
@@ -62,6 +65,8 @@ void scheduling_func2()
 		int id = get_next_ready_item(ready_wt_list, wt_count);
 		execute_worker_thread(ready_wt_list, wt_count, id);
 	}
+
+	printf("scheduler 2 example routine finished\n");
 
 	exit_ums_scheduling_mode();
 }

@@ -1,0 +1,67 @@
+\hypertarget{structprocess}{}\doxysection{process Struct Reference}
+\label{structprocess}\index{process@{process}}
+
+
+The process that initialized/enabled UMS mechanism.  
+
+
+
+
+{\ttfamily \#include $<$ums.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+pid\+\_\+t \mbox{\hyperlink{structprocess_ab7b330a89c9b52c5f0c7dedd4f90dfb8}{pid}}
+\item 
+\mbox{\hyperlink{ums_8h_a331020b397767045df55c3440bcfe919}{cl\+\_\+list\+\_\+t}} \mbox{\hyperlink{structprocess_ab0972857847dcec4ae7095b0b5503ec1}{cl\+\_\+list}}
+\item 
+\mbox{\hyperlink{ums_8h_a0b7394272d57022d03b53178cbc1c260}{worker\+\_\+thread\+\_\+list\+\_\+t}} \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{worker\+\_\+thread\+\_\+list}}
+\item 
+\mbox{\hyperlink{ums_8h_a35c358a86004735824917343df36009f}{ums\+\_\+thread\+\_\+list\+\_\+t}} \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{ums\+\_\+thread\+\_\+list}}
+\item 
+\mbox{\Hypertarget{structprocess_a6e624cafa37304fa2ad337a545b11b91}\label{structprocess_a6e624cafa37304fa2ad337a545b11b91}} 
+struct list\+\_\+head {\bfseries list}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The process that initialized/enabled UMS mechanism. 
+
+This is a node in the \mbox{\hyperlink{structprocess__list}{process\+\_\+list}}. This is a process that initialized/enabled UMS mechanism. Each such process has 3 lists\+:
+\begin{DoxyItemize}
+\item list of completion lists
+\item list of ums threads(schedulers)
+\item list of worker threads 
+\end{DoxyItemize}
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structprocess_ab0972857847dcec4ae7095b0b5503ec1}\label{structprocess_ab0972857847dcec4ae7095b0b5503ec1}} 
+\index{process@{process}!cl\_list@{cl\_list}}
+\index{cl\_list@{cl\_list}!process@{process}}
+\doxysubsubsection{\texorpdfstring{cl\_list}{cl\_list}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_a331020b397767045df55c3440bcfe919}{cl\+\_\+list\+\_\+t}} process\+::cl\+\_\+list}
+
+A list of completion list created in this process environment \mbox{\Hypertarget{structprocess_ab7b330a89c9b52c5f0c7dedd4f90dfb8}\label{structprocess_ab7b330a89c9b52c5f0c7dedd4f90dfb8}} 
+\index{process@{process}!pid@{pid}}
+\index{pid@{pid}!process@{process}}
+\doxysubsubsection{\texorpdfstring{pid}{pid}}
+{\footnotesize\ttfamily pid\+\_\+t process\+::pid}
+
+The PID of the main thread, hence the TGID of every thread of the process \mbox{\Hypertarget{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}\label{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}} 
+\index{process@{process}!ums\_thread\_list@{ums\_thread\_list}}
+\index{ums\_thread\_list@{ums\_thread\_list}!process@{process}}
+\doxysubsubsection{\texorpdfstring{ums\_thread\_list}{ums\_thread\_list}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_a35c358a86004735824917343df36009f}{ums\+\_\+thread\+\_\+list\+\_\+t}} process\+::ums\+\_\+thread\+\_\+list}
+
+A list of ums thread(schedulers) created in this process environment \mbox{\Hypertarget{structprocess_a8304715a0688e07a8d3a8bc64bce8672}\label{structprocess_a8304715a0688e07a8d3a8bc64bce8672}} 
+\index{process@{process}!worker\_thread\_list@{worker\_thread\_list}}
+\index{worker\_thread\_list@{worker\_thread\_list}!process@{process}}
+\doxysubsubsection{\texorpdfstring{worker\_thread\_list}{worker\_thread\_list}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_a0b7394272d57022d03b53178cbc1c260}{worker\+\_\+thread\+\_\+list\+\_\+t}} process\+::worker\+\_\+thread\+\_\+list}
+
+A list of worker thread created in this process environment 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{ums_8h}{ums.\+h}}\end{DoxyCompactItemize}

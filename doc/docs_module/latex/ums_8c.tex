@@ -1,0 +1,649 @@
+\hypertarget{ums_8c}{}\doxysection{ums.\+c File Reference}
+\label{ums_8c}\index{ums.c@{ums.c}}
+
+
+This file contains the implementation of all main functions of the module.  
+
+
+{\ttfamily \#include \char`\"{}ums.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{ums_8c_a6f0ba61c7c4c5bcc133f227ce66671fc}{init\+\_\+ums\+\_\+process}} (void)
+\begin{DoxyCompactList}\small\item\em Initialize/enable UMS in the process. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a021582c885c8a14b8ebd8d3846f975ba}{exit\+\_\+ums\+\_\+process}} (void)
+\begin{DoxyCompactList}\small\item\em Delete current process that enabled UMS. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{ums_8c_a8c2655f2f806f114bf859a362324433f}{exit\+\_\+ums}} (void)
+\begin{DoxyCompactList}\small\item\em Clean/free the list of processes \mbox{\hyperlink{structprocess__list}{process\+\_\+list}}. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a75ce1900a0840e6b37a61c11f973cbb9}{create\+\_\+completion\+\_\+list}} (void)
+\begin{DoxyCompactList}\small\item\em Create completion list. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_abc8cc7df36f79b361fa1c72961948571}{create\+\_\+worker\+\_\+thread}} (\mbox{\hyperlink{device__shared_8h_a7db527934bf7ffb83701317f9a073dd0}{worker\+\_\+thread\+\_\+params\+\_\+t}} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Create worker thread. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a91a276dd169c9225d57c5d8f55d53aba}{add\+\_\+to\+\_\+completion\+\_\+list}} (\mbox{\hyperlink{device__shared_8h_ab042f0a28f23e82580c274912cfe7d1b}{add\+\_\+wt\+\_\+params\+\_\+t}} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Add worker thread to completion list. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a52e3e330114076371db8a28d840d4f19}{create\+\_\+ums\+\_\+thread}} (\mbox{\hyperlink{device__shared_8h_a6ac8c9c6aa900b00f3b35300be5d16fe}{ums\+\_\+thread\+\_\+params\+\_\+t}} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Create ums thread(scheduler) \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a3e10182dc213395263cd6828d416bbd2}{convert\+\_\+to\+\_\+ums\+\_\+thread}} (unsigned int ums\+\_\+thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Convert thread into ums thread(scheduler) \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a2e220d694fcbee583e42701da8cd4896}{convert\+\_\+from\+\_\+ums\+\_\+thread}} (void)
+\begin{DoxyCompactList}\small\item\em Convert back from ums thread(scheduler) \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_aa4c1d2cb545625bcc03c9d1fdaeafbf1}{dequeue\+\_\+completion\+\_\+list\+\_\+items}} (int $\ast$read\+\_\+wt\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Dequeue completion list items. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_af88cdd76665d17307ce464e5182f3ccd}{switch\+\_\+to\+\_\+worker\+\_\+thread}} (unsigned int worker\+\_\+thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Switch to worker thread. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a2f0a7c9a0decf8a521b2e380f0fbb464}{switch\+\_\+back\+\_\+to\+\_\+ums\+\_\+thread}} (\mbox{\hyperlink{device__shared_8h_af6a037295cc215d38e0865102e652366}{yield\+\_\+reason\+\_\+t}} \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1}{yield\+\_\+reason}})
+\begin{DoxyCompactList}\small\item\em Convert back from worker thread. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$ \mbox{\hyperlink{ums_8c_a675f8fb78aabe5442f47cb86e0a95664}{get\+\_\+process\+\_\+with\+\_\+pid}} (pid\+\_\+t req\+\_\+pid)
+\begin{DoxyCompactList}\small\item\em Get process structure from \mbox{\hyperlink{structprocess__list}{process\+\_\+list}} with specific PID. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ums_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\+\_\+list\+\_\+t}} $\ast$ \mbox{\hyperlink{ums_8c_a3a162c63f1b0ad09dea0ee0dd29f4357}{get\+\_\+cl\+\_\+with\+\_\+id}} (\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$\mbox{\hyperlink{structprocess}{process}}, unsigned int completion\+\_\+list\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get completion list from \mbox{\hyperlink{structprocess_ab0972857847dcec4ae7095b0b5503ec1}{process\+::cl\+\_\+list}} with specific id. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ums_8h_a122c865caa826d3b11882e53707fbf7e}{worker\+\_\+thread\+\_\+context\+\_\+t}} $\ast$ \mbox{\hyperlink{ums_8c_aef3cee42b6891e083223c643fa1229f5}{get\+\_\+wt\+\_\+with\+\_\+id}} (\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$\mbox{\hyperlink{structprocess}{process}}, unsigned int worker\+\_\+thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get worker thread from \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}} with specific id. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a669f410186fca6be1184cfec91538482}{get\+\_\+ready\+\_\+wt\+\_\+list}} (\mbox{\hyperlink{ums_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\+\_\+list\+\_\+t}} $\ast$\mbox{\hyperlink{structcompletion__list}{completion\+\_\+list}}, unsigned int $\ast$ready\+\_\+wt\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Fill the array of integers with ready worker thread ids from completion list. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ums_8h_a122c865caa826d3b11882e53707fbf7e}{worker\+\_\+thread\+\_\+context\+\_\+t}} $\ast$ \mbox{\hyperlink{ums_8c_a6053cda9b5ef3d9e380357b0db351f8d}{get\+\_\+wt\+\_\+run\+\_\+by\+\_\+umst\+\_\+id}} (\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$\mbox{\hyperlink{structprocess}{process}}, unsigned int ums\+\_\+thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get worker thread from \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}} run by specific ums thread(scheduler) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ums_8h_ab7704f774ab72f95b456c1fcadb0c83f}{ums\+\_\+thread\+\_\+context\+\_\+t}} $\ast$ \mbox{\hyperlink{ums_8c_a4b71cdba8cfa9ab83b97c5a3a1bb3463}{get\+\_\+umst\+\_\+with\+\_\+id}} (\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$\mbox{\hyperlink{structprocess}{process}}, unsigned int ums\+\_\+thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get ums thread(scheduler) from \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}} with specific id. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ums_8h_ab7704f774ab72f95b456c1fcadb0c83f}{ums\+\_\+thread\+\_\+context\+\_\+t}} $\ast$ \mbox{\hyperlink{ums_8c_ac030b78b6219960507cd37eb7e4dbeee}{get\+\_\+umst\+\_\+run\+\_\+by\+\_\+pid}} (\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$\mbox{\hyperlink{structprocess}{process}}, pid\+\_\+t req\+\_\+pid)
+\begin{DoxyCompactList}\small\item\em Get ums thread(scheduler) from \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}} run by specific thread. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a38247438dcbb475d4744d0463c5f5390}{free\+\_\+process\+\_\+ums\+\_\+thread\+\_\+list}} (\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$\mbox{\hyperlink{structprocess}{process}})
+\begin{DoxyCompactList}\small\item\em Clean the list of ums threads(schedulers) \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a04223f98521c33aef04bd75585c49b88}{free\+\_\+process\+\_\+cl\+\_\+list}} (\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$\mbox{\hyperlink{structprocess}{process}})
+\begin{DoxyCompactList}\small\item\em Clean the list of completion lists. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a73a4721236a17583867c5cf2445e673c}{free\+\_\+process\+\_\+worker\+\_\+thread\+\_\+list}} (\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$\mbox{\hyperlink{structprocess}{process}})
+\begin{DoxyCompactList}\small\item\em Clean the list of worker threads. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums_8c_a302901f16efb6791d3b0d0514bfda7bf}{free\+\_\+process}} (\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$\mbox{\hyperlink{structprocess}{process}})
+\begin{DoxyCompactList}\small\item\em Delete/free process structure. \end{DoxyCompactList}\item 
+unsigned long \mbox{\hyperlink{ums_8c_a948cb61485daa4bbd00b17ced951c2fe}{get\+\_\+wt\+\_\+running\+\_\+time}} (\mbox{\hyperlink{ums_8h_a122c865caa826d3b11882e53707fbf7e}{worker\+\_\+thread\+\_\+context\+\_\+t}} $\ast$\mbox{\hyperlink{structworker__thread__context}{worker\+\_\+thread\+\_\+context}})
+\begin{DoxyCompactList}\small\item\em Calculate the total runnning time of the worker thread. \end{DoxyCompactList}\item 
+unsigned long \mbox{\hyperlink{ums_8c_a225973539481835bbb121821f11ebbe3}{get\+\_\+umst\+\_\+switching\+\_\+time}} (\mbox{\hyperlink{ums_8h_ab7704f774ab72f95b456c1fcadb0c83f}{ums\+\_\+thread\+\_\+context\+\_\+t}} $\ast$\mbox{\hyperlink{structums__thread__context}{ums\+\_\+thread\+\_\+context}})
+\begin{DoxyCompactList}\small\item\em Calculate the total switching time of the ums thread. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{ums_8h_aeab9a7fcce181267a3e8390f4e5469c5}{process\+\_\+list\+\_\+t}} \mbox{\hyperlink{ums_8c_ad96941d1139df32d935e2a7b467b87e3}{process\+\_\+list}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file contains the implementation of all main functions of the module. 
+
+Copyright (C) 2021 Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}}
+
+This file is part of UMS implementation (Kernel Module).
+
+UMS implementation (Kernel Module) is free software\+: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+UMS implementation (Kernel Module) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with UMS implementation (Kernel Module). If not, see \href{http://www.gnu.org/licenses/}{\texttt{ http\+://www.\+gnu.\+org/licenses/}}.
+
+\begin{DoxyAuthor}{Author}
+Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}} 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{ums_8c_a91a276dd169c9225d57c5d8f55d53aba}\label{ums_8c_a91a276dd169c9225d57c5d8f55d53aba}} 
+\index{ums.c@{ums.c}!add\_to\_completion\_list@{add\_to\_completion\_list}}
+\index{add\_to\_completion\_list@{add\_to\_completion\_list}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{add\_to\_completion\_list()}{add\_to\_completion\_list()}}
+{\footnotesize\ttfamily int add\+\_\+to\+\_\+completion\+\_\+list (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{device__shared_8h_ab042f0a28f23e82580c274912cfe7d1b}{add\+\_\+wt\+\_\+params\+\_\+t}} $\ast$}]{params }\end{DoxyParamCaption})}
+
+
+
+Add worker thread to completion list. 
+
+First, we check if process that invokes this function is the one that enabled UMS. Then we perform all necessary addition steps\+: Check if exists and get completion list with requested params\+::completion\+\_\+list\+\_\+id from \mbox{\hyperlink{structprocess_ab0972857847dcec4ae7095b0b5503ec1}{process\+::cl\+\_\+list}}. Check if exists and get worker thread with requested params\+::worker\+\_\+thread\+\_\+id from \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}}. Set \mbox{\hyperlink{structworker__thread__context_aeb201e41d85e5e5737d97f04bb020cb1}{worker\+\_\+thread\+\_\+context\+::cl\+\_\+id}} to \mbox{\hyperlink{structcompletion__list_a053c1483124f251f5ce17414f0b36e80}{completion\+\_\+list\+::id}} and add the worker thread to \mbox{\hyperlink{structcompletion__list_a35419b9ab0e3ef392a786fdc5e70a4ea}{completion\+\_\+list\+::wt\+\_\+list}}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & pointer to data structure shared to user space to pass parameters \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a2e220d694fcbee583e42701da8cd4896}\label{ums_8c_a2e220d694fcbee583e42701da8cd4896}} 
+\index{ums.c@{ums.c}!convert\_from\_ums\_thread@{convert\_from\_ums\_thread}}
+\index{convert\_from\_ums\_thread@{convert\_from\_ums\_thread}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{convert\_from\_ums\_thread()}{convert\_from\_ums\_thread()}}
+{\footnotesize\ttfamily int convert\+\_\+from\+\_\+ums\+\_\+thread (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Convert back from ums thread(scheduler) 
+
+First, we check if process that invokes this function is the one that enabled UMS. Then we perform all necessary convertion steps\+: Check if exists and get ums thread(scheduler) run by {\ttfamily current-\/\texorpdfstring{$>$}{>}pid} thread from \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}}. Assign to structure necessary values\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structums__thread__context_a12fb7174037d944027a0dd3eed12d226}{ums\+\_\+thread\+\_\+context\+::run\+\_\+by}} is set to -\/1
+\item \mbox{\hyperlink{structums__thread__context_ad39f49e374ec95ecf13c448283b4535a}{ums\+\_\+thread\+\_\+context\+::state}} is set to \mbox{\hyperlink{ums_8h_a20c07d57fac8a74722c0d3471d0472bdafd6a0e4343048b10646dd2976cc5ad18}{ums\+\_\+state\+\_\+t\+::\+IDLE}} Then, perform context switch operation\+:
+\item switch current {\ttfamily pt\+\_\+regs} and {\ttfamily fpu} structures to \mbox{\hyperlink{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}{ums\+\_\+thread\+\_\+context\+::regs}} and \mbox{\hyperlink{structums__thread__context_a01b56016d18235e154a353c29b2b8c68}{ums\+\_\+thread\+\_\+context\+::fpu\+\_\+regs}}
+\end{DoxyItemize}
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a3e10182dc213395263cd6828d416bbd2}\label{ums_8c_a3e10182dc213395263cd6828d416bbd2}} 
+\index{ums.c@{ums.c}!convert\_to\_ums\_thread@{convert\_to\_ums\_thread}}
+\index{convert\_to\_ums\_thread@{convert\_to\_ums\_thread}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{convert\_to\_ums\_thread()}{convert\_to\_ums\_thread()}}
+{\footnotesize\ttfamily int convert\+\_\+to\+\_\+ums\+\_\+thread (\begin{DoxyParamCaption}\item[{unsigned int}]{ums\+\_\+thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Convert thread into ums thread(scheduler) 
+
+First, we check if process that invokes this function is the one that enabled UMS. Then we perform all necessary convertion steps\+: Check if exists and get ums thread(scheduler) with requested ums\+\_\+thread\+\_\+id from \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}}. Check if this ums thread(scheduler) is IDLE and not currently run by other thread. Save the context of the current thread\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structums__thread__context_a12fb7174037d944027a0dd3eed12d226}{ums\+\_\+thread\+\_\+context\+::run\+\_\+by}} is set to {\ttfamily current-\/\texorpdfstring{$>$}{>}pid} 
+\item \mbox{\hyperlink{structums__thread__context_ad39f49e374ec95ecf13c448283b4535a}{ums\+\_\+thread\+\_\+context\+::state}} is set to \mbox{\hyperlink{ums_8h_a20c07d57fac8a74722c0d3471d0472bda1061be6c3fb88d32829cba6f6b2be304}{ums\+\_\+state\+\_\+t\+::\+RUNNING}}
+\item \mbox{\hyperlink{structums__thread__context_a22ab508a18133af3af2f6cf804d04ed6}{ums\+\_\+thread\+\_\+context\+::switch\+\_\+count}} is increased by 1
+\item \mbox{\hyperlink{structums__thread__context_a5ecfdc22f1c91698ffd474e1a975f9b6}{ums\+\_\+thread\+\_\+context\+::last\+\_\+switch\+\_\+time}} is set to current time by ktime\+\_\+get\+\_\+real\+\_\+ts64()
+\item \mbox{\hyperlink{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}{ums\+\_\+thread\+\_\+context\+::regs}} is set to the values of {\ttfamily task\+\_\+pt\+\_\+regs(current)} function
+\item \mbox{\hyperlink{structums__thread__context_a01b56016d18235e154a353c29b2b8c68}{ums\+\_\+thread\+\_\+context\+::fpu\+\_\+regs}} is set to the values of {\ttfamily copy\+\_\+fxregs\+\_\+to\+\_\+kernel()} function
+\item \mbox{\hyperlink{structums__thread__context_a85e0111a0c22f806eecd448f5ff8a642}{ums\+\_\+thread\+\_\+context\+::ret\+\_\+regs}} is set to \mbox{\hyperlink{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}{ums\+\_\+thread\+\_\+context\+::regs}}
+\item ums\+\_\+thread\+\_\+context\+::regs\+::ip is set to \mbox{\hyperlink{structums__thread__context_a32aa3478a25c6fc832193a983c734823}{ums\+\_\+thread\+\_\+context\+::entry\+\_\+point}} Then, perform context switch operation\+:
+\item switch current {\ttfamily pt\+\_\+regs} structure to \mbox{\hyperlink{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}{ums\+\_\+thread\+\_\+context\+::regs}}
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em ums\+\_\+thread\+\_\+id} & the id of the ums thread(scheduler) to be converted to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a75ce1900a0840e6b37a61c11f973cbb9}\label{ums_8c_a75ce1900a0840e6b37a61c11f973cbb9}} 
+\index{ums.c@{ums.c}!create\_completion\_list@{create\_completion\_list}}
+\index{create\_completion\_list@{create\_completion\_list}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{create\_completion\_list()}{create\_completion\_list()}}
+{\footnotesize\ttfamily int create\+\_\+completion\+\_\+list (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Create completion list. 
+
+First, we check if process that invokes this function is the one that enabled UMS. Then we perform all necessary creation steps\+: Create a new completion list and return a corresponding id. Add the completion list to \mbox{\hyperlink{structprocess_ab0972857847dcec4ae7095b0b5503ec1}{process\+::cl\+\_\+list}} and initialize \mbox{\hyperlink{structcompletion__list_a35419b9ab0e3ef392a786fdc5e70a4ea}{completion\+\_\+list\+::wt\+\_\+list}} for storing worker threads. Set \mbox{\hyperlink{structcompletion__list_a053c1483124f251f5ce17414f0b36e80}{completion\+\_\+list\+::id}} to the current number of completion lists in \mbox{\hyperlink{structprocess_ab0972857847dcec4ae7095b0b5503ec1}{process\+::cl\+\_\+list}}.
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} completion list id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a52e3e330114076371db8a28d840d4f19}\label{ums_8c_a52e3e330114076371db8a28d840d4f19}} 
+\index{ums.c@{ums.c}!create\_ums\_thread@{create\_ums\_thread}}
+\index{create\_ums\_thread@{create\_ums\_thread}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{create\_ums\_thread()}{create\_ums\_thread()}}
+{\footnotesize\ttfamily int create\+\_\+ums\+\_\+thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{device__shared_8h_a6ac8c9c6aa900b00f3b35300be5d16fe}{ums\+\_\+thread\+\_\+params\+\_\+t}} $\ast$}]{params }\end{DoxyParamCaption})}
+
+
+
+Create ums thread(scheduler) 
+
+First, we check if process that invokes this function is the one that enabled UMS. Then we perform all necessary creation steps\+: Create a new ums thread(scheduler) and add the ums thread(scheduler) to \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}}. Assign to structure all initial values and the ones passed by params parameter, hence\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structums__thread__context_a9b594f8c5ec95bdcc2bb90d6f5588721}{ums\+\_\+thread\+\_\+context\+::id}} is to the current number of ums threads in \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}}
+\item \mbox{\hyperlink{structums__thread__context_a32aa3478a25c6fc832193a983c734823}{ums\+\_\+thread\+\_\+context\+::entry\+\_\+point}} is set to the starting function passed by params\+::function
+\item \mbox{\hyperlink{structums__thread__context_aada95dacd52bb950a3fe8f1629d8d17a}{ums\+\_\+thread\+\_\+context\+::cl\+\_\+id}} is set to params.\+completion\+\_\+list\+\_\+id
+\item \mbox{\hyperlink{structums__thread__context_aa66c738f2ee9ffa03198348143cc49c3}{ums\+\_\+thread\+\_\+context\+::wt\+\_\+id}} is set to -\/1, no worker thread is currently run by ums thread(scheduler)
+\item \mbox{\hyperlink{structums__thread__context_abf06939bac9db7caede4234c208acc01}{ums\+\_\+thread\+\_\+context\+::created\+\_\+by}} is set to \mbox{\hyperlink{structprocess_ab7b330a89c9b52c5f0c7dedd4f90dfb8}{process\+::pid}}
+\item \mbox{\hyperlink{structums__thread__context_a12fb7174037d944027a0dd3eed12d226}{ums\+\_\+thread\+\_\+context\+::run\+\_\+by}} is set to -\/1, no thread is currently running the ums thread(scheduler)
+\item \mbox{\hyperlink{structums__thread__context_ad39f49e374ec95ecf13c448283b4535a}{ums\+\_\+thread\+\_\+context\+::state}} is set to \mbox{\hyperlink{ums_8h_a20c07d57fac8a74722c0d3471d0472bdafd6a0e4343048b10646dd2976cc5ad18}{ums\+\_\+state\+\_\+t\+::\+IDLE}}
+\item \mbox{\hyperlink{structums__thread__context_a22ab508a18133af3af2f6cf804d04ed6}{ums\+\_\+thread\+\_\+context\+::switch\+\_\+count}} is set to 0 Additionaly, we create /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$, /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers and /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/info entries for ums thread(scheduler). As well as /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers and /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers/$<$\+ID$>$ entries for each worker thread in the competion list associated with ums thread(scheduler).
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & pointer to data structure shared to user space to pass parameters \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} ums thread(scheduler) id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_abc8cc7df36f79b361fa1c72961948571}\label{ums_8c_abc8cc7df36f79b361fa1c72961948571}} 
+\index{ums.c@{ums.c}!create\_worker\_thread@{create\_worker\_thread}}
+\index{create\_worker\_thread@{create\_worker\_thread}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{create\_worker\_thread()}{create\_worker\_thread()}}
+{\footnotesize\ttfamily int create\+\_\+worker\+\_\+thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{device__shared_8h_a7db527934bf7ffb83701317f9a073dd0}{worker\+\_\+thread\+\_\+params\+\_\+t}} $\ast$}]{params }\end{DoxyParamCaption})}
+
+
+
+Create worker thread. 
+
+First, we check if process that invokes this function is the one that enabled UMS. Then we perform all necessary creation steps\+: Create a new worker thread and return a corresponding id. Add the worker thread to \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}}. Assign to structure all initial values and the ones passed by params parameter, hence\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structworker__thread__context_afa9716132e7502ee44ffbfd96827226e}{worker\+\_\+thread\+\_\+context\+::id}} is to the current number of worker threads in \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}}
+\item \mbox{\hyperlink{structworker__thread__context_a4dc5458fb6ced5ae28ee72bd70a1725f}{worker\+\_\+thread\+\_\+context\+::entry\+\_\+point}} is set to the starting function passed by params\+::function
+\item \mbox{\hyperlink{structworker__thread__context_aad083bf9e4acb5588d86c0428f694b0e}{worker\+\_\+thread\+\_\+context\+::created\+\_\+by}} is set to \mbox{\hyperlink{structprocess_ab7b330a89c9b52c5f0c7dedd4f90dfb8}{process\+::pid}}
+\item \mbox{\hyperlink{structworker__thread__context_a0069c68289848a127b7758755f3ad4bc}{worker\+\_\+thread\+\_\+context\+::run\+\_\+by}} is set to -\/1 because no scheduler is running the worker thread
+\item \mbox{\hyperlink{structworker__thread__context_a5874572082354fd3c22aab2bf32e23e6}{worker\+\_\+thread\+\_\+context\+::state}} is set to \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6a6564f2f3e15be06b670547bbcaaf0798}{worker\+\_\+state\+\_\+t\+::\+READY}}
+\item \mbox{\hyperlink{structworker__thread__context_ab065b954e4426a48bf0c4d2ec2884e9e}{worker\+\_\+thread\+\_\+context\+::running\+\_\+time}} is set to 0
+\item \mbox{\hyperlink{structworker__thread__context_ac64a4db7d891f3ce348778b946556eab}{worker\+\_\+thread\+\_\+context\+::switch\+\_\+count}} is set to 0
+\item \mbox{\hyperlink{structworker__thread__context_aefef0092884ac37e5a541b9a617a2a8f}{worker\+\_\+thread\+\_\+context\+::regs}} is set to the values of {\ttfamily task\+\_\+pt\+\_\+regs(current)} function
+\item worker\+\_\+thread\+\_\+context\+::regs\+::ip is set to params\+::function, the starting function of the worker thread
+\item worker\+\_\+thread\+\_\+context\+::regs\+::di is set to params\+::function\+\_\+args, the arguments to the function
+\item worker\+\_\+thread\+\_\+context\+::regs\+::sp is set to params\+::stack\+\_\+address
+\item worker\+\_\+thread\+\_\+context\+::regs\+::bp is set to params\+::stack\+\_\+address
+\item \mbox{\hyperlink{structworker__thread__context_a6c2a3d2b66cf5537ac22f3866533b136}{worker\+\_\+thread\+\_\+context\+::fpu\+\_\+regs}} is set to the values of {\ttfamily copy\+\_\+fxregs\+\_\+to\+\_\+kernel()} function
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & pointer to data structure shared to user space to pass parameters \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} worker thread id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_aa4c1d2cb545625bcc03c9d1fdaeafbf1}\label{ums_8c_aa4c1d2cb545625bcc03c9d1fdaeafbf1}} 
+\index{ums.c@{ums.c}!dequeue\_completion\_list\_items@{dequeue\_completion\_list\_items}}
+\index{dequeue\_completion\_list\_items@{dequeue\_completion\_list\_items}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{dequeue\_completion\_list\_items()}{dequeue\_completion\_list\_items()}}
+{\footnotesize\ttfamily int dequeue\+\_\+completion\+\_\+list\+\_\+items (\begin{DoxyParamCaption}\item[{int $\ast$}]{read\+\_\+wt\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Dequeue completion list items. 
+
+First, we check if process that invokes this function is the one that enabled UMS. Then we perform all necessary dequeue steps\+: Check if exists and get ums thread(scheduler) run by {\ttfamily current-\/\texorpdfstring{$>$}{>}pid} thread from \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}}. Check if exists and get completion list associated with ums thread(scheduler) by \mbox{\hyperlink{structums__thread__context_aada95dacd52bb950a3fe8f1629d8d17a}{ums\+\_\+thread\+\_\+context\+::cl\+\_\+id}}. Allocated temporary array of integers and fill it with rnnable worker thread ids with the help of auxiliary function \mbox{\hyperlink{ums_8c_a669f410186fca6be1184cfec91538482}{get\+\_\+ready\+\_\+wt\+\_\+list()}}. Copy data from temporary array into array allocated by user.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ready\+\_\+wt\+\_\+list} & the pointer to an allocated by user array of integers which will be filled with ready to run worker thread ids \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a8c2655f2f806f114bf859a362324433f}\label{ums_8c_a8c2655f2f806f114bf859a362324433f}} 
+\index{ums.c@{ums.c}!exit\_ums@{exit\_ums}}
+\index{exit\_ums@{exit\_ums}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{exit\_ums()}{exit\_ums()}}
+{\footnotesize\ttfamily void exit\+\_\+ums (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Clean/free the list of processes \mbox{\hyperlink{structprocess__list}{process\+\_\+list}}. 
+
+Delete and free each item in the list of processes \mbox{\hyperlink{structprocess__list}{process\+\_\+list}}. \mbox{\Hypertarget{ums_8c_a021582c885c8a14b8ebd8d3846f975ba}\label{ums_8c_a021582c885c8a14b8ebd8d3846f975ba}} 
+\index{ums.c@{ums.c}!exit\_ums\_process@{exit\_ums\_process}}
+\index{exit\_ums\_process@{exit\_ums\_process}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{exit\_ums\_process()}{exit\_ums\_process()}}
+{\footnotesize\ttfamily int exit\+\_\+ums\+\_\+process (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Delete current process that enabled UMS. 
+
+First, we check if process that invokes this function is the one that enabled UMS. Clean up memory allocated for the data structures that are associated with the process by \mbox{\hyperlink{ums_8c_a302901f16efb6791d3b0d0514bfda7bf}{free\+\_\+process()}} funciton.
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a302901f16efb6791d3b0d0514bfda7bf}\label{ums_8c_a302901f16efb6791d3b0d0514bfda7bf}} 
+\index{ums.c@{ums.c}!free\_process@{free\_process}}
+\index{free\_process@{free\_process}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{free\_process()}{free\_process()}}
+{\footnotesize\ttfamily int free\+\_\+process (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$}]{process }\end{DoxyParamCaption})}
+
+
+
+Delete/free process structure. 
+
+Delete and free specific process. In particular, delete every element in\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structprocess_ab0972857847dcec4ae7095b0b5503ec1}{process\+::cl\+\_\+list}}
+\item \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}}
+\item \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}} And after that delete the process from \mbox{\hyperlink{structprocess__list}{process\+\_\+list}}, the list of all processes that enabled UMS.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em process} & the pointer to the process structure of the process to be deleted \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a04223f98521c33aef04bd75585c49b88}\label{ums_8c_a04223f98521c33aef04bd75585c49b88}} 
+\index{ums.c@{ums.c}!free\_process\_cl\_list@{free\_process\_cl\_list}}
+\index{free\_process\_cl\_list@{free\_process\_cl\_list}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{free\_process\_cl\_list()}{free\_process\_cl\_list()}}
+{\footnotesize\ttfamily int free\+\_\+process\+\_\+cl\+\_\+list (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$}]{process }\end{DoxyParamCaption})}
+
+
+
+Clean the list of completion lists. 
+
+Delete and free each item in the list of completion lists
+
+
+\begin{DoxyParams}{Parameters}
+{\em process} & the pointer to the process structure of the current process \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a38247438dcbb475d4744d0463c5f5390}\label{ums_8c_a38247438dcbb475d4744d0463c5f5390}} 
+\index{ums.c@{ums.c}!free\_process\_ums\_thread\_list@{free\_process\_ums\_thread\_list}}
+\index{free\_process\_ums\_thread\_list@{free\_process\_ums\_thread\_list}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{free\_process\_ums\_thread\_list()}{free\_process\_ums\_thread\_list()}}
+{\footnotesize\ttfamily int free\+\_\+process\+\_\+ums\+\_\+thread\+\_\+list (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$}]{process }\end{DoxyParamCaption})}
+
+
+
+Clean the list of ums threads(schedulers) 
+
+Delete and free each item in the list of ums threads(schedulers)
+
+
+\begin{DoxyParams}{Parameters}
+{\em process} & the pointer to the process structure of the current process \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a73a4721236a17583867c5cf2445e673c}\label{ums_8c_a73a4721236a17583867c5cf2445e673c}} 
+\index{ums.c@{ums.c}!free\_process\_worker\_thread\_list@{free\_process\_worker\_thread\_list}}
+\index{free\_process\_worker\_thread\_list@{free\_process\_worker\_thread\_list}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{free\_process\_worker\_thread\_list()}{free\_process\_worker\_thread\_list()}}
+{\footnotesize\ttfamily int free\+\_\+process\+\_\+worker\+\_\+thread\+\_\+list (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$}]{process }\end{DoxyParamCaption})}
+
+
+
+Clean the list of worker threads. 
+
+Delete and free each item in the list of worker threads
+
+
+\begin{DoxyParams}{Parameters}
+{\em process} & the pointer to the process structure of the current process \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a3a162c63f1b0ad09dea0ee0dd29f4357}\label{ums_8c_a3a162c63f1b0ad09dea0ee0dd29f4357}} 
+\index{ums.c@{ums.c}!get\_cl\_with\_id@{get\_cl\_with\_id}}
+\index{get\_cl\_with\_id@{get\_cl\_with\_id}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{get\_cl\_with\_id()}{get\_cl\_with\_id()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\+\_\+list\+\_\+t}} $\ast$ get\+\_\+cl\+\_\+with\+\_\+id (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$}]{process,  }\item[{unsigned int}]{completion\+\_\+list\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Get completion list from \mbox{\hyperlink{structprocess_ab0972857847dcec4ae7095b0b5503ec1}{process\+::cl\+\_\+list}} with specific id. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em process} & the pointer to the process structure of the current process \\
+\hline
+{\em completion\+\_\+list\+\_\+id} & the id of the completion list requested to be retrieved \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily completion\+\_\+list\+\_\+t} the pointer to completion list 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a675f8fb78aabe5442f47cb86e0a95664}\label{ums_8c_a675f8fb78aabe5442f47cb86e0a95664}} 
+\index{ums.c@{ums.c}!get\_process\_with\_pid@{get\_process\_with\_pid}}
+\index{get\_process\_with\_pid@{get\_process\_with\_pid}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{get\_process\_with\_pid()}{get\_process\_with\_pid()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$ get\+\_\+process\+\_\+with\+\_\+pid (\begin{DoxyParamCaption}\item[{pid\+\_\+t}]{req\+\_\+pid }\end{DoxyParamCaption})}
+
+
+
+Get process structure from \mbox{\hyperlink{structprocess__list}{process\+\_\+list}} with specific PID. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em req\+\_\+pid} & the PID of the current process \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily process\+\_\+t} the pointer to process structure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a669f410186fca6be1184cfec91538482}\label{ums_8c_a669f410186fca6be1184cfec91538482}} 
+\index{ums.c@{ums.c}!get\_ready\_wt\_list@{get\_ready\_wt\_list}}
+\index{get\_ready\_wt\_list@{get\_ready\_wt\_list}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{get\_ready\_wt\_list()}{get\_ready\_wt\_list()}}
+{\footnotesize\ttfamily int get\+\_\+ready\+\_\+wt\+\_\+list (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\+\_\+list\+\_\+t}} $\ast$}]{completion\+\_\+list,  }\item[{unsigned int $\ast$}]{ready\+\_\+wt\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Fill the array of integers with ready worker thread ids from completion list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \mbox{\hyperlink{structcompletion__list}{completion\+\_\+list}}} & the pointer to the completion list from which to get worker thread ids \\
+\hline
+{\em ready\+\_\+wt\+\_\+list} & the pointer to the array of integers that will be filled \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_ac030b78b6219960507cd37eb7e4dbeee}\label{ums_8c_ac030b78b6219960507cd37eb7e4dbeee}} 
+\index{ums.c@{ums.c}!get\_umst\_run\_by\_pid@{get\_umst\_run\_by\_pid}}
+\index{get\_umst\_run\_by\_pid@{get\_umst\_run\_by\_pid}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{get\_umst\_run\_by\_pid()}{get\_umst\_run\_by\_pid()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_ab7704f774ab72f95b456c1fcadb0c83f}{ums\+\_\+thread\+\_\+context\+\_\+t}} $\ast$ get\+\_\+umst\+\_\+run\+\_\+by\+\_\+pid (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$}]{process,  }\item[{pid\+\_\+t}]{req\+\_\+pid }\end{DoxyParamCaption})}
+
+
+
+Get ums thread(scheduler) from \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}} run by specific thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em process} & the pointer to the process structure of the current process \\
+\hline
+{\em req\+\_\+pid} & the PID of the thread that runs ums thread(scheduler) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily ums\+\_\+thread\+\_\+context\+\_\+t} the pointer to ums thread(scheduler) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a225973539481835bbb121821f11ebbe3}\label{ums_8c_a225973539481835bbb121821f11ebbe3}} 
+\index{ums.c@{ums.c}!get\_umst\_switching\_time@{get\_umst\_switching\_time}}
+\index{get\_umst\_switching\_time@{get\_umst\_switching\_time}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{get\_umst\_switching\_time()}{get\_umst\_switching\_time()}}
+{\footnotesize\ttfamily unsigned long get\+\_\+umst\+\_\+switching\+\_\+time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_ab7704f774ab72f95b456c1fcadb0c83f}{ums\+\_\+thread\+\_\+context\+\_\+t}} $\ast$}]{ums\+\_\+thread\+\_\+context }\end{DoxyParamCaption})}
+
+
+
+Calculate the total switching time of the ums thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \mbox{\hyperlink{structums__thread__context}{ums\+\_\+thread\+\_\+context}}} & the pointer to the ums thread which swithcing time to be calculated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily unsigned} {\ttfamily long} calculated total switching time 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a4b71cdba8cfa9ab83b97c5a3a1bb3463}\label{ums_8c_a4b71cdba8cfa9ab83b97c5a3a1bb3463}} 
+\index{ums.c@{ums.c}!get\_umst\_with\_id@{get\_umst\_with\_id}}
+\index{get\_umst\_with\_id@{get\_umst\_with\_id}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{get\_umst\_with\_id()}{get\_umst\_with\_id()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_ab7704f774ab72f95b456c1fcadb0c83f}{ums\+\_\+thread\+\_\+context\+\_\+t}} $\ast$ get\+\_\+umst\+\_\+with\+\_\+id (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$}]{process,  }\item[{unsigned int}]{ums\+\_\+thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Get ums thread(scheduler) from \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}} with specific id. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em process} & the pointer to the process structure of the current process \\
+\hline
+{\em ums\+\_\+thread\+\_\+id} & the id of the ums thread(scheduler) requested to be retrieved \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily ums\+\_\+thread\+\_\+context\+\_\+t} the pointer to ums thread(scheduler) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a6053cda9b5ef3d9e380357b0db351f8d}\label{ums_8c_a6053cda9b5ef3d9e380357b0db351f8d}} 
+\index{ums.c@{ums.c}!get\_wt\_run\_by\_umst\_id@{get\_wt\_run\_by\_umst\_id}}
+\index{get\_wt\_run\_by\_umst\_id@{get\_wt\_run\_by\_umst\_id}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{get\_wt\_run\_by\_umst\_id()}{get\_wt\_run\_by\_umst\_id()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_a122c865caa826d3b11882e53707fbf7e}{worker\+\_\+thread\+\_\+context\+\_\+t}} $\ast$ get\+\_\+wt\+\_\+run\+\_\+by\+\_\+umst\+\_\+id (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$}]{process,  }\item[{unsigned int}]{ums\+\_\+thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Get worker thread from \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}} run by specific ums thread(scheduler) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em process} & the pointer to the process structure of the current process \\
+\hline
+{\em ums\+\_\+thread\+\_\+id} & the id of the ums thread(scheduler) that runs worker thread \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily worker\+\_\+thread\+\_\+context\+\_\+t} the pointer to worker thread 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a948cb61485daa4bbd00b17ced951c2fe}\label{ums_8c_a948cb61485daa4bbd00b17ced951c2fe}} 
+\index{ums.c@{ums.c}!get\_wt\_running\_time@{get\_wt\_running\_time}}
+\index{get\_wt\_running\_time@{get\_wt\_running\_time}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{get\_wt\_running\_time()}{get\_wt\_running\_time()}}
+{\footnotesize\ttfamily unsigned long get\+\_\+wt\+\_\+running\+\_\+time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a122c865caa826d3b11882e53707fbf7e}{worker\+\_\+thread\+\_\+context\+\_\+t}} $\ast$}]{worker\+\_\+thread\+\_\+context }\end{DoxyParamCaption})}
+
+
+
+Calculate the total runnning time of the worker thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \mbox{\hyperlink{structworker__thread__context}{worker\+\_\+thread\+\_\+context}}} & the pointer to the worker thread which running time to be calculated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily unsigned} {\ttfamily long} calculated running time 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_aef3cee42b6891e083223c643fa1229f5}\label{ums_8c_aef3cee42b6891e083223c643fa1229f5}} 
+\index{ums.c@{ums.c}!get\_wt\_with\_id@{get\_wt\_with\_id}}
+\index{get\_wt\_with\_id@{get\_wt\_with\_id}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{get\_wt\_with\_id()}{get\_wt\_with\_id()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_a122c865caa826d3b11882e53707fbf7e}{worker\+\_\+thread\+\_\+context\+\_\+t}} $\ast$ get\+\_\+wt\+\_\+with\+\_\+id (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} $\ast$}]{process,  }\item[{unsigned int}]{worker\+\_\+thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Get worker thread from \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}} with specific id. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em process} & the pointer to the process structure of the current process \\
+\hline
+{\em worker\+\_\+thread\+\_\+id} & the id of the worker thread requested to be retrieved \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily worker\+\_\+thread\+\_\+context\+\_\+t} the pointer to worker thread 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a6f0ba61c7c4c5bcc133f227ce66671fc}\label{ums_8c_a6f0ba61c7c4c5bcc133f227ce66671fc}} 
+\index{ums.c@{ums.c}!init\_ums\_process@{init\_ums\_process}}
+\index{init\_ums\_process@{init\_ums\_process}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{init\_ums\_process()}{init\_ums\_process()}}
+{\footnotesize\ttfamily int init\+\_\+ums\+\_\+process (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Initialize/enable UMS in the process. 
+
+First, we check if the process has already enabled UMS. In order to start utilizing UMS mechanism, we need to enable UMS for the process. By this we create process element in the \mbox{\hyperlink{structprocess__list}{process\+\_\+list}} which contains all processes that enbled UMS mechanism. If not, we create \mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\+\_\+t}} and initialize\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structprocess_ab0972857847dcec4ae7095b0b5503ec1}{process\+::cl\+\_\+list}} -\/ A list of completion list in the process environment
+\item \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}} -\/ A list of worker thread in the process environment
+\item \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}} -\/ A list of ums thread(schedulers) in the process environment Additionaly, we create /proc/ums/$<$\+PID$>$ and /proc/ums/$<$\+PID$>$/schedulers entries
+\end{DoxyItemize}
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_a2f0a7c9a0decf8a521b2e380f0fbb464}\label{ums_8c_a2f0a7c9a0decf8a521b2e380f0fbb464}} 
+\index{ums.c@{ums.c}!switch\_back\_to\_ums\_thread@{switch\_back\_to\_ums\_thread}}
+\index{switch\_back\_to\_ums\_thread@{switch\_back\_to\_ums\_thread}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{switch\_back\_to\_ums\_thread()}{switch\_back\_to\_ums\_thread()}}
+{\footnotesize\ttfamily int switch\+\_\+back\+\_\+to\+\_\+ums\+\_\+thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{device__shared_8h_af6a037295cc215d38e0865102e652366}{yield\+\_\+reason\+\_\+t}}}]{yield\+\_\+reason }\end{DoxyParamCaption})}
+
+
+
+Convert back from worker thread. 
+
+First, we check if process that invokes this function is the one that enabled UMS. Then we perform all necessary convertion steps\+: Check if exists and get ums thread(scheduler) run by {\ttfamily current-\/\texorpdfstring{$>$}{>}pid} thread from \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}}. Check if exists and get worker thread run by \mbox{\hyperlink{structums__thread__context_a9b594f8c5ec95bdcc2bb90d6f5588721}{ums\+\_\+thread\+\_\+context\+::id}} from \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}}. Check if the yield reason is not \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6aa6e504d57ec9777faa0185fbd3b93b97}{yield\+\_\+reason\+\_\+t\+::\+BUSY}} or \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6adbd1812bee789fbf3548cf79d3f2b400}{yield\+\_\+reason\+\_\+t\+::\+FINISHED}}. Then, perform context saving and context switch operations\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structworker__thread__context_a0069c68289848a127b7758755f3ad4bc}{worker\+\_\+thread\+\_\+context\+::run\+\_\+by}} is set to -\/1
+\item \mbox{\hyperlink{structworker__thread__context_a5874572082354fd3c22aab2bf32e23e6}{worker\+\_\+thread\+\_\+context\+::state}} is set to \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6aa6e504d57ec9777faa0185fbd3b93b97}{worker\+\_\+state\+\_\+t\+::\+BUSY}} or \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6adbd1812bee789fbf3548cf79d3f2b400}{worker\+\_\+state\+\_\+t\+::\+FINISHED}}
+\item \mbox{\hyperlink{structworker__thread__context_ab065b954e4426a48bf0c4d2ec2884e9e}{worker\+\_\+thread\+\_\+context\+::running\+\_\+time}} is set by auxiiary function \mbox{\hyperlink{ums_8c_a948cb61485daa4bbd00b17ced951c2fe}{get\+\_\+wt\+\_\+running\+\_\+time()}}
+\item \mbox{\hyperlink{structworker__thread__context_aefef0092884ac37e5a541b9a617a2a8f}{worker\+\_\+thread\+\_\+context\+::regs}} is set to the values of {\ttfamily task\+\_\+pt\+\_\+regs(current)} function
+\item \mbox{\hyperlink{structworker__thread__context_a6c2a3d2b66cf5537ac22f3866533b136}{worker\+\_\+thread\+\_\+context\+::fpu\+\_\+regs}} is set to the values of {\ttfamily copy\+\_\+fxregs\+\_\+to\+\_\+kernel()} function
+\item \mbox{\hyperlink{structums__thread__context_aa66c738f2ee9ffa03198348143cc49c3}{ums\+\_\+thread\+\_\+context\+::wt\+\_\+id}} is set to -\/1
+\item switch current {\ttfamily pt\+\_\+regs} and {\ttfamily fpu} structures to \mbox{\hyperlink{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}{ums\+\_\+thread\+\_\+context\+::regs}} and \mbox{\hyperlink{structums__thread__context_a01b56016d18235e154a353c29b2b8c68}{ums\+\_\+thread\+\_\+context\+::fpu\+\_\+regs}}
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em yield\+\_\+reason} & reason which defines if worker thread should be paused or finished, \mbox{\hyperlink{device__shared_8h_af6a037295cc215d38e0865102e652366}{yield\+\_\+reason\+\_\+t}} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums_8c_af88cdd76665d17307ce464e5182f3ccd}\label{ums_8c_af88cdd76665d17307ce464e5182f3ccd}} 
+\index{ums.c@{ums.c}!switch\_to\_worker\_thread@{switch\_to\_worker\_thread}}
+\index{switch\_to\_worker\_thread@{switch\_to\_worker\_thread}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{switch\_to\_worker\_thread()}{switch\_to\_worker\_thread()}}
+{\footnotesize\ttfamily int switch\+\_\+to\+\_\+worker\+\_\+thread (\begin{DoxyParamCaption}\item[{unsigned int}]{worker\+\_\+thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Switch to worker thread. 
+
+First, we check if process that invokes this function is the one that enabled UMS. Then we perform all necessary convertion steps\+: Check if exists and get ums thread(scheduler) run by {\ttfamily current-\/\texorpdfstring{$>$}{>}pid} thread from \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}}. Check if exists and get worker thread with requested params\+::worker\+\_\+thread\+\_\+id from \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{process\+::worker\+\_\+thread\+\_\+list}}. Check if this worker thread is not BUSY and/or FINISHED. Save the context of the ums thread(scheduler)\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structums__thread__context_aa66c738f2ee9ffa03198348143cc49c3}{ums\+\_\+thread\+\_\+context\+::wt\+\_\+id}} is set to \mbox{\hyperlink{structworker__thread__context_afa9716132e7502ee44ffbfd96827226e}{worker\+\_\+thread\+\_\+context\+::id}}
+\item \mbox{\hyperlink{structums__thread__context_a22ab508a18133af3af2f6cf804d04ed6}{ums\+\_\+thread\+\_\+context\+::switch\+\_\+count}} is increased by 1
+\item \mbox{\hyperlink{structums__thread__context_a5ecfdc22f1c91698ffd474e1a975f9b6}{ums\+\_\+thread\+\_\+context\+::last\+\_\+switch\+\_\+time}} is set to current time by {\ttfamily ktime\+\_\+get\+\_\+real\+\_\+ts64()} 
+\item \mbox{\hyperlink{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}{ums\+\_\+thread\+\_\+context\+::regs}} is set to the values of {\ttfamily task\+\_\+pt\+\_\+regs(current)} function
+\item \mbox{\hyperlink{structums__thread__context_a85e0111a0c22f806eecd448f5ff8a642}{ums\+\_\+thread\+\_\+context\+::ret\+\_\+regs}} is set to \mbox{\hyperlink{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}{ums\+\_\+thread\+\_\+context\+::regs}}
+\item \mbox{\hyperlink{structums__thread__context_a01b56016d18235e154a353c29b2b8c68}{ums\+\_\+thread\+\_\+context\+::fpu\+\_\+regs}} is set to the values of {\ttfamily copy\+\_\+fxregs\+\_\+to\+\_\+kernel()} function
+\item \mbox{\hyperlink{structums__thread__context_a22ab508a18133af3af2f6cf804d04ed6}{ums\+\_\+thread\+\_\+context\+::switch\+\_\+count}} is increased by 1
+\item \mbox{\hyperlink{structums__thread__context_a172287161e05473566433859037e9e24}{ums\+\_\+thread\+\_\+context\+::switching\+\_\+time}} is set by an auxiliary function \mbox{\hyperlink{ums_8c_a225973539481835bbb121821f11ebbe3}{get\+\_\+umst\+\_\+switching\+\_\+time()}}
+\end{DoxyItemize}
+
+Then, perform context switch operation\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structworker__thread__context_a0069c68289848a127b7758755f3ad4bc}{worker\+\_\+thread\+\_\+context\+::run\+\_\+by}} is set to \mbox{\hyperlink{structums__thread__context_a9b594f8c5ec95bdcc2bb90d6f5588721}{ums\+\_\+thread\+\_\+context\+::id}}
+\item \mbox{\hyperlink{structworker__thread__context_a5874572082354fd3c22aab2bf32e23e6}{worker\+\_\+thread\+\_\+context\+::state}} is set to \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6aa6e504d57ec9777faa0185fbd3b93b97}{worker\+\_\+state\+\_\+t\+::\+BUSY}}
+\item \mbox{\hyperlink{structworker__thread__context_ac64a4db7d891f3ce348778b946556eab}{worker\+\_\+thread\+\_\+context\+::switch\+\_\+count}} is increased by 1
+\item \mbox{\hyperlink{structworker__thread__context_aa4b843564cc7c069d44deaa56c7e66bd}{worker\+\_\+thread\+\_\+context\+::last\+\_\+switch\+\_\+time}} is set to current time by {\ttfamily ktime\+\_\+get\+\_\+real\+\_\+ts64()} 
+\item switch current {\ttfamily pt\+\_\+regs} and {\ttfamily fpu} structures to \mbox{\hyperlink{structworker__thread__context_aefef0092884ac37e5a541b9a617a2a8f}{worker\+\_\+thread\+\_\+context\+::regs}} and \mbox{\hyperlink{structworker__thread__context_a6c2a3d2b66cf5537ac22f3866533b136}{worker\+\_\+thread\+\_\+context\+::fpu\+\_\+regs}}
+\end{DoxyItemize}
+
+{\bfseries{NOTE}}\+: If worker thread is BUSY function returns 2, if it is FINISHED it returns 1. These cases are not considered as real ERROR but handled as a special cases in userspace. In case of BUSY thread, scheduler in userspace will try to switch to next READY worker thread. For the case of FINISHED worker thread, scheduler in userpace will update list of ready worker threads.
+
+
+\begin{DoxyParams}{Parameters}
+{\em worker\+\_\+thread\+\_\+id} & the id of the worker thread to be switched to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{ums_8c_ad96941d1139df32d935e2a7b467b87e3}\label{ums_8c_ad96941d1139df32d935e2a7b467b87e3}} 
+\index{ums.c@{ums.c}!process\_list@{process\_list}}
+\index{process\_list@{process\_list}!ums.c@{ums.c}}
+\doxysubsubsection{\texorpdfstring{process\_list}{process\_list}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_aeab9a7fcce181267a3e8390f4e5469c5}{process\+\_\+list\+\_\+t}} \mbox{\hyperlink{structprocess__list}{process\+\_\+list}}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    .list = LIST\_HEAD\_INIT(\mbox{\hyperlink{structprocess__list}{process\_list}}.list),}
+\DoxyCodeLine{    .process\_count = 0}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

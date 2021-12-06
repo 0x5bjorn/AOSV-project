@@ -86,11 +86,11 @@ int init_ums_process(void)
 }
 
 /**
- * @brief Exit/disable UMS in the process
+ * @brief Delete current process that enabled UMS
  *
  * First, we check if process that invokes this function is the one that enabled UMS.
- * Only after that we clean up memory allocated for the data structures that are associated 
- * with the process by @ref free_process() funciton.
+ * Clean up memory allocated for the data structures that are associated with the process 
+ * by @ref free_process() funciton.
  * 
  * @return @c int exit code 0 for success, otherwise a corresponding error code
  */
@@ -1000,11 +1000,13 @@ int free_process_worker_thread_list(process_t *process)
 }
 
 /**
- * @brief Clean/delete/free process structure
+ * @brief Delete/free process structure
  * 
- * Delete and free specific process. In particular, delete every element in the @ref process::cl_list, 
- * @ref process::wroker_thread_list, @ref process::ums_thread_list and after that delete the process 
- * itself from @ref process_list which contains all processes that enbled UMS.
+ * Delete and free specific process. In particular, delete every element in:
+ *  - @ref process::cl_list
+ *  - @ref process::worker_thread_list
+ *  - @ref process::ums_thread_list
+ * And after that delete the process from @ref process_list, the list of all processes that enabled UMS.
  * 
  * @param process the pointer to the process structure of the process to be deleted
  * @return @c int exit code 0 for success, otherwise a corresponding error code

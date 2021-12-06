@@ -1,0 +1,54 @@
+\hypertarget{structprocess__entry}{}\doxysection{process\+\_\+entry Struct Reference}
+\label{structprocess__entry}\index{process\_entry@{process\_entry}}
+
+
+The structure for process entry /proc/ums/$<$\+PID$>$  
+
+
+
+
+{\ttfamily \#include $<$proc.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+pid\+\_\+t \mbox{\hyperlink{structprocess__entry_aa6514cd03e7b0ccdf7c096c417fa880f}{pid}}
+\item 
+\mbox{\Hypertarget{structprocess__entry_a27d7551d15b39f373f3ae9e197a72b4d}\label{structprocess__entry_a27d7551d15b39f373f3ae9e197a72b4d}} 
+struct list\+\_\+head {\bfseries list}
+\item 
+struct proc\+\_\+dir\+\_\+entry $\ast$ \mbox{\hyperlink{structprocess__entry_a681f74969ad1277f823677fc526be724}{entry}}
+\item 
+struct proc\+\_\+dir\+\_\+entry $\ast$ \mbox{\hyperlink{structprocess__entry_ac3db658d35e7cc8502d6c3ad2d87f461}{schedulers\+\_\+entry}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The structure for process entry /proc/ums/$<$\+PID$>$ 
+
+This is a node in the \mbox{\hyperlink{structprocess__entry__list}{process\+\_\+entry\+\_\+list}}. This is a description of the process entry. 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structprocess__entry_a681f74969ad1277f823677fc526be724}\label{structprocess__entry_a681f74969ad1277f823677fc526be724}} 
+\index{process\_entry@{process\_entry}!entry@{entry}}
+\index{entry@{entry}!process\_entry@{process\_entry}}
+\doxysubsubsection{\texorpdfstring{entry}{entry}}
+{\footnotesize\ttfamily struct proc\+\_\+dir\+\_\+entry$\ast$ process\+\_\+entry\+::entry}
+
+The entry of the process \mbox{\Hypertarget{structprocess__entry_aa6514cd03e7b0ccdf7c096c417fa880f}\label{structprocess__entry_aa6514cd03e7b0ccdf7c096c417fa880f}} 
+\index{process\_entry@{process\_entry}!pid@{pid}}
+\index{pid@{pid}!process\_entry@{process\_entry}}
+\doxysubsubsection{\texorpdfstring{pid}{pid}}
+{\footnotesize\ttfamily pid\+\_\+t process\+\_\+entry\+::pid}
+
+The PID of the process \mbox{\Hypertarget{structprocess__entry_ac3db658d35e7cc8502d6c3ad2d87f461}\label{structprocess__entry_ac3db658d35e7cc8502d6c3ad2d87f461}} 
+\index{process\_entry@{process\_entry}!schedulers\_entry@{schedulers\_entry}}
+\index{schedulers\_entry@{schedulers\_entry}!process\_entry@{process\_entry}}
+\doxysubsubsection{\texorpdfstring{schedulers\_entry}{schedulers\_entry}}
+{\footnotesize\ttfamily struct proc\+\_\+dir\+\_\+entry$\ast$ process\+\_\+entry\+::schedulers\+\_\+entry}
+
+The entry of schedulers, child of \mbox{\hyperlink{structprocess__entry_a681f74969ad1277f823677fc526be724}{process\+\_\+entry\+::entry}} 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{proc_8h}{proc.\+h}}\end{DoxyCompactItemize}

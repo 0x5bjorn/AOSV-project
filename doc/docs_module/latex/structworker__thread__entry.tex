@@ -1,0 +1,46 @@
+\hypertarget{structworker__thread__entry}{}\doxysection{worker\+\_\+thread\+\_\+entry Struct Reference}
+\label{structworker__thread__entry}\index{worker\_thread\_entry@{worker\_thread\_entry}}
+
+
+The structure for worker thread entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers/$<$\+ID$>$  
+
+
+
+
+{\ttfamily \#include $<$proc.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{structworker__thread__entry_adcd602def0aee6eb9d91f1398c675184}{id}}
+\item 
+\mbox{\Hypertarget{structworker__thread__entry_ac809601176152ff20c1bcb44af174665}\label{structworker__thread__entry_ac809601176152ff20c1bcb44af174665}} 
+struct list\+\_\+head {\bfseries list}
+\item 
+struct proc\+\_\+dir\+\_\+entry $\ast$ \mbox{\hyperlink{structworker__thread__entry_a009a380e777dee4f05cf4e5efb1e9ab4}{entry}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The structure for worker thread entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers/$<$\+ID$>$ 
+
+This is a node in the \mbox{\hyperlink{structworker__thread__entry__list}{worker\+\_\+thread\+\_\+entry\+\_\+list}}. This is a description of the worker thread entry. 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structworker__thread__entry_a009a380e777dee4f05cf4e5efb1e9ab4}\label{structworker__thread__entry_a009a380e777dee4f05cf4e5efb1e9ab4}} 
+\index{worker\_thread\_entry@{worker\_thread\_entry}!entry@{entry}}
+\index{entry@{entry}!worker\_thread\_entry@{worker\_thread\_entry}}
+\doxysubsubsection{\texorpdfstring{entry}{entry}}
+{\footnotesize\ttfamily struct proc\+\_\+dir\+\_\+entry$\ast$ worker\+\_\+thread\+\_\+entry\+::entry}
+
+The entry of the worker thread, which contains statistics about it \mbox{\Hypertarget{structworker__thread__entry_adcd602def0aee6eb9d91f1398c675184}\label{structworker__thread__entry_adcd602def0aee6eb9d91f1398c675184}} 
+\index{worker\_thread\_entry@{worker\_thread\_entry}!id@{id}}
+\index{id@{id}!worker\_thread\_entry@{worker\_thread\_entry}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily unsigned int worker\+\_\+thread\+\_\+entry\+::id}
+
+Unique id of the worker thread 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{proc_8h}{proc.\+h}}\end{DoxyCompactItemize}

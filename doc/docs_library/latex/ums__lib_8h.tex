@@ -1,0 +1,594 @@
+\hypertarget{ums__lib_8h}{}\doxysection{ums\+\_\+lib.\+h File Reference}
+\label{ums__lib_8h}\index{ums\_lib.h@{ums\_lib.h}}
+
+
+This file is a header of the library.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$sys/ioctl.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$pthread.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}list.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../module/device\+\_\+shared.\+h\char`\"{}}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcl__list}{cl\+\_\+list}}
+\begin{DoxyCompactList}\small\item\em The list of completion lists. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structworker__thread__list}{worker\+\_\+thread\+\_\+list}}
+\begin{DoxyCompactList}\small\item\em The list of worker threads. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structums__thread__list}{ums\+\_\+thread\+\_\+list}}
+\begin{DoxyCompactList}\small\item\em The list of ums threads(schedulers) \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structcompletion__list}{completion\+\_\+list}}
+\begin{DoxyCompactList}\small\item\em The completion list of worker threads. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structworker__thread}{worker\+\_\+thread}}
+\begin{DoxyCompactList}\small\item\em The worker thread. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structums__thread}{ums\+\_\+thread}}
+\begin{DoxyCompactList}\small\item\em The ums thread(scheduler) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{ums__lib_8h_aea7ae0576acbc64d3210309eb168dc9c}\label{ums__lib_8h_aea7ae0576acbc64d3210309eb168dc9c}} 
+\#define {\bfseries UMS\+\_\+\+DEVICE\+\_\+\+PATH}~\char`\"{}/dev/umsdevice\char`\"{}
+\item 
+\mbox{\Hypertarget{ums__lib_8h_ac87189ed29451ac92f89b6e8889054d9}\label{ums__lib_8h_ac87189ed29451ac92f89b6e8889054d9}} 
+\#define {\bfseries UMS\+\_\+\+LIB\+\_\+\+LOG}~\char`\"{}UMS lib\+: \char`\"{}
+\item 
+\mbox{\Hypertarget{ums__lib_8h_ac9a8e754ddaa2697e9e675579912a15f}\label{ums__lib_8h_ac9a8e754ddaa2697e9e675579912a15f}} 
+\#define {\bfseries MIN\+\_\+\+STACK\+\_\+\+SIZE}~4096
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structcl__list}{cl\+\_\+list}} \mbox{\hyperlink{ums__lib_8h_a331020b397767045df55c3440bcfe919}{cl\+\_\+list\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The list of completion lists. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structworker__thread__list}{worker\+\_\+thread\+\_\+list}} \mbox{\hyperlink{ums__lib_8h_a0b7394272d57022d03b53178cbc1c260}{worker\+\_\+thread\+\_\+list\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The list of worker threads. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structums__thread__list}{ums\+\_\+thread\+\_\+list}} \mbox{\hyperlink{ums__lib_8h_a35c358a86004735824917343df36009f}{ums\+\_\+thread\+\_\+list\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The list of ums threads(schedulers) \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structcompletion__list}{completion\+\_\+list}} \mbox{\hyperlink{ums__lib_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\+\_\+list\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The completion list of worker threads. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structworker__thread}{worker\+\_\+thread}} \mbox{\hyperlink{ums__lib_8h_a283231e0eca6d5c5c7450ed0c40e1ccf}{worker\+\_\+thread\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The worker thread. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structums__thread}{ums\+\_\+thread}} \mbox{\hyperlink{ums__lib_8h_a47c075daee7305cd294767817f16da96}{ums\+\_\+thread\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The ums thread(scheduler) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{ums__lib_8h_a5f0e5bd0b9dad50cc339df9894adcd53}{init\+\_\+ums}} (void)
+\begin{DoxyCompactList}\small\item\em Initialize/enable UMS in the program/process. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a38621061488257d36f9bbdfda41f97bf}{exit\+\_\+ums}} (void)
+\begin{DoxyCompactList}\small\item\em Exit/disable UMS in the program/process. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a75ce1900a0840e6b37a61c11f973cbb9}{create\+\_\+completion\+\_\+list}} (void)
+\begin{DoxyCompactList}\small\item\em Create completion list. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a154cdaed1247445afca2e79d9dbb6ecc}{create\+\_\+worker\+\_\+thread}} (void($\ast$function)(void $\ast$), void $\ast$args, unsigned long stack\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Create worker thread. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a8f5f98fd8afce15af00547799ef1c826}{add\+\_\+worker\+\_\+thread}} (unsigned int completion\+\_\+list\+\_\+id, unsigned int worker\+\_\+thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Add worker thread to completion list. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_af4d33ae61bf2a9e89c2ff94b7993791d}{enter\+\_\+ums\+\_\+scheduling\+\_\+mode}} (void($\ast$function)(void $\ast$), unsigned long completion\+\_\+list\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Enter UMS scheduling mode. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{ums__lib_8h_a33a89f4fc8fc11ddf826265f4c95768a}{convert\+\_\+to\+\_\+ums\+\_\+thread}} (void $\ast$ums\+\_\+thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Convert pthread into ums thread(scheduler) \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a6bc8d8d4936394440b424107352dad49}{exit\+\_\+ums\+\_\+scheduling\+\_\+mode}} (void)
+\begin{DoxyCompactList}\small\item\em Exit UMS scheduling mode. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_adf01114d0d1719655e22cb69b51e1268}{dequeue\+\_\+completion\+\_\+list\+\_\+items}} (int $\ast$ready\+\_\+wt\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Dequeue completion list. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a12eee99aa4872b888af399203b30ba83}{execute\+\_\+worker\+\_\+thread}} (int $\ast$ready\+\_\+wt\+\_\+list, int size, unsigned int worker\+\_\+thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Execute specific worker thread. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_abf29f0150d2f1fccb5734d66cd2a31c0}{worker\+\_\+thread\+\_\+yield}} (yield\+\_\+reason\+\_\+t yield\+\_\+reason)
+\begin{DoxyCompactList}\small\item\em Pause or finish worker thread. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a2104cd2d3d9d9120deee336bd4a907f6}{get\+\_\+next\+\_\+ready\+\_\+item}} (int $\ast$ready\+\_\+wt\+\_\+list, int size)
+\begin{DoxyCompactList}\small\item\em Get next item from the list of ready worker threads. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a14dc713595176c062112d91a3a913da8}{check\+\_\+ready\+\_\+wt\+\_\+list}} (int $\ast$ready\+\_\+wt\+\_\+list, int size)
+\begin{DoxyCompactList}\small\item\em Check if the list of ready worker threads is empty. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a02b971dbc0683158b4aee548eeea14fa}{open\+\_\+dev}} (void)
+\begin{DoxyCompactList}\small\item\em Open /dev/umsdevice device. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a4ea1bab04bbb44f6becfcae9bdc8cb6a}{close\+\_\+dev}} (void)
+\begin{DoxyCompactList}\small\item\em Close /dev/umsdevice device. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_ab8f17c63d34a99bc8ee100746a9c7e2f}{get\+\_\+wt\+\_\+count\+\_\+in\+\_\+current\+\_\+umst\+\_\+cl}} (void)
+\begin{DoxyCompactList}\small\item\em Get the number of worker threads in completion list of current ums thread(scheduler) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ums__lib_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\+\_\+list\+\_\+t}} $\ast$ \mbox{\hyperlink{ums__lib_8h_a10dd4f6e3382061149242d4ad43c0562}{get\+\_\+cl\+\_\+with\+\_\+id}} (unsigned int completion\+\_\+list\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get completion list from \mbox{\hyperlink{ums__lib_8h_a331020b397767045df55c3440bcfe919}{cl\+\_\+list\+\_\+t}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ums__lib_8h_a283231e0eca6d5c5c7450ed0c40e1ccf}{worker\+\_\+thread\+\_\+t}} $\ast$ \mbox{\hyperlink{ums__lib_8h_a875ac05c0e7c61f46a910b1815a1ad9d}{get\+\_\+wt\+\_\+with\+\_\+id}} (unsigned int worker\+\_\+thread\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get worker thread from \mbox{\hyperlink{ums__lib_8h_a0b7394272d57022d03b53178cbc1c260}{worker\+\_\+thread\+\_\+list\+\_\+t}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ums__lib_8h_a47c075daee7305cd294767817f16da96}{ums\+\_\+thread\+\_\+t}} $\ast$ \mbox{\hyperlink{ums__lib_8h_aaabca1624adb9c3e49c9da3d588be00a}{get\+\_\+umst\+\_\+run\+\_\+by\+\_\+pthread}} (pthread\+\_\+t current\+\_\+pt)
+\begin{DoxyCompactList}\small\item\em Get ums thread(scheduler) from \mbox{\hyperlink{ums__lib_8h_a35c358a86004735824917343df36009f}{ums\+\_\+thread\+\_\+list\+\_\+t}}. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_ab3d928286f28d72c20c361130928869f}{free\+\_\+ums\+\_\+thread\+\_\+list}} (void)
+\begin{DoxyCompactList}\small\item\em Clean the list of ums threads(schedulers) \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_aa0387cff4a6b18c39234f35926c4973d}{free\+\_\+cl\+\_\+list}} (void)
+\begin{DoxyCompactList}\small\item\em Clean the list of completion lists. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ums__lib_8h_a0e586774ba40c4fb7525730e8939717e}{free\+\_\+worker\+\_\+thread\+\_\+list}} (void)
+\begin{DoxyCompactList}\small\item\em Clean the list of worker threads. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{ums__lib_8h_af43699ccb343e62b230ad2722ad378da}{clean\+\_\+memory}} (void)
+\begin{DoxyCompactList}\small\item\em Clean memory. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{ums__lib_8h_a47f430ffba96dfa86e94e53bb4ae2c4c}\label{ums__lib_8h_a47f430ffba96dfa86e94e53bb4ae2c4c}} 
+{\bfseries \+\_\+\+\_\+attribute\+\_\+\+\_\+} ((constructor)) void const ructor(void)
+\item 
+\mbox{\Hypertarget{ums__lib_8h_a8389e7ed5dcd45e373c0d91ecc34d58a}\label{ums__lib_8h_a8389e7ed5dcd45e373c0d91ecc34d58a}} 
+{\bfseries \+\_\+\+\_\+attribute\+\_\+\+\_\+} ((destructor)) void destructor(void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file is a header of the library. 
+
+Copyright (C) 2021 Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}}
+
+This file is part of UMS implementation (Library).
+
+UMS implementation (Library) is free software\+: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+UMS implementation (Library) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with UMS implementation (Library). If not, see \href{http://www.gnu.org/licenses/}{\texttt{ http\+://www.\+gnu.\+org/licenses/}}.
+
+This file contains all the data structures and function declarations of library
+
+\begin{DoxyAuthor}{Author}
+Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}} 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{ums__lib_8h_a331020b397767045df55c3440bcfe919}\label{ums__lib_8h_a331020b397767045df55c3440bcfe919}} 
+\index{ums\_lib.h@{ums\_lib.h}!cl\_list\_t@{cl\_list\_t}}
+\index{cl\_list\_t@{cl\_list\_t}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{cl\_list\_t}{cl\_list\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structcl__list}{cl\+\_\+list}} \mbox{\hyperlink{ums__lib_8h_a331020b397767045df55c3440bcfe919}{cl\+\_\+list\+\_\+t}}}
+
+
+
+The list of completion lists. 
+
+The purpose of this list is to store all completion lists created by the program \mbox{\Hypertarget{ums__lib_8h_a3aa2faf3090172d4cd003dbf1704efbb}\label{ums__lib_8h_a3aa2faf3090172d4cd003dbf1704efbb}} 
+\index{ums\_lib.h@{ums\_lib.h}!completion\_list\_t@{completion\_list\_t}}
+\index{completion\_list\_t@{completion\_list\_t}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{completion\_list\_t}{completion\_list\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structcompletion__list}{completion\+\_\+list}} \mbox{\hyperlink{ums__lib_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\+\_\+list\+\_\+t}}}
+
+
+
+The completion list of worker threads. 
+
+This is a node in the \mbox{\hyperlink{structcl__list}{cl\+\_\+list}}. \mbox{\Hypertarget{ums__lib_8h_a35c358a86004735824917343df36009f}\label{ums__lib_8h_a35c358a86004735824917343df36009f}} 
+\index{ums\_lib.h@{ums\_lib.h}!ums\_thread\_list\_t@{ums\_thread\_list\_t}}
+\index{ums\_thread\_list\_t@{ums\_thread\_list\_t}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{ums\_thread\_list\_t}{ums\_thread\_list\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structums__thread__list}{ums\+\_\+thread\+\_\+list}} \mbox{\hyperlink{ums__lib_8h_a35c358a86004735824917343df36009f}{ums\+\_\+thread\+\_\+list\+\_\+t}}}
+
+
+
+The list of ums threads(schedulers) 
+
+The purpose of this list is to store all ums threads(schedulers) created by the program \mbox{\Hypertarget{ums__lib_8h_a47c075daee7305cd294767817f16da96}\label{ums__lib_8h_a47c075daee7305cd294767817f16da96}} 
+\index{ums\_lib.h@{ums\_lib.h}!ums\_thread\_t@{ums\_thread\_t}}
+\index{ums\_thread\_t@{ums\_thread\_t}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{ums\_thread\_t}{ums\_thread\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structums__thread}{ums\+\_\+thread}} \mbox{\hyperlink{ums__lib_8h_a47c075daee7305cd294767817f16da96}{ums\+\_\+thread\+\_\+t}}}
+
+
+
+The ums thread(scheduler) 
+
+This is a node in the \mbox{\hyperlink{structums__thread__list}{ums\+\_\+thread\+\_\+list}}. \mbox{\Hypertarget{ums__lib_8h_a0b7394272d57022d03b53178cbc1c260}\label{ums__lib_8h_a0b7394272d57022d03b53178cbc1c260}} 
+\index{ums\_lib.h@{ums\_lib.h}!worker\_thread\_list\_t@{worker\_thread\_list\_t}}
+\index{worker\_thread\_list\_t@{worker\_thread\_list\_t}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{worker\_thread\_list\_t}{worker\_thread\_list\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structworker__thread__list}{worker\+\_\+thread\+\_\+list}} \mbox{\hyperlink{ums__lib_8h_a0b7394272d57022d03b53178cbc1c260}{worker\+\_\+thread\+\_\+list\+\_\+t}}}
+
+
+
+The list of worker threads. 
+
+The purpose of this list is to store all worker threads created by the program \mbox{\Hypertarget{ums__lib_8h_a283231e0eca6d5c5c7450ed0c40e1ccf}\label{ums__lib_8h_a283231e0eca6d5c5c7450ed0c40e1ccf}} 
+\index{ums\_lib.h@{ums\_lib.h}!worker\_thread\_t@{worker\_thread\_t}}
+\index{worker\_thread\_t@{worker\_thread\_t}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{worker\_thread\_t}{worker\_thread\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structworker__thread}{worker\+\_\+thread}} \mbox{\hyperlink{ums__lib_8h_a283231e0eca6d5c5c7450ed0c40e1ccf}{worker\+\_\+thread\+\_\+t}}}
+
+
+
+The worker thread. 
+
+This is a node in the \mbox{\hyperlink{structworker__thread__list}{worker\+\_\+thread\+\_\+list}}. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{ums__lib_8h_a8f5f98fd8afce15af00547799ef1c826}\label{ums__lib_8h_a8f5f98fd8afce15af00547799ef1c826}} 
+\index{ums\_lib.h@{ums\_lib.h}!add\_worker\_thread@{add\_worker\_thread}}
+\index{add\_worker\_thread@{add\_worker\_thread}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{add\_worker\_thread()}{add\_worker\_thread()}}
+{\footnotesize\ttfamily int add\+\_\+worker\+\_\+thread (\begin{DoxyParamCaption}\item[{unsigned int}]{completion\+\_\+list\+\_\+id,  }\item[{unsigned int}]{worker\+\_\+thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Add worker thread to completion list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em completion\+\_\+list\+\_\+id} & the id of completion list to which worker thread is added \\
+\hline
+{\em worker\+\_\+thread\+\_\+id} & the id of worker thread that is added \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a14dc713595176c062112d91a3a913da8}\label{ums__lib_8h_a14dc713595176c062112d91a3a913da8}} 
+\index{ums\_lib.h@{ums\_lib.h}!check\_ready\_wt\_list@{check\_ready\_wt\_list}}
+\index{check\_ready\_wt\_list@{check\_ready\_wt\_list}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{check\_ready\_wt\_list()}{check\_ready\_wt\_list()}}
+{\footnotesize\ttfamily int check\+\_\+ready\+\_\+wt\+\_\+list (\begin{DoxyParamCaption}\item[{int $\ast$}]{ready\+\_\+wt\+\_\+list,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+
+
+Check if the list of ready worker threads is empty. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ready\+\_\+wt\+\_\+list} & the pointer to an array of ready to run worker thread ids \\
+\hline
+{\em size} & the size of the array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} 0 if false, otherwise true 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_af43699ccb343e62b230ad2722ad378da}\label{ums__lib_8h_af43699ccb343e62b230ad2722ad378da}} 
+\index{ums\_lib.h@{ums\_lib.h}!clean\_memory@{clean\_memory}}
+\index{clean\_memory@{clean\_memory}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{clean\_memory()}{clean\_memory()}}
+{\footnotesize\ttfamily void clean\+\_\+memory (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Clean memory. 
+
+Clean up all created by the library data structures from the memory. \mbox{\Hypertarget{ums__lib_8h_a4ea1bab04bbb44f6becfcae9bdc8cb6a}\label{ums__lib_8h_a4ea1bab04bbb44f6becfcae9bdc8cb6a}} 
+\index{ums\_lib.h@{ums\_lib.h}!close\_dev@{close\_dev}}
+\index{close\_dev@{close\_dev}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{close\_dev()}{close\_dev()}}
+{\footnotesize\ttfamily int close\+\_\+dev (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Close /dev/umsdevice device. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a33a89f4fc8fc11ddf826265f4c95768a}\label{ums__lib_8h_a33a89f4fc8fc11ddf826265f4c95768a}} 
+\index{ums\_lib.h@{ums\_lib.h}!convert\_to\_ums\_thread@{convert\_to\_ums\_thread}}
+\index{convert\_to\_ums\_thread@{convert\_to\_ums\_thread}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{convert\_to\_ums\_thread()}{convert\_to\_ums\_thread()}}
+{\footnotesize\ttfamily void $\ast$ convert\+\_\+to\+\_\+ums\+\_\+thread (\begin{DoxyParamCaption}\item[{void $\ast$}]{ums\+\_\+thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Convert pthread into ums thread(scheduler) 
+
+Convert current thread into ums thread(scheduler). This function is passed to pthread\+\_\+create(), therefore the created pthread is converted into ums thread(scheduler).
+
+
+\begin{DoxyParams}{Parameters}
+{\em } & \\
+\hline
+\end{DoxyParams}
+c int the id of ums thread(scheduler) into which to convert \mbox{\Hypertarget{ums__lib_8h_a75ce1900a0840e6b37a61c11f973cbb9}\label{ums__lib_8h_a75ce1900a0840e6b37a61c11f973cbb9}} 
+\index{ums\_lib.h@{ums\_lib.h}!create\_completion\_list@{create\_completion\_list}}
+\index{create\_completion\_list@{create\_completion\_list}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{create\_completion\_list()}{create\_completion\_list()}}
+{\footnotesize\ttfamily int create\+\_\+completion\+\_\+list (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Create completion list. 
+
+Create a new completion list and return a corresponding id. Add the completion list to \mbox{\hyperlink{structcl__list}{cl\+\_\+list}}.
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} completion list id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a154cdaed1247445afca2e79d9dbb6ecc}\label{ums__lib_8h_a154cdaed1247445afca2e79d9dbb6ecc}} 
+\index{ums\_lib.h@{ums\_lib.h}!create\_worker\_thread@{create\_worker\_thread}}
+\index{create\_worker\_thread@{create\_worker\_thread}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{create\_worker\_thread()}{create\_worker\_thread()}}
+{\footnotesize\ttfamily int create\+\_\+worker\+\_\+thread (\begin{DoxyParamCaption}\item[{void($\ast$)(void $\ast$)}]{function,  }\item[{void $\ast$}]{args,  }\item[{unsigned long}]{stack\+\_\+size }\end{DoxyParamCaption})}
+
+
+
+Create worker thread. 
+
+Create a new worker thread and return a corresponding id.
+
+
+\begin{DoxyParams}{Parameters}
+{\em function} & the address of the starting function of the worker thread \\
+\hline
+{\em args} & the address of arguments allocated by the user passed to the function (first parameter) \\
+\hline
+{\em stack\+\_\+size} & the stack size that is used for calculating the stack address after memory allocation with malloc function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} worker thread id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_adf01114d0d1719655e22cb69b51e1268}\label{ums__lib_8h_adf01114d0d1719655e22cb69b51e1268}} 
+\index{ums\_lib.h@{ums\_lib.h}!dequeue\_completion\_list\_items@{dequeue\_completion\_list\_items}}
+\index{dequeue\_completion\_list\_items@{dequeue\_completion\_list\_items}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{dequeue\_completion\_list\_items()}{dequeue\_completion\_list\_items()}}
+{\footnotesize\ttfamily int dequeue\+\_\+completion\+\_\+list\+\_\+items (\begin{DoxyParamCaption}\item[{int $\ast$}]{ready\+\_\+wt\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Dequeue completion list. 
+
+Obtain a set of currently available worker threads to be run.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ready\+\_\+wt\+\_\+list} & the pointer to an allocated array of integers which will be filled with ready to run worker thread ids \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_af4d33ae61bf2a9e89c2ff94b7993791d}\label{ums__lib_8h_af4d33ae61bf2a9e89c2ff94b7993791d}} 
+\index{ums\_lib.h@{ums\_lib.h}!enter\_ums\_scheduling\_mode@{enter\_ums\_scheduling\_mode}}
+\index{enter\_ums\_scheduling\_mode@{enter\_ums\_scheduling\_mode}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{enter\_ums\_scheduling\_mode()}{enter\_ums\_scheduling\_mode()}}
+{\footnotesize\ttfamily int enter\+\_\+ums\+\_\+scheduling\+\_\+mode (\begin{DoxyParamCaption}\item[{void($\ast$)(void $\ast$)}]{function,  }\item[{unsigned long}]{completion\+\_\+list\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Enter UMS scheduling mode. 
+
+Create ums thread(scheduler) and pthread which will be converted to ums thread created earlier.
+
+
+\begin{DoxyParams}{Parameters}
+{\em function} & an entry point function for the ums thread(scheduler), scheduling function \\
+\hline
+{\em completion\+\_\+list\+\_\+id} & the id of completion list with worker threads associated with ums thread(scheduler) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a12eee99aa4872b888af399203b30ba83}\label{ums__lib_8h_a12eee99aa4872b888af399203b30ba83}} 
+\index{ums\_lib.h@{ums\_lib.h}!execute\_worker\_thread@{execute\_worker\_thread}}
+\index{execute\_worker\_thread@{execute\_worker\_thread}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{execute\_worker\_thread()}{execute\_worker\_thread()}}
+{\footnotesize\ttfamily int execute\+\_\+worker\+\_\+thread (\begin{DoxyParamCaption}\item[{int $\ast$}]{ready\+\_\+wt\+\_\+list,  }\item[{int}]{size,  }\item[{unsigned int}]{worker\+\_\+thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Execute specific worker thread. 
+
+Execute worker thread given the id. The return result from ioctl call defines if requested worker thread is currently busy and handled by another ums thread(scheduler) or worker thread was already finished before. If it is busy then scheduler will try to execute next available thread from ready\+\_\+wt\+\_\+list. However, if it was already finished before ready\+\_\+wt\+\_\+list will be updated.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ready\+\_\+wt\+\_\+list} & the pointer to an array of ready to run worker thread ids \\
+\hline
+{\em size} & the size of the array \\
+\hline
+{\em worker\+\_\+thread\+\_\+id} & the id of the worker thread to be executed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a38621061488257d36f9bbdfda41f97bf}\label{ums__lib_8h_a38621061488257d36f9bbdfda41f97bf}} 
+\index{ums\_lib.h@{ums\_lib.h}!exit\_ums@{exit\_ums}}
+\index{exit\_ums@{exit\_ums}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{exit\_ums()}{exit\_ums()}}
+{\footnotesize\ttfamily int exit\+\_\+ums (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Exit/disable UMS in the program/process. 
+
+Synchronize the execution of the ums threads(schedulers).
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a6bc8d8d4936394440b424107352dad49}\label{ums__lib_8h_a6bc8d8d4936394440b424107352dad49}} 
+\index{ums\_lib.h@{ums\_lib.h}!exit\_ums\_scheduling\_mode@{exit\_ums\_scheduling\_mode}}
+\index{exit\_ums\_scheduling\_mode@{exit\_ums\_scheduling\_mode}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{exit\_ums\_scheduling\_mode()}{exit\_ums\_scheduling\_mode()}}
+{\footnotesize\ttfamily int exit\+\_\+ums\+\_\+scheduling\+\_\+mode (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Exit UMS scheduling mode. 
+
+Convert from ums thread(scheduler) back to pthread.
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_aa0387cff4a6b18c39234f35926c4973d}\label{ums__lib_8h_aa0387cff4a6b18c39234f35926c4973d}} 
+\index{ums\_lib.h@{ums\_lib.h}!free\_cl\_list@{free\_cl\_list}}
+\index{free\_cl\_list@{free\_cl\_list}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{free\_cl\_list()}{free\_cl\_list()}}
+{\footnotesize\ttfamily int free\+\_\+cl\+\_\+list (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Clean the list of completion lists. 
+
+Delete and free each item in the list of completion lists
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_ab3d928286f28d72c20c361130928869f}\label{ums__lib_8h_ab3d928286f28d72c20c361130928869f}} 
+\index{ums\_lib.h@{ums\_lib.h}!free\_ums\_thread\_list@{free\_ums\_thread\_list}}
+\index{free\_ums\_thread\_list@{free\_ums\_thread\_list}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{free\_ums\_thread\_list()}{free\_ums\_thread\_list()}}
+{\footnotesize\ttfamily int free\+\_\+ums\+\_\+thread\+\_\+list (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Clean the list of ums threads(schedulers) 
+
+Delete and free each item in the list of ums threads(schedulers)
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a0e586774ba40c4fb7525730e8939717e}\label{ums__lib_8h_a0e586774ba40c4fb7525730e8939717e}} 
+\index{ums\_lib.h@{ums\_lib.h}!free\_worker\_thread\_list@{free\_worker\_thread\_list}}
+\index{free\_worker\_thread\_list@{free\_worker\_thread\_list}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{free\_worker\_thread\_list()}{free\_worker\_thread\_list()}}
+{\footnotesize\ttfamily int free\+\_\+worker\+\_\+thread\+\_\+list (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Clean the list of worker threads. 
+
+Delete and free each item in the list of worker threads
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a10dd4f6e3382061149242d4ad43c0562}\label{ums__lib_8h_a10dd4f6e3382061149242d4ad43c0562}} 
+\index{ums\_lib.h@{ums\_lib.h}!get\_cl\_with\_id@{get\_cl\_with\_id}}
+\index{get\_cl\_with\_id@{get\_cl\_with\_id}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{get\_cl\_with\_id()}{get\_cl\_with\_id()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums__lib_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\+\_\+list\+\_\+t}} $\ast$ get\+\_\+cl\+\_\+with\+\_\+id (\begin{DoxyParamCaption}\item[{unsigned int}]{completion\+\_\+list\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Get completion list from \mbox{\hyperlink{ums__lib_8h_a331020b397767045df55c3440bcfe919}{cl\+\_\+list\+\_\+t}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em completion\+\_\+list\+\_\+id} & id of the completion list requested to be retrieved \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily completion\+\_\+list\+\_\+t} the pointer to completion list with specific id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a2104cd2d3d9d9120deee336bd4a907f6}\label{ums__lib_8h_a2104cd2d3d9d9120deee336bd4a907f6}} 
+\index{ums\_lib.h@{ums\_lib.h}!get\_next\_ready\_item@{get\_next\_ready\_item}}
+\index{get\_next\_ready\_item@{get\_next\_ready\_item}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{get\_next\_ready\_item()}{get\_next\_ready\_item()}}
+{\footnotesize\ttfamily int get\+\_\+next\+\_\+ready\+\_\+item (\begin{DoxyParamCaption}\item[{int $\ast$}]{ready\+\_\+wt\+\_\+list,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+
+
+Get next item from the list of ready worker threads. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ready\+\_\+wt\+\_\+list} & the pointer to an array of ready to run worker thread ids \\
+\hline
+{\em size} & the size of the array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} worker thread id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_aaabca1624adb9c3e49c9da3d588be00a}\label{ums__lib_8h_aaabca1624adb9c3e49c9da3d588be00a}} 
+\index{ums\_lib.h@{ums\_lib.h}!get\_umst\_run\_by\_pthread@{get\_umst\_run\_by\_pthread}}
+\index{get\_umst\_run\_by\_pthread@{get\_umst\_run\_by\_pthread}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{get\_umst\_run\_by\_pthread()}{get\_umst\_run\_by\_pthread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums__lib_8h_a47c075daee7305cd294767817f16da96}{ums\+\_\+thread\+\_\+t}} $\ast$ get\+\_\+umst\+\_\+run\+\_\+by\+\_\+pthread (\begin{DoxyParamCaption}\item[{pthread\+\_\+t}]{current\+\_\+pt }\end{DoxyParamCaption})}
+
+
+
+Get ums thread(scheduler) from \mbox{\hyperlink{ums__lib_8h_a35c358a86004735824917343df36009f}{ums\+\_\+thread\+\_\+list\+\_\+t}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ums\+\_\+thread\+\_\+id} & id of the ums thread(scheduler) requested to be retrieved \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily ums\+\_\+thread\+\_\+t} the pointer to ums thread(scheduler) with specific id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_ab8f17c63d34a99bc8ee100746a9c7e2f}\label{ums__lib_8h_ab8f17c63d34a99bc8ee100746a9c7e2f}} 
+\index{ums\_lib.h@{ums\_lib.h}!get\_wt\_count\_in\_current\_umst\_cl@{get\_wt\_count\_in\_current\_umst\_cl}}
+\index{get\_wt\_count\_in\_current\_umst\_cl@{get\_wt\_count\_in\_current\_umst\_cl}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{get\_wt\_count\_in\_current\_umst\_cl()}{get\_wt\_count\_in\_current\_umst\_cl()}}
+{\footnotesize\ttfamily int get\+\_\+wt\+\_\+count\+\_\+in\+\_\+current\+\_\+umst\+\_\+cl (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Get the number of worker threads in completion list of current ums thread(scheduler) 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} number of worker threads 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a875ac05c0e7c61f46a910b1815a1ad9d}\label{ums__lib_8h_a875ac05c0e7c61f46a910b1815a1ad9d}} 
+\index{ums\_lib.h@{ums\_lib.h}!get\_wt\_with\_id@{get\_wt\_with\_id}}
+\index{get\_wt\_with\_id@{get\_wt\_with\_id}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{get\_wt\_with\_id()}{get\_wt\_with\_id()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums__lib_8h_a283231e0eca6d5c5c7450ed0c40e1ccf}{worker\+\_\+thread\+\_\+t}} $\ast$ get\+\_\+wt\+\_\+with\+\_\+id (\begin{DoxyParamCaption}\item[{unsigned int}]{worker\+\_\+thread\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Get worker thread from \mbox{\hyperlink{ums__lib_8h_a0b7394272d57022d03b53178cbc1c260}{worker\+\_\+thread\+\_\+list\+\_\+t}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em worker\+\_\+thread\+\_\+id} & id of the worker thread requested to be retrieved \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily worker\+\_\+thread\+\_\+t} the pointer to worker thread with specific id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a5f0e5bd0b9dad50cc339df9894adcd53}\label{ums__lib_8h_a5f0e5bd0b9dad50cc339df9894adcd53}} 
+\index{ums\_lib.h@{ums\_lib.h}!init\_ums@{init\_ums}}
+\index{init\_ums@{init\_ums}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{init\_ums()}{init\_ums()}}
+{\footnotesize\ttfamily int init\+\_\+ums (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Initialize/enable UMS in the program/process. 
+
+In order to start utilizing UMS mechanism, we need to enable UMS for the program/process.
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_a02b971dbc0683158b4aee548eeea14fa}\label{ums__lib_8h_a02b971dbc0683158b4aee548eeea14fa}} 
+\index{ums\_lib.h@{ums\_lib.h}!open\_dev@{open\_dev}}
+\index{open\_dev@{open\_dev}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{open\_dev()}{open\_dev()}}
+{\footnotesize\ttfamily int open\+\_\+dev (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Open /dev/umsdevice device. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ums__lib_8h_abf29f0150d2f1fccb5734d66cd2a31c0}\label{ums__lib_8h_abf29f0150d2f1fccb5734d66cd2a31c0}} 
+\index{ums\_lib.h@{ums\_lib.h}!worker\_thread\_yield@{worker\_thread\_yield}}
+\index{worker\_thread\_yield@{worker\_thread\_yield}!ums\_lib.h@{ums\_lib.h}}
+\doxysubsubsection{\texorpdfstring{worker\_thread\_yield()}{worker\_thread\_yield()}}
+{\footnotesize\ttfamily int worker\+\_\+thread\+\_\+yield (\begin{DoxyParamCaption}\item[{yield\+\_\+reason\+\_\+t}]{yield\+\_\+reason }\end{DoxyParamCaption})}
+
+
+
+Pause or finish worker thread. 
+
+Pause or finish worker thread deppending on the passed reason.
+
+
+\begin{DoxyParams}{Parameters}
+{\em yield\+\_\+reason} & reason which defines if worker thread should be paused or finished, yield\+\_\+reason\+\_\+t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}

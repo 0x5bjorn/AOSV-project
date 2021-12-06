@@ -1,0 +1,134 @@
+\hypertarget{device__shared_8h}{}\doxysection{device\+\_\+shared.\+h File Reference}
+\label{device__shared_8h}\index{device\_shared.h@{device\_shared.h}}
+
+
+This file contains definitions of ioctl commands.  
+
+
+{\ttfamily \#include $<$linux/ioctl.\+h$>$}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structworker__thread__params}{worker\+\_\+thread\+\_\+params}}
+\begin{DoxyCompactList}\small\item\em Parameters passed by the library and user for worker thread creation. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structadd__wt__params}{add\+\_\+wt\+\_\+params}}
+\begin{DoxyCompactList}\small\item\em Parameters passed by the library and user for adding worker thread to completion list. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structums__thread__params}{ums\+\_\+thread\+\_\+params}}
+\begin{DoxyCompactList}\small\item\em Parameters passed by the library and user for ums thread(scheduler) creation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{device__shared_8h_aae5e5136f0c8373088d4079c39546d61}\label{device__shared_8h_aae5e5136f0c8373088d4079c39546d61}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC}~\textquotesingle{}R\textquotesingle{}
+\item 
+\mbox{\Hypertarget{device__shared_8h_a92a43a58217238cadd06cc65ab31f2a4}\label{device__shared_8h_a92a43a58217238cadd06cc65ab31f2a4}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+INIT\+\_\+\+UMS\+\_\+\+PROCESS}~\+\_\+\+IO(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 0)
+\item 
+\mbox{\Hypertarget{device__shared_8h_a940b529301c3eb6bc0eab390c3dbc225}\label{device__shared_8h_a940b529301c3eb6bc0eab390c3dbc225}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+EXIT\+\_\+\+UMS\+\_\+\+PROCESS}~\+\_\+\+IO(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 1)
+\item 
+\mbox{\Hypertarget{device__shared_8h_ae2ea587890edd9495d45e2ab6382592a}\label{device__shared_8h_ae2ea587890edd9495d45e2ab6382592a}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+CREATE\+\_\+\+COMPLETION\+\_\+\+LIST}~\+\_\+\+IO(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 2)
+\item 
+\mbox{\Hypertarget{device__shared_8h_a6e4f1e855af2dc848137cef0a1d1767e}\label{device__shared_8h_a6e4f1e855af2dc848137cef0a1d1767e}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+CREATE\+\_\+\+WORKER\+\_\+\+THREAD}~\+\_\+\+IOW(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 3, \mbox{\hyperlink{device__shared_8h_a7db527934bf7ffb83701317f9a073dd0}{worker\+\_\+thread\+\_\+params\+\_\+t}} $\ast$)
+\item 
+\mbox{\Hypertarget{device__shared_8h_a7e295eb1d83bec0b2285613554595837}\label{device__shared_8h_a7e295eb1d83bec0b2285613554595837}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+ADD\+\_\+\+TO\+\_\+\+COMPLETION\+\_\+\+LIST}~\+\_\+\+IOW(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 4, \mbox{\hyperlink{device__shared_8h_ab042f0a28f23e82580c274912cfe7d1b}{add\+\_\+wt\+\_\+params\+\_\+t}} $\ast$)
+\item 
+\mbox{\Hypertarget{device__shared_8h_a2d692ed3d647089cb56ea2ca0a04cebe}\label{device__shared_8h_a2d692ed3d647089cb56ea2ca0a04cebe}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+CREATE\+\_\+\+UMS\+\_\+\+THREAD}~\+\_\+\+IOW(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 5, \mbox{\hyperlink{device__shared_8h_a6ac8c9c6aa900b00f3b35300be5d16fe}{ums\+\_\+thread\+\_\+params\+\_\+t}} $\ast$)
+\item 
+\mbox{\Hypertarget{device__shared_8h_a68939eec67f961c0dcc245f4d0c582d5}\label{device__shared_8h_a68939eec67f961c0dcc245f4d0c582d5}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+CONVERT\+\_\+\+TO\+\_\+\+UMS\+\_\+\+THREAD}~\+\_\+\+IOW(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 6, int)
+\item 
+\mbox{\Hypertarget{device__shared_8h_ada6224309b80b413b0d9b68d909592a0}\label{device__shared_8h_ada6224309b80b413b0d9b68d909592a0}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+CONVERT\+\_\+\+FROM\+\_\+\+UMS\+\_\+\+THREAD}~\+\_\+\+IO(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 7)
+\item 
+\mbox{\Hypertarget{device__shared_8h_a81dc64133661bcc16a030909ab6739c1}\label{device__shared_8h_a81dc64133661bcc16a030909ab6739c1}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+DEQUEUE\+\_\+\+CL\+\_\+\+ITEMS}~\+\_\+\+IOWR(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 8, int $\ast$)
+\item 
+\mbox{\Hypertarget{device__shared_8h_ac5b027b4c03b86739b4bcd1a728bf4d4}\label{device__shared_8h_ac5b027b4c03b86739b4bcd1a728bf4d4}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+SWITCH\+\_\+\+TO\+\_\+\+WORKER\+\_\+\+THREAD}~\+\_\+\+IOW(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 9, int)
+\item 
+\mbox{\Hypertarget{device__shared_8h_aeb3af91ba144fd1893e806953d11f835}\label{device__shared_8h_aeb3af91ba144fd1893e806953d11f835}} 
+\#define {\bfseries UMS\+\_\+\+DEV\+\_\+\+SWITCH\+\_\+\+BACK\+\_\+\+TO\+\_\+\+UMS\+\_\+\+THREAD}~\+\_\+\+IOW(UMS\+\_\+\+DEV\+\_\+\+IOCTL\+\_\+\+MAGIC, 10, \mbox{\hyperlink{device__shared_8h_af6a037295cc215d38e0865102e652366}{yield\+\_\+reason\+\_\+t}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{device__shared_8h_a7db527934bf7ffb83701317f9a073dd0}\label{device__shared_8h_a7db527934bf7ffb83701317f9a073dd0}} 
+typedef struct \mbox{\hyperlink{structworker__thread__params}{worker\+\_\+thread\+\_\+params}} {\bfseries worker\+\_\+thread\+\_\+params\+\_\+t}
+\begin{DoxyCompactList}\small\item\em Parameters passed by the library and user for worker thread creation. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{device__shared_8h_ab042f0a28f23e82580c274912cfe7d1b}\label{device__shared_8h_ab042f0a28f23e82580c274912cfe7d1b}} 
+typedef struct \mbox{\hyperlink{structadd__wt__params}{add\+\_\+wt\+\_\+params}} {\bfseries add\+\_\+wt\+\_\+params\+\_\+t}
+\begin{DoxyCompactList}\small\item\em Parameters passed by the library and user for adding worker thread to completion list. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{device__shared_8h_a6ac8c9c6aa900b00f3b35300be5d16fe}\label{device__shared_8h_a6ac8c9c6aa900b00f3b35300be5d16fe}} 
+typedef struct \mbox{\hyperlink{structums__thread__params}{ums\+\_\+thread\+\_\+params}} {\bfseries ums\+\_\+thread\+\_\+params\+\_\+t}
+\begin{DoxyCompactList}\small\item\em Parameters passed by the library and user for ums thread(scheduler) creation. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{device__shared_8h_af6a037295cc215d38e0865102e652366}\label{device__shared_8h_af6a037295cc215d38e0865102e652366}} 
+typedef enum \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1}{yield\+\_\+reason}} {\bfseries yield\+\_\+reason\+\_\+t}
+\begin{DoxyCompactList}\small\item\em Parameters passed by the library and user for worker thread yield function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1}{yield\+\_\+reason}} \{ \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1a8b9af67858708d770f017e4aae85900d}{FINISH}}
+, \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1a56b36d0d0bb01b339cf1041adc08e262}{PAUSE}}
+ \}
+\begin{DoxyCompactList}\small\item\em Parameters passed by the library and user for worker thread yield function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file contains definitions of ioctl commands. 
+
+Copyright (C) 2021 Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}}
+
+This file is part of UMS implementation (Kernel Module).
+
+UMS implementation (Kernel Module) is free software\+: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+UMS implementation (Kernel Module) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with UMS implementation (Kernel Module). If not, see \href{http://www.gnu.org/licenses/}{\texttt{ http\+://www.\+gnu.\+org/licenses/}}.
+
+This file is also included in the library Defined ioctl commands are mapped with the library functions\+:
+\begin{DoxyItemize}
+\item UMS\+\_\+\+DEV\+\_\+\+INIT\+\_\+\+UMS\+\_\+\+PROCESS \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} init\+\_\+ums()
+\item UMS\+\_\+\+DEV\+\_\+\+EXIT\+\_\+\+UMS\+\_\+\+PROCESS \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} \mbox{\hyperlink{ums_8c_a8c2655f2f806f114bf859a362324433f}{exit\+\_\+ums()}}
+\item UMS\+\_\+\+DEV\+\_\+\+CREATE\+\_\+\+COMPLETION\+\_\+\+LIST \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} \mbox{\hyperlink{ums_8c_a75ce1900a0840e6b37a61c11f973cbb9}{create\+\_\+completion\+\_\+list()}}
+\item UMS\+\_\+\+DEV\+\_\+\+CREATE\+\_\+\+WORKER\+\_\+\+THREAD \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} \mbox{\hyperlink{ums_8c_abc8cc7df36f79b361fa1c72961948571}{create\+\_\+worker\+\_\+thread()}}
+\item UMS\+\_\+\+DEV\+\_\+\+ADD\+\_\+\+TO\+\_\+\+COMPLETION\+\_\+\+LIST \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} add\+\_\+worker\+\_\+thread()
+\item UMS\+\_\+\+DEV\+\_\+\+CREATE\+\_\+\+UMS\+\_\+\+THREAD \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} enter\+\_\+ums\+\_\+scheduling\+\_\+mode()
+\item UMS\+\_\+\+DEV\+\_\+\+CONVERT\+\_\+\+TO\+\_\+\+UMS\+\_\+\+THREAD \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} \mbox{\hyperlink{ums_8c_a3e10182dc213395263cd6828d416bbd2}{convert\+\_\+to\+\_\+ums\+\_\+thread()}}
+\item UMS\+\_\+\+DEV\+\_\+\+CONVERT\+\_\+\+FROM\+\_\+\+UMS\+\_\+\+THREAD \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} exit\+\_\+ums\+\_\+scheduling\+\_\+mode()
+\item UMS\+\_\+\+DEV\+\_\+\+DEQUEUE\+\_\+\+CL\+\_\+\+ITEMS \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} \mbox{\hyperlink{ums_8c_aa4c1d2cb545625bcc03c9d1fdaeafbf1}{dequeue\+\_\+completion\+\_\+list\+\_\+items()}}
+\item UMS\+\_\+\+DEV\+\_\+\+SWITCH\+\_\+\+TO\+\_\+\+WORKER\+\_\+\+THREAD \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} execute\+\_\+worker\+\_\+thread()
+\item UMS\+\_\+\+DEV\+\_\+\+SWITCH\+\_\+\+BACK\+\_\+\+TO\+\_\+\+UMS\+\_\+\+THREAD \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} worker\+\_\+thread\+\_\+yield()
+\end{DoxyItemize}
+
+\begin{DoxyAuthor}{Author}
+Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}} 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{device__shared_8h_a173c832278e844627c9b4ac112127dd1}\label{device__shared_8h_a173c832278e844627c9b4ac112127dd1}} 
+\index{device\_shared.h@{device\_shared.h}!yield\_reason@{yield\_reason}}
+\index{yield\_reason@{yield\_reason}!device\_shared.h@{device\_shared.h}}
+\doxysubsubsection{\texorpdfstring{yield\_reason}{yield\_reason}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1}{yield\+\_\+reason}}}
+
+
+
+Parameters passed by the library and user for worker thread yield function. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FINISH@{FINISH}!device\_shared.h@{device\_shared.h}}\index{device\_shared.h@{device\_shared.h}!FINISH@{FINISH}}}\mbox{\Hypertarget{device__shared_8h_a173c832278e844627c9b4ac112127dd1a8b9af67858708d770f017e4aae85900d}\label{device__shared_8h_a173c832278e844627c9b4ac112127dd1a8b9af67858708d770f017e4aae85900d}} 
+FINISH&The yield reason is FINSIH when worker thread has finished its task \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PAUSE@{PAUSE}!device\_shared.h@{device\_shared.h}}\index{device\_shared.h@{device\_shared.h}!PAUSE@{PAUSE}}}\mbox{\Hypertarget{device__shared_8h_a173c832278e844627c9b4ac112127dd1a56b36d0d0bb01b339cf1041adc08e262}\label{device__shared_8h_a173c832278e844627c9b4ac112127dd1a56b36d0d0bb01b339cf1041adc08e262}} 
+PAUSE&The yield reason is PAUSE when worker thread hasn\textquotesingle{}t finished its task but for some reason is requested to be blocked/paused until next invokation \\
+\hline
+
+\end{DoxyEnumFields}

@@ -1,0 +1,274 @@
+\hypertarget{proc_8h}{}\doxysection{proc.\+h File Reference}
+\label{proc_8h}\index{proc.h@{proc.h}}
+
+
+This file is a header of the /proc part of the module.  
+
+
+{\ttfamily \#include $<$linux/proc\+\_\+fs.\+h$>$}\newline
+{\ttfamily \#include $<$linux/seq\+\_\+file.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}ums.\+h\char`\"{}}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structprocess__entry__list}{process\+\_\+entry\+\_\+list}}
+\begin{DoxyCompactList}\small\item\em The list of process entries in /proc/ums. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structums__thread__entry__list}{ums\+\_\+thread\+\_\+entry\+\_\+list}}
+\begin{DoxyCompactList}\small\item\em The list of scheduler entries in /proc/ums/$<$\+PID$>$/schedulers. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structworker__thread__entry__list}{worker\+\_\+thread\+\_\+entry\+\_\+list}}
+\begin{DoxyCompactList}\small\item\em The list of worker thread entries in /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structprocess__entry}{process\+\_\+entry}}
+\begin{DoxyCompactList}\small\item\em The structure for process entry /proc/ums/$<$\+PID$>$ \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structums__thread__entry}{ums\+\_\+thread\+\_\+entry}}
+\begin{DoxyCompactList}\small\item\em The structure for scheduler entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$ \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structworker__thread__entry}{worker\+\_\+thread\+\_\+entry}}
+\begin{DoxyCompactList}\small\item\em The structure for worker thread entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers/$<$\+ID$>$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{proc_8h_ac2cc6586aa68fc2fde4b47d0a680c447}\label{proc_8h_ac2cc6586aa68fc2fde4b47d0a680c447}} 
+\#define {\bfseries UMS\+\_\+\+PROC\+\_\+\+LOG}~\char`\"{}UMS proc\+: \char`\"{}
+\item 
+\mbox{\Hypertarget{proc_8h_ae5af211c1b6cd0b06119394bf97ac904}\label{proc_8h_ae5af211c1b6cd0b06119394bf97ac904}} 
+\#define {\bfseries ERROR\+\_\+\+PROC\+\_\+\+FAIL}~1
+\item 
+\mbox{\Hypertarget{proc_8h_a94d960f355acb477ca493fd71af4b938}\label{proc_8h_a94d960f355acb477ca493fd71af4b938}} 
+\#define {\bfseries ERROR\+\_\+\+PROCESS\+\_\+\+ENTRY\+\_\+\+NOT\+\_\+\+FOUND}~601
+\item 
+\mbox{\Hypertarget{proc_8h_a0040c15af1c4da108beaecfe1c581032}\label{proc_8h_a0040c15af1c4da108beaecfe1c581032}} 
+\#define {\bfseries ERROR\+\_\+\+PROCESS\+\_\+\+ENTRY\+\_\+\+ALREADY\+\_\+\+EXISTS}~602
+\item 
+\mbox{\Hypertarget{proc_8h_a900fc56c9974e87a497d4540eaeab585}\label{proc_8h_a900fc56c9974e87a497d4540eaeab585}} 
+\#define {\bfseries ERROR\+\_\+\+UMST\+\_\+\+ENTRY\+\_\+\+NOT\+\_\+\+FOUND}~603
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structprocess__entry__list}{process\+\_\+entry\+\_\+list}} \mbox{\hyperlink{proc_8h_a7464412f10c3b7870b654caf1ea5073a}{process\+\_\+entry\+\_\+list\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The list of process entries in /proc/ums. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structums__thread__entry__list}{ums\+\_\+thread\+\_\+entry\+\_\+list}} \mbox{\hyperlink{proc_8h_af5c0f386828829947b35e084beae2c0c}{ums\+\_\+thread\+\_\+entry\+\_\+list\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The list of scheduler entries in /proc/ums/$<$\+PID$>$/schedulers. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structworker__thread__entry__list}{worker\+\_\+thread\+\_\+entry\+\_\+list}} \mbox{\hyperlink{proc_8h_ac2b313c9e13ac4de28018c22de73af93}{worker\+\_\+thread\+\_\+entry\+\_\+list\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The list of worker thread entries in /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structprocess__entry}{process\+\_\+entry}} \mbox{\hyperlink{proc_8h_ace957b26c02808ff5cf4be8c841da377}{process\+\_\+entry\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The structure for process entry /proc/ums/$<$\+PID$>$ \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structums__thread__entry}{ums\+\_\+thread\+\_\+entry}} \mbox{\hyperlink{proc_8h_a9ffd04e4be2b8a8e807b100fdb471e3b}{ums\+\_\+thread\+\_\+entry\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The structure for scheduler entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$ \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structworker__thread__entry}{worker\+\_\+thread\+\_\+entry}} \mbox{\hyperlink{proc_8h_a5d37f58b22852bfcd5cea7f12768b4c1}{worker\+\_\+thread\+\_\+entry\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The structure for worker thread entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers/$<$\+ID$>$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{proc_8h_ac259d1fab55f793f322af5233653b7a3}{init\+\_\+proc}} (void)
+\begin{DoxyCompactList}\small\item\em Init initial proc files for the module. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{proc_8h_a023126b4fbbcfa4d0566a131371e245c}{exit\+\_\+proc}} (void)
+\begin{DoxyCompactList}\small\item\em Exit/delete allocated structures and entries of the proc part of the module. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{proc_8h_a5e324c23c3e7abc4f0ac29790a7a8dcf}{create\+\_\+process\+\_\+entry}} (pid\+\_\+t pid)
+\begin{DoxyCompactList}\small\item\em Create /proc/ums/$<$\+PID$>$ entry. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{proc_8h_a35460d097e7416d646aab806ecc570d3}{create\+\_\+umst\+\_\+entry}} (pid\+\_\+t pid, unsigned int umst\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Create /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$ entry. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{proc_8h_a567df7aea0311b15da9a98cc744b6199}{create\+\_\+wt\+\_\+entry}} (unsigned int umst\+\_\+id, unsigned int wt\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Create /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers/$<$\+ID$>$ entry. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{proc_8h_ace957b26c02808ff5cf4be8c841da377}{process\+\_\+entry\+\_\+t}} $\ast$ \mbox{\hyperlink{proc_8h_ae7f367728e30a39b67afcc43ab1dbfa4}{get\+\_\+process\+\_\+entry\+\_\+with\+\_\+pid}} (pid\+\_\+t req\+\_\+pid)
+\begin{DoxyCompactList}\small\item\em Get process entry structure from \mbox{\hyperlink{structprocess__entry__list}{process\+\_\+entry\+\_\+list}} with specific PID. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{proc_8h_a9ffd04e4be2b8a8e807b100fdb471e3b}{ums\+\_\+thread\+\_\+entry\+\_\+t}} $\ast$ \mbox{\hyperlink{proc_8h_a74700b19cca7f0589485d6a2d89c797d}{get\+\_\+ums\+\_\+thread\+\_\+entry\+\_\+with\+\_\+id}} (pid\+\_\+t req\+\_\+pid, unsigned int id)
+\begin{DoxyCompactList}\small\item\em Get scheduler entry structure from \mbox{\hyperlink{structums__thread__entry__list}{ums\+\_\+thread\+\_\+entry\+\_\+list}} with specific id. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file is a header of the /proc part of the module. 
+
+Copyright (C) 2021 Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}}
+
+This file is part of UMS implementation (Kernel Module).
+
+UMS implementation (Kernel Module) is free software\+: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+UMS implementation (Kernel Module) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with UMS implementation (Kernel Module). If not, see \href{http://www.gnu.org/licenses/}{\texttt{ http\+://www.\+gnu.\+org/licenses/}}.
+
+This file contains all data structures, macros, error codes and function declarations of the /proc part
+
+\begin{DoxyAuthor}{Author}
+Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}} 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{proc_8h_a7464412f10c3b7870b654caf1ea5073a}\label{proc_8h_a7464412f10c3b7870b654caf1ea5073a}} 
+\index{proc.h@{proc.h}!process\_entry\_list\_t@{process\_entry\_list\_t}}
+\index{process\_entry\_list\_t@{process\_entry\_list\_t}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{process\_entry\_list\_t}{process\_entry\_list\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structprocess__entry__list}{process\+\_\+entry\+\_\+list}} \mbox{\hyperlink{proc_8h_a7464412f10c3b7870b654caf1ea5073a}{process\+\_\+entry\+\_\+list\+\_\+t}}}
+
+
+
+The list of process entries in /proc/ums. 
+
+The purpose of this list is to store all process entries in /proc/ums/$<$\+PID$>$ \mbox{\Hypertarget{proc_8h_ace957b26c02808ff5cf4be8c841da377}\label{proc_8h_ace957b26c02808ff5cf4be8c841da377}} 
+\index{proc.h@{proc.h}!process\_entry\_t@{process\_entry\_t}}
+\index{process\_entry\_t@{process\_entry\_t}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{process\_entry\_t}{process\_entry\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structprocess__entry}{process\+\_\+entry}} \mbox{\hyperlink{proc_8h_ace957b26c02808ff5cf4be8c841da377}{process\+\_\+entry\+\_\+t}}}
+
+
+
+The structure for process entry /proc/ums/$<$\+PID$>$ 
+
+This is a node in the \mbox{\hyperlink{structprocess__entry__list}{process\+\_\+entry\+\_\+list}}. This is a description of the process entry. \mbox{\Hypertarget{proc_8h_af5c0f386828829947b35e084beae2c0c}\label{proc_8h_af5c0f386828829947b35e084beae2c0c}} 
+\index{proc.h@{proc.h}!ums\_thread\_entry\_list\_t@{ums\_thread\_entry\_list\_t}}
+\index{ums\_thread\_entry\_list\_t@{ums\_thread\_entry\_list\_t}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{ums\_thread\_entry\_list\_t}{ums\_thread\_entry\_list\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structums__thread__entry__list}{ums\+\_\+thread\+\_\+entry\+\_\+list}} \mbox{\hyperlink{proc_8h_af5c0f386828829947b35e084beae2c0c}{ums\+\_\+thread\+\_\+entry\+\_\+list\+\_\+t}}}
+
+
+
+The list of scheduler entries in /proc/ums/$<$\+PID$>$/schedulers. 
+
+The purpose of this list is to store all scheduler entries in /proc/ums/$<$\+PID$>$/schedulers \mbox{\Hypertarget{proc_8h_a9ffd04e4be2b8a8e807b100fdb471e3b}\label{proc_8h_a9ffd04e4be2b8a8e807b100fdb471e3b}} 
+\index{proc.h@{proc.h}!ums\_thread\_entry\_t@{ums\_thread\_entry\_t}}
+\index{ums\_thread\_entry\_t@{ums\_thread\_entry\_t}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{ums\_thread\_entry\_t}{ums\_thread\_entry\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structums__thread__entry}{ums\+\_\+thread\+\_\+entry}} \mbox{\hyperlink{proc_8h_a9ffd04e4be2b8a8e807b100fdb471e3b}{ums\+\_\+thread\+\_\+entry\+\_\+t}}}
+
+
+
+The structure for scheduler entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$ 
+
+This is a node in the \mbox{\hyperlink{structums__thread__entry__list}{ums\+\_\+thread\+\_\+entry\+\_\+list}}. This is a description of the scheduler entry. \mbox{\Hypertarget{proc_8h_ac2b313c9e13ac4de28018c22de73af93}\label{proc_8h_ac2b313c9e13ac4de28018c22de73af93}} 
+\index{proc.h@{proc.h}!worker\_thread\_entry\_list\_t@{worker\_thread\_entry\_list\_t}}
+\index{worker\_thread\_entry\_list\_t@{worker\_thread\_entry\_list\_t}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{worker\_thread\_entry\_list\_t}{worker\_thread\_entry\_list\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structworker__thread__entry__list}{worker\+\_\+thread\+\_\+entry\+\_\+list}} \mbox{\hyperlink{proc_8h_ac2b313c9e13ac4de28018c22de73af93}{worker\+\_\+thread\+\_\+entry\+\_\+list\+\_\+t}}}
+
+
+
+The list of worker thread entries in /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers. 
+
+The purpose of this list is to store all worker thread entries in /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers \mbox{\Hypertarget{proc_8h_a5d37f58b22852bfcd5cea7f12768b4c1}\label{proc_8h_a5d37f58b22852bfcd5cea7f12768b4c1}} 
+\index{proc.h@{proc.h}!worker\_thread\_entry\_t@{worker\_thread\_entry\_t}}
+\index{worker\_thread\_entry\_t@{worker\_thread\_entry\_t}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{worker\_thread\_entry\_t}{worker\_thread\_entry\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structworker__thread__entry}{worker\+\_\+thread\+\_\+entry}} \mbox{\hyperlink{proc_8h_a5d37f58b22852bfcd5cea7f12768b4c1}{worker\+\_\+thread\+\_\+entry\+\_\+t}}}
+
+
+
+The structure for worker thread entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers/$<$\+ID$>$ 
+
+This is a node in the \mbox{\hyperlink{structworker__thread__entry__list}{worker\+\_\+thread\+\_\+entry\+\_\+list}}. This is a description of the worker thread entry. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{proc_8h_a5e324c23c3e7abc4f0ac29790a7a8dcf}\label{proc_8h_a5e324c23c3e7abc4f0ac29790a7a8dcf}} 
+\index{proc.h@{proc.h}!create\_process\_entry@{create\_process\_entry}}
+\index{create\_process\_entry@{create\_process\_entry}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{create\_process\_entry()}{create\_process\_entry()}}
+{\footnotesize\ttfamily int create\+\_\+process\+\_\+entry (\begin{DoxyParamCaption}\item[{pid\+\_\+t}]{pid }\end{DoxyParamCaption})}
+
+
+
+Create /proc/ums/$<$\+PID$>$ entry. 
+
+First, we check if the process entry already exists. Create \mbox{\hyperlink{proc_8h_ace957b26c02808ff5cf4be8c841da377}{process\+\_\+entry\+\_\+t}} and add it to \mbox{\hyperlink{structprocess__entry__list}{process\+\_\+entry\+\_\+list}} that enabled UMS mechanism. Create /proc/ums/$<$\+PID$>$ and /proc/ums/$<$\+PID$>$/schedulers entries.
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{proc_8h_a35460d097e7416d646aab806ecc570d3}\label{proc_8h_a35460d097e7416d646aab806ecc570d3}} 
+\index{proc.h@{proc.h}!create\_umst\_entry@{create\_umst\_entry}}
+\index{create\_umst\_entry@{create\_umst\_entry}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{create\_umst\_entry()}{create\_umst\_entry()}}
+{\footnotesize\ttfamily int create\+\_\+umst\+\_\+entry (\begin{DoxyParamCaption}\item[{pid\+\_\+t}]{pid,  }\item[{unsigned int}]{umst\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Create /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$ entry. 
+
+First, we check if current process has process entry in /proc/ums. Create \mbox{\hyperlink{proc_8h_a9ffd04e4be2b8a8e807b100fdb471e3b}{ums\+\_\+thread\+\_\+entry\+\_\+t}} and add it to \mbox{\hyperlink{structums__thread__entry__list}{ums\+\_\+thread\+\_\+entry\+\_\+list}}. Create /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$, /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers and /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/info entries.
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{proc_8h_a567df7aea0311b15da9a98cc744b6199}\label{proc_8h_a567df7aea0311b15da9a98cc744b6199}} 
+\index{proc.h@{proc.h}!create\_wt\_entry@{create\_wt\_entry}}
+\index{create\_wt\_entry@{create\_wt\_entry}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{create\_wt\_entry()}{create\_wt\_entry()}}
+{\footnotesize\ttfamily int create\+\_\+wt\+\_\+entry (\begin{DoxyParamCaption}\item[{unsigned int}]{umst\+\_\+id,  }\item[{unsigned int}]{wt\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Create /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers/$<$\+ID$>$ entry. 
+
+First, we check if current process has process entry in /proc/ums. Create \mbox{\hyperlink{proc_8h_a5d37f58b22852bfcd5cea7f12768b4c1}{worker\+\_\+thread\+\_\+entry\+\_\+t}} and add it to \mbox{\hyperlink{structworker__thread__entry__list}{worker\+\_\+thread\+\_\+entry\+\_\+list}}. Create /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$/workers/$<$\+ID$>$ entry.
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{proc_8h_a023126b4fbbcfa4d0566a131371e245c}\label{proc_8h_a023126b4fbbcfa4d0566a131371e245c}} 
+\index{proc.h@{proc.h}!exit\_proc@{exit\_proc}}
+\index{exit\_proc@{exit\_proc}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{exit\_proc()}{exit\_proc()}}
+{\footnotesize\ttfamily void exit\+\_\+proc (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Exit/delete allocated structures and entries of the proc part of the module. 
+
+Remove /proc/ums entry. Clean up memory allocated for the data structures that are associated in proc part\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{structprocess__entry__list}{process\+\_\+entry\+\_\+list}}
+\item \mbox{\hyperlink{structums__thread__entry__list}{ums\+\_\+thread\+\_\+entry\+\_\+list}}
+\item \mbox{\hyperlink{structworker__thread__entry__list}{worker\+\_\+thread\+\_\+entry\+\_\+list}} 
+\end{DoxyItemize}\mbox{\Hypertarget{proc_8h_ae7f367728e30a39b67afcc43ab1dbfa4}\label{proc_8h_ae7f367728e30a39b67afcc43ab1dbfa4}} 
+\index{proc.h@{proc.h}!get\_process\_entry\_with\_pid@{get\_process\_entry\_with\_pid}}
+\index{get\_process\_entry\_with\_pid@{get\_process\_entry\_with\_pid}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{get\_process\_entry\_with\_pid()}{get\_process\_entry\_with\_pid()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{proc_8h_ace957b26c02808ff5cf4be8c841da377}{process\+\_\+entry\+\_\+t}} $\ast$ get\+\_\+process\+\_\+entry\+\_\+with\+\_\+pid (\begin{DoxyParamCaption}\item[{pid\+\_\+t}]{req\+\_\+pid }\end{DoxyParamCaption})}
+
+
+
+Get process entry structure from \mbox{\hyperlink{structprocess__entry__list}{process\+\_\+entry\+\_\+list}} with specific PID. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em req\+\_\+pid} & the PID of the process \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily process\+\_\+entry\+\_\+t} the pointer to process entry structure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{proc_8h_a74700b19cca7f0589485d6a2d89c797d}\label{proc_8h_a74700b19cca7f0589485d6a2d89c797d}} 
+\index{proc.h@{proc.h}!get\_ums\_thread\_entry\_with\_id@{get\_ums\_thread\_entry\_with\_id}}
+\index{get\_ums\_thread\_entry\_with\_id@{get\_ums\_thread\_entry\_with\_id}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{get\_ums\_thread\_entry\_with\_id()}{get\_ums\_thread\_entry\_with\_id()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{proc_8h_a9ffd04e4be2b8a8e807b100fdb471e3b}{ums\+\_\+thread\+\_\+entry\+\_\+t}} $\ast$ get\+\_\+ums\+\_\+thread\+\_\+entry\+\_\+with\+\_\+id (\begin{DoxyParamCaption}\item[{pid\+\_\+t}]{req\+\_\+pid,  }\item[{unsigned int}]{id }\end{DoxyParamCaption})}
+
+
+
+Get scheduler entry structure from \mbox{\hyperlink{structums__thread__entry__list}{ums\+\_\+thread\+\_\+entry\+\_\+list}} with specific id. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em req\+\_\+pid} & the pid that created the scheduler \\
+\hline
+{\em id} & the id of the scheduler \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily ums\+\_\+thread\+\_\+entry\+\_\+t} the pointer to scheduler entry structure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{proc_8h_ac259d1fab55f793f322af5233653b7a3}\label{proc_8h_ac259d1fab55f793f322af5233653b7a3}} 
+\index{proc.h@{proc.h}!init\_proc@{init\_proc}}
+\index{init\_proc@{init\_proc}!proc.h@{proc.h}}
+\doxysubsubsection{\texorpdfstring{init\_proc()}{init\_proc()}}
+{\footnotesize\ttfamily int init\+\_\+proc (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Init initial proc files for the module. 
+
+Create /proc/ums entry at the start of the module
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}

@@ -1,0 +1,45 @@
+\hypertarget{device__shared_8h_source}{}\doxysection{device\+\_\+shared.\+h}
+\mbox{\hyperlink{device__shared_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#include <linux/ioctl.h>}}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define UMS\_DEV\_IOCTL\_MAGIC 'R'}}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{52 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structworker__thread__params}{worker\_thread\_params}} \{}
+\DoxyCodeLine{53     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keyword}{function};             }
+\DoxyCodeLine{54     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{structworker__thread__params_a1621ac016397a480676b38438271be25}{function\_args}};        }
+\DoxyCodeLine{55     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{structworker__thread__params_a2f9e1091aae77a8a00139ee2d406ce52}{stack\_address}};        }
+\DoxyCodeLine{56     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{structworker__thread__params_a1f892316e396f06c058e47f37176277d}{stack\_size}};           }
+\DoxyCodeLine{57 \} \mbox{\hyperlink{device__shared_8h_a7db527934bf7ffb83701317f9a073dd0}{worker\_thread\_params\_t}};}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{63 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structadd__wt__params}{add\_wt\_params}} \{}
+\DoxyCodeLine{64     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structadd__wt__params_a8783ea2fc7852ac862a11f5e01b9c879}{completion\_list\_id}};    }
+\DoxyCodeLine{65     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structadd__wt__params_a2bc0111aadf06411a52c0e0c96911c05}{worker\_thread\_id}};      }
+\DoxyCodeLine{66 \} \mbox{\hyperlink{device__shared_8h_ab042f0a28f23e82580c274912cfe7d1b}{add\_wt\_params\_t}};}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{72 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structums__thread__params}{ums\_thread\_params}} \{}
+\DoxyCodeLine{73     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keyword}{function};             }
+\DoxyCodeLine{74     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread__params_aaf7b5b9528b84a2a1ec20ca7907d6c68}{completion\_list\_id}};    }
+\DoxyCodeLine{75 \} \mbox{\hyperlink{device__shared_8h_a6ac8c9c6aa900b00f3b35300be5d16fe}{ums\_thread\_params\_t}};}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{81 \textcolor{keyword}{typedef} \textcolor{keyword}{enum} \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1}{yield\_reason}} \{}
+\DoxyCodeLine{82     \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1a8b9af67858708d770f017e4aae85900d}{FINISH}},         }
+\DoxyCodeLine{83     \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1a56b36d0d0bb01b339cf1041adc08e262}{PAUSE}}           }
+\DoxyCodeLine{85 \} \mbox{\hyperlink{device__shared_8h_af6a037295cc215d38e0865102e652366}{yield\_reason\_t}};}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87 \textcolor{preprocessor}{\#define UMS\_DEV\_INIT\_UMS\_PROCESS            \_IO(UMS\_DEV\_IOCTL\_MAGIC, 0)}}
+\DoxyCodeLine{88 \textcolor{preprocessor}{\#define UMS\_DEV\_EXIT\_UMS\_PROCESS            \_IO(UMS\_DEV\_IOCTL\_MAGIC, 1)}}
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#define UMS\_DEV\_CREATE\_COMPLETION\_LIST      \_IO(UMS\_DEV\_IOCTL\_MAGIC, 2)}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{\#define UMS\_DEV\_CREATE\_WORKER\_THREAD        \_IOW(UMS\_DEV\_IOCTL\_MAGIC, 3, worker\_thread\_params\_t *)}}
+\DoxyCodeLine{91 \textcolor{preprocessor}{\#define UMS\_DEV\_ADD\_TO\_COMPLETION\_LIST      \_IOW(UMS\_DEV\_IOCTL\_MAGIC, 4, add\_wt\_params\_t *)}}
+\DoxyCodeLine{92 \textcolor{preprocessor}{\#define UMS\_DEV\_CREATE\_UMS\_THREAD           \_IOW(UMS\_DEV\_IOCTL\_MAGIC, 5, ums\_thread\_params\_t *)}}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define UMS\_DEV\_CONVERT\_TO\_UMS\_THREAD       \_IOW(UMS\_DEV\_IOCTL\_MAGIC, 6, int)}}
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#define UMS\_DEV\_CONVERT\_FROM\_UMS\_THREAD     \_IO(UMS\_DEV\_IOCTL\_MAGIC, 7)}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{\#define UMS\_DEV\_DEQUEUE\_CL\_ITEMS            \_IOWR(UMS\_DEV\_IOCTL\_MAGIC, 8, int *)}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{\#define UMS\_DEV\_SWITCH\_TO\_WORKER\_THREAD     \_IOW(UMS\_DEV\_IOCTL\_MAGIC, 9, int)}}
+\DoxyCodeLine{97 \textcolor{preprocessor}{\#define UMS\_DEV\_SWITCH\_BACK\_TO\_UMS\_THREAD   \_IOW(UMS\_DEV\_IOCTL\_MAGIC, 10, yield\_reason\_t)}}
+
+\end{DoxyCode}

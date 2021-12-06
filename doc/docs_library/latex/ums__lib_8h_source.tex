@@ -1,0 +1,96 @@
+\hypertarget{ums__lib_8h_source}{}\doxysection{ums\+\_\+lib.\+h}
+\mbox{\hyperlink{ums__lib_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include <sys/ioctl.h>}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include <errno.h>}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <fcntl.h>}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include <pthread.h>}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{list_8h}{list.h}}"{}}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#include "{}../module/device\_shared.h"{}}}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#define UMS\_DEVICE\_PATH "{}/dev/umsdevice"{}}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#define UMS\_LIB\_LOG "{}UMS lib: "{}}}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define MIN\_STACK\_SIZE 4096}}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{comment}{/* }}
+\DoxyCodeLine{49 \textcolor{comment}{ * Structs}}
+\DoxyCodeLine{50 \textcolor{comment}{ */}}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{58 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structcl__list}{cl\_list}} \{}
+\DoxyCodeLine{59     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} list;}
+\DoxyCodeLine{60     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structcl__list_a22de9667427aefd3059ddb3c1e1efcdf}{cl\_count}};      }
+\DoxyCodeLine{61 \} \mbox{\hyperlink{ums__lib_8h_a331020b397767045df55c3440bcfe919}{cl\_list\_t}};}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{69 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structworker__thread__list}{worker\_thread\_list}} \{}
+\DoxyCodeLine{70     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} list;}
+\DoxyCodeLine{71     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structworker__thread__list_aa29eea4868cb925b924d53f038dc7b50}{worker\_thread\_count}};        }
+\DoxyCodeLine{72 \} \mbox{\hyperlink{ums__lib_8h_a0b7394272d57022d03b53178cbc1c260}{worker\_thread\_list\_t}};}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{80 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structums__thread__list}{ums\_thread\_list}} \{}
+\DoxyCodeLine{81     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} list;}
+\DoxyCodeLine{82     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread__list_ac23ca6aa50b17a8e980e01c08a357760}{ums\_thread\_count}};      }
+\DoxyCodeLine{83 \} \mbox{\hyperlink{ums__lib_8h_a35c358a86004735824917343df36009f}{ums\_thread\_list\_t}};}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{91 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structcompletion__list}{completion\_list}} \{}
+\DoxyCodeLine{92     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structcompletion__list_a053c1483124f251f5ce17414f0b36e80}{id}};                      }
+\DoxyCodeLine{93     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structcompletion__list_a3c0a4928a6e8454fce9eba410bd6f9e5}{worker\_thread\_count}};        }
+\DoxyCodeLine{94     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} list;                 }
+\DoxyCodeLine{95 \} \mbox{\hyperlink{ums__lib_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\_list\_t}};}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{103 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structworker__thread}{worker\_thread}} \{}
+\DoxyCodeLine{104     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structworker__thread_a24de109256f7f6e8d17a83ab1d472443}{id}};                  }
+\DoxyCodeLine{105     worker\_thread\_params\_t *\mbox{\hyperlink{structworker__thread_abbc90576b1620c1e1ca9357a1794a6e3}{params}};       }
+\DoxyCodeLine{106     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} list;             }
+\DoxyCodeLine{107 \} \mbox{\hyperlink{ums__lib_8h_a283231e0eca6d5c5c7450ed0c40e1ccf}{worker\_thread\_t}};}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{115 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structums__thread}{ums\_thread}} \{}
+\DoxyCodeLine{116     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread_a1bcb24b9c8e23c9ba623739dad5b6b3b}{id}};                  }
+\DoxyCodeLine{117     pthread\_t \mbox{\hyperlink{structums__thread_ad886fdf605c6f86ca553e2964171a849}{pt}};                     }
+\DoxyCodeLine{118     ums\_thread\_params\_t *\mbox{\hyperlink{structums__thread_a5abe673ed0fe93b710471fa3048e95ed}{params}};      }
+\DoxyCodeLine{119     \textcolor{keyword}{struct }\mbox{\hyperlink{structlist__head}{list\_head}} list;             }
+\DoxyCodeLine{120 \} \mbox{\hyperlink{ums__lib_8h_a47c075daee7305cd294767817f16da96}{ums\_thread\_t}};}
+\DoxyCodeLine{121 }
+\DoxyCodeLine{122 \textcolor{comment}{/* }}
+\DoxyCodeLine{123 \textcolor{comment}{ * Functions}}
+\DoxyCodeLine{124 \textcolor{comment}{ */}}
+\DoxyCodeLine{125 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a5f0e5bd0b9dad50cc339df9894adcd53}{init\_ums}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{126 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a38621061488257d36f9bbdfda41f97bf}{exit\_ums}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{127 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a75ce1900a0840e6b37a61c11f973cbb9}{create\_completion\_list}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{128 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a154cdaed1247445afca2e79d9dbb6ecc}{create\_worker\_thread}}(\textcolor{keywordtype}{void} (*\textcolor{keyword}{function})(\textcolor{keywordtype}{void} *), \textcolor{keywordtype}{void} *args, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} stack\_size);}
+\DoxyCodeLine{129 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a8f5f98fd8afce15af00547799ef1c826}{add\_worker\_thread}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} completion\_list\_id, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} worker\_thread\_id);}
+\DoxyCodeLine{130 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_af4d33ae61bf2a9e89c2ff94b7993791d}{enter\_ums\_scheduling\_mode}}(\textcolor{keywordtype}{void} (*\textcolor{keyword}{function})(\textcolor{keywordtype}{void} *), \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} completion\_list\_id);}
+\DoxyCodeLine{131 \textcolor{keywordtype}{void} *\mbox{\hyperlink{ums__lib_8h_a33a89f4fc8fc11ddf826265f4c95768a}{convert\_to\_ums\_thread}}(\textcolor{keywordtype}{void} *ums\_thread\_id);}
+\DoxyCodeLine{132 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a6bc8d8d4936394440b424107352dad49}{exit\_ums\_scheduling\_mode}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{133 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_adf01114d0d1719655e22cb69b51e1268}{dequeue\_completion\_list\_items}}(\textcolor{keywordtype}{int} *ready\_wt\_list);}
+\DoxyCodeLine{134 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a12eee99aa4872b888af399203b30ba83}{execute\_worker\_thread}}(\textcolor{keywordtype}{int} *ready\_wt\_list, \textcolor{keywordtype}{int} size, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} worker\_thread\_id);}
+\DoxyCodeLine{135 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_abf29f0150d2f1fccb5734d66cd2a31c0}{worker\_thread\_yield}}(yield\_reason\_t yield\_reason);}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a2104cd2d3d9d9120deee336bd4a907f6}{get\_next\_ready\_item}}(\textcolor{keywordtype}{int} *ready\_wt\_list, \textcolor{keywordtype}{int} size);}
+\DoxyCodeLine{138 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a14dc713595176c062112d91a3a913da8}{check\_ready\_wt\_list}}(\textcolor{keywordtype}{int} *ready\_wt\_list, \textcolor{keywordtype}{int} size);}
+\DoxyCodeLine{139 }
+\DoxyCodeLine{140 \textcolor{comment}{/* }}
+\DoxyCodeLine{141 \textcolor{comment}{ * Auxiliary functions}}
+\DoxyCodeLine{142 \textcolor{comment}{ */}}
+\DoxyCodeLine{143 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a02b971dbc0683158b4aee548eeea14fa}{open\_dev}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{144 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a4ea1bab04bbb44f6becfcae9bdc8cb6a}{close\_dev}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{145 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_ab8f17c63d34a99bc8ee100746a9c7e2f}{get\_wt\_count\_in\_current\_umst\_cl}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{146 \mbox{\hyperlink{structcompletion__list}{completion\_list\_t}} *\mbox{\hyperlink{ums__lib_8h_a10dd4f6e3382061149242d4ad43c0562}{get\_cl\_with\_id}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} completion\_list\_id);}
+\DoxyCodeLine{147 \mbox{\hyperlink{structworker__thread}{worker\_thread\_t}} *\mbox{\hyperlink{ums__lib_8h_a875ac05c0e7c61f46a910b1815a1ad9d}{get\_wt\_with\_id}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} worker\_thread\_id);}
+\DoxyCodeLine{148 \mbox{\hyperlink{structums__thread}{ums\_thread\_t}} *\mbox{\hyperlink{ums__lib_8h_aaabca1624adb9c3e49c9da3d588be00a}{get\_umst\_run\_by\_pthread}}(pthread\_t current\_pt);}
+\DoxyCodeLine{149 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_ab3d928286f28d72c20c361130928869f}{free\_ums\_thread\_list}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{150 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_aa0387cff4a6b18c39234f35926c4973d}{free\_cl\_list}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{151 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums__lib_8h_a0e586774ba40c4fb7525730e8939717e}{free\_worker\_thread\_list}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{152 \textcolor{keywordtype}{void} \mbox{\hyperlink{ums__lib_8h_af43699ccb343e62b230ad2722ad378da}{clean\_memory}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154 \_\_attribute\_\_((constructor)) \textcolor{keywordtype}{void} constructor(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{155 \_\_attribute\_\_((destructor)) \textcolor{keywordtype}{void} destructor(\textcolor{keywordtype}{void});}
+
+\end{DoxyCode}

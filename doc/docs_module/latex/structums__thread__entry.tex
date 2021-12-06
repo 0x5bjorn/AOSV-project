@@ -1,0 +1,70 @@
+\hypertarget{structums__thread__entry}{}\doxysection{ums\+\_\+thread\+\_\+entry Struct Reference}
+\label{structums__thread__entry}\index{ums\_thread\_entry@{ums\_thread\_entry}}
+
+
+The structure for scheduler entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$  
+
+
+
+
+{\ttfamily \#include $<$proc.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{structums__thread__entry_a7ee514a60dc5ab7f950c32677b557384}{id}}
+\item 
+pid\+\_\+t \mbox{\hyperlink{structums__thread__entry_a42acf71c050f9d29a8a4ed1c34a52eeb}{created\+\_\+by}}
+\item 
+\mbox{\Hypertarget{structums__thread__entry_afed1617893fd2ed9e92e4c6025fdba7a}\label{structums__thread__entry_afed1617893fd2ed9e92e4c6025fdba7a}} 
+struct list\+\_\+head {\bfseries list}
+\item 
+struct proc\+\_\+dir\+\_\+entry $\ast$ \mbox{\hyperlink{structums__thread__entry_a3ad81259a1223c80890c705b8451d610}{entry}}
+\item 
+struct proc\+\_\+dir\+\_\+entry $\ast$ \mbox{\hyperlink{structums__thread__entry_ad321a788ee9a4ead33703ae25cf9ca5c}{workers\+\_\+entry}}
+\item 
+struct proc\+\_\+dir\+\_\+entry $\ast$ \mbox{\hyperlink{structums__thread__entry_a1b91e93f693949b34c902d14156fdf4b}{info\+\_\+entry}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The structure for scheduler entry /proc/ums/$<$\+PID$>$/schedulers/$<$\+ID$>$ 
+
+This is a node in the \mbox{\hyperlink{structums__thread__entry__list}{ums\+\_\+thread\+\_\+entry\+\_\+list}}. This is a description of the scheduler entry. 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structums__thread__entry_a42acf71c050f9d29a8a4ed1c34a52eeb}\label{structums__thread__entry_a42acf71c050f9d29a8a4ed1c34a52eeb}} 
+\index{ums\_thread\_entry@{ums\_thread\_entry}!created\_by@{created\_by}}
+\index{created\_by@{created\_by}!ums\_thread\_entry@{ums\_thread\_entry}}
+\doxysubsubsection{\texorpdfstring{created\_by}{created\_by}}
+{\footnotesize\ttfamily pid\+\_\+t ums\+\_\+thread\+\_\+entry\+::created\+\_\+by}
+
+The PID of the process associated with scheduler entry \mbox{\Hypertarget{structums__thread__entry_a3ad81259a1223c80890c705b8451d610}\label{structums__thread__entry_a3ad81259a1223c80890c705b8451d610}} 
+\index{ums\_thread\_entry@{ums\_thread\_entry}!entry@{entry}}
+\index{entry@{entry}!ums\_thread\_entry@{ums\_thread\_entry}}
+\doxysubsubsection{\texorpdfstring{entry}{entry}}
+{\footnotesize\ttfamily struct proc\+\_\+dir\+\_\+entry$\ast$ ums\+\_\+thread\+\_\+entry\+::entry}
+
+The entry of the scheduler \mbox{\Hypertarget{structums__thread__entry_a7ee514a60dc5ab7f950c32677b557384}\label{structums__thread__entry_a7ee514a60dc5ab7f950c32677b557384}} 
+\index{ums\_thread\_entry@{ums\_thread\_entry}!id@{id}}
+\index{id@{id}!ums\_thread\_entry@{ums\_thread\_entry}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily unsigned int ums\+\_\+thread\+\_\+entry\+::id}
+
+Unique id of the scheduler \mbox{\Hypertarget{structums__thread__entry_a1b91e93f693949b34c902d14156fdf4b}\label{structums__thread__entry_a1b91e93f693949b34c902d14156fdf4b}} 
+\index{ums\_thread\_entry@{ums\_thread\_entry}!info\_entry@{info\_entry}}
+\index{info\_entry@{info\_entry}!ums\_thread\_entry@{ums\_thread\_entry}}
+\doxysubsubsection{\texorpdfstring{info\_entry}{info\_entry}}
+{\footnotesize\ttfamily struct proc\+\_\+dir\+\_\+entry$\ast$ ums\+\_\+thread\+\_\+entry\+::info\+\_\+entry}
+
+The entry containing statistics about scheduler, child of \mbox{\hyperlink{structums__thread__entry_a3ad81259a1223c80890c705b8451d610}{ums\+\_\+thread\+\_\+entry\+::entry}} \mbox{\Hypertarget{structums__thread__entry_ad321a788ee9a4ead33703ae25cf9ca5c}\label{structums__thread__entry_ad321a788ee9a4ead33703ae25cf9ca5c}} 
+\index{ums\_thread\_entry@{ums\_thread\_entry}!workers\_entry@{workers\_entry}}
+\index{workers\_entry@{workers\_entry}!ums\_thread\_entry@{ums\_thread\_entry}}
+\doxysubsubsection{\texorpdfstring{workers\_entry}{workers\_entry}}
+{\footnotesize\ttfamily struct proc\+\_\+dir\+\_\+entry$\ast$ ums\+\_\+thread\+\_\+entry\+::workers\+\_\+entry}
+
+The entry of workers, child of \mbox{\hyperlink{structums__thread__entry_a3ad81259a1223c80890c705b8451d610}{ums\+\_\+thread\+\_\+entry\+::entry}} 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{proc_8h}{proc.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,62 @@
+\hypertarget{device_8c}{}\doxysection{device.\+c File Reference}
+\label{device_8c}\index{device.c@{device.c}}
+
+
+This file contains the implementation of the functions of the char device part.  
+
+
+{\ttfamily \#include \char`\"{}device.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{device_8c_a9e41697c2adbe328e3e139556979f382}\label{device_8c_a9e41697c2adbe328e3e139556979f382}} 
+{\bfseries DEFINE\+\_\+\+SPINLOCK} (spinlock)
+\item 
+int \mbox{\hyperlink{device_8c_a88bd4adb20dc9040ae78f5b4036b61ab}{init\+\_\+device}} (void)
+\begin{DoxyCompactList}\small\item\em Init/register the UMS device. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{device_8c_a913daeab576f2ec16b1d312d54a668e0}\label{device_8c_a913daeab576f2ec16b1d312d54a668e0}} 
+void {\bfseries exit\+\_\+device} (void)
+\begin{DoxyCompactList}\small\item\em Exit/deregister the UMS device. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{device_8c_a32fa47cb5bdac92cf773340d747b1539}\label{device_8c_a32fa47cb5bdac92cf773340d747b1539}} 
+spinlock\+\_\+t {\bfseries spinlock}
+\item 
+\mbox{\Hypertarget{device_8c_a114551e2b32145f9d19a45d8d2079e11}\label{device_8c_a114551e2b32145f9d19a45d8d2079e11}} 
+unsigned long {\bfseries sl\+\_\+irq\+\_\+flags}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file contains the implementation of the functions of the char device part. 
+
+Copyright (C) 2021 Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}}
+
+This file is part of UMS implementation (Kernel Module).
+
+UMS implementation (Kernel Module) is free software\+: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+UMS implementation (Kernel Module) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with UMS implementation (Kernel Module). If not, see \href{http://www.gnu.org/licenses/}{\texttt{ http\+://www.\+gnu.\+org/licenses/}}.
+
+\begin{DoxyAuthor}{Author}
+Sultan Umarbaev \href{mailto:name.sul27@gmail.com}{\texttt{ name.\+sul27@gmail.\+com}} 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{device_8c_a88bd4adb20dc9040ae78f5b4036b61ab}\label{device_8c_a88bd4adb20dc9040ae78f5b4036b61ab}} 
+\index{device.c@{device.c}!init\_device@{init\_device}}
+\index{init\_device@{init\_device}!device.c@{device.c}}
+\doxysubsubsection{\texorpdfstring{init\_device()}{init\_device()}}
+{\footnotesize\ttfamily int init\+\_\+device (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Init/register the UMS device. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily int} exit code 0 for success, otherwise a corresponding error code 
+\end{DoxyReturn}

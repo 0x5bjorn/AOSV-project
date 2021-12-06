@@ -1,0 +1,75 @@
+\hypertarget{proc_8h_source}{}\doxysection{proc.\+h}
+\mbox{\hyperlink{proc_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include <linux/proc\_fs.h>}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include <linux/seq\_file.h>}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{ums_8h}{ums.h}}"{}}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#define UMS\_PROC\_LOG "{}UMS proc: "{}}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#define ERROR\_PROC\_FAIL 1}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#define ERROR\_PROCESS\_ENTRY\_NOT\_FOUND 601}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#define ERROR\_PROCESS\_ENTRY\_ALREADY\_EXISTS 602}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#define ERROR\_UMST\_ENTRY\_NOT\_FOUND 603}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{comment}{/* }}
+\DoxyCodeLine{46 \textcolor{comment}{ * Structs}}
+\DoxyCodeLine{47 \textcolor{comment}{ */}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{55 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structprocess__entry__list}{process\_entry\_list}} \{}
+\DoxyCodeLine{56     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{57     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structprocess__entry__list_afde81aaf5c1b3b1e87efc2f866f3eb42}{process\_entry\_count}};            }
+\DoxyCodeLine{58 \} \mbox{\hyperlink{proc_8h_a7464412f10c3b7870b654caf1ea5073a}{process\_entry\_list\_t}};}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{66 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structums__thread__entry__list}{ums\_thread\_entry\_list}} \{}
+\DoxyCodeLine{67     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{68     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread__entry__list_a12a1657812cb80f0a5acd69cd80c5343}{ums\_thread\_entry\_count}};      }
+\DoxyCodeLine{69 \} \mbox{\hyperlink{proc_8h_af5c0f386828829947b35e084beae2c0c}{ums\_thread\_entry\_list\_t}};}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{77 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structworker__thread__entry__list}{worker\_thread\_entry\_list}} \{}
+\DoxyCodeLine{78     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{79     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structworker__thread__entry__list_a7fac60834907ad7c06348802957486a4}{worker\_thread\_entry\_count}};        }
+\DoxyCodeLine{80 \} \mbox{\hyperlink{proc_8h_ac2b313c9e13ac4de28018c22de73af93}{worker\_thread\_entry\_list\_t}};}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{88 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structprocess__entry}{process\_entry}} \{}
+\DoxyCodeLine{89     pid\_t \mbox{\hyperlink{structprocess__entry_aa6514cd03e7b0ccdf7c096c417fa880f}{pid}};                                   }
+\DoxyCodeLine{90     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{91     \textcolor{keyword}{struct }proc\_dir\_entry *\mbox{\hyperlink{structprocess__entry_a681f74969ad1277f823677fc526be724}{entry}};              }
+\DoxyCodeLine{92     \textcolor{keyword}{struct }proc\_dir\_entry *\mbox{\hyperlink{structprocess__entry_ac3db658d35e7cc8502d6c3ad2d87f461}{schedulers\_entry}};    }
+\DoxyCodeLine{93 \} \mbox{\hyperlink{proc_8h_ace957b26c02808ff5cf4be8c841da377}{process\_entry\_t}};}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{101 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structums__thread__entry}{ums\_thread\_entry}} \{}
+\DoxyCodeLine{102     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread__entry_a7ee514a60dc5ab7f950c32677b557384}{id}};                          }
+\DoxyCodeLine{103     pid\_t \mbox{\hyperlink{structums__thread__entry_a42acf71c050f9d29a8a4ed1c34a52eeb}{created\_by}};                         }
+\DoxyCodeLine{104     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{105     \textcolor{keyword}{struct }proc\_dir\_entry *\mbox{\hyperlink{structums__thread__entry_a3ad81259a1223c80890c705b8451d610}{entry}};              }
+\DoxyCodeLine{106     \textcolor{keyword}{struct }proc\_dir\_entry *\mbox{\hyperlink{structums__thread__entry_ad321a788ee9a4ead33703ae25cf9ca5c}{workers\_entry}};      }
+\DoxyCodeLine{107     \textcolor{keyword}{struct }proc\_dir\_entry *\mbox{\hyperlink{structums__thread__entry_a1b91e93f693949b34c902d14156fdf4b}{info\_entry}};            }
+\DoxyCodeLine{108 \} \mbox{\hyperlink{proc_8h_a9ffd04e4be2b8a8e807b100fdb471e3b}{ums\_thread\_entry\_t}};}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{116 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structworker__thread__entry}{worker\_thread\_entry}} \{}
+\DoxyCodeLine{117     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structworker__thread__entry_adcd602def0aee6eb9d91f1398c675184}{id}};                  }
+\DoxyCodeLine{118     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{119     \textcolor{keyword}{struct }proc\_dir\_entry *\mbox{\hyperlink{structworker__thread__entry_a009a380e777dee4f05cf4e5efb1e9ab4}{entry}};      }
+\DoxyCodeLine{120 \} \mbox{\hyperlink{proc_8h_a5d37f58b22852bfcd5cea7f12768b4c1}{worker\_thread\_entry\_t}};}
+\DoxyCodeLine{121 }
+\DoxyCodeLine{122 \textcolor{comment}{/*}}
+\DoxyCodeLine{123 \textcolor{comment}{ * Functions}}
+\DoxyCodeLine{124 \textcolor{comment}{ */}}
+\DoxyCodeLine{125 \textcolor{keywordtype}{int} \mbox{\hyperlink{proc_8h_ac259d1fab55f793f322af5233653b7a3}{init\_proc}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{126 \textcolor{keywordtype}{void} \mbox{\hyperlink{proc_8h_a023126b4fbbcfa4d0566a131371e245c}{exit\_proc}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{127 \textcolor{keywordtype}{int} \mbox{\hyperlink{proc_8h_a5e324c23c3e7abc4f0ac29790a7a8dcf}{create\_process\_entry}}(pid\_t pid);}
+\DoxyCodeLine{128 \textcolor{keywordtype}{int} \mbox{\hyperlink{proc_8h_a35460d097e7416d646aab806ecc570d3}{create\_umst\_entry}}(pid\_t pid, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} umst\_id);}
+\DoxyCodeLine{129 \textcolor{keywordtype}{int} \mbox{\hyperlink{proc_8h_a567df7aea0311b15da9a98cc744b6199}{create\_wt\_entry}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} umst\_id, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} wt\_id);}
+\DoxyCodeLine{130 }
+\DoxyCodeLine{131 \textcolor{comment}{/* }}
+\DoxyCodeLine{132 \textcolor{comment}{ * Auxiliary functions}}
+\DoxyCodeLine{133 \textcolor{comment}{ */}}
+\DoxyCodeLine{134 \mbox{\hyperlink{structprocess__entry}{process\_entry\_t}} *\mbox{\hyperlink{proc_8h_ae7f367728e30a39b67afcc43ab1dbfa4}{get\_process\_entry\_with\_pid}}(pid\_t req\_pid);}
+\DoxyCodeLine{135 \mbox{\hyperlink{structums__thread__entry}{ums\_thread\_entry\_t}} *\mbox{\hyperlink{proc_8h_a74700b19cca7f0589485d6a2d89c797d}{get\_ums\_thread\_entry\_with\_id}}(pid\_t req\_pid, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \textcolor{keywordtype}{id});}
+
+\end{DoxyCode}

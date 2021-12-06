@@ -1,0 +1,142 @@
+\hypertarget{structums__thread__context}{}\doxysection{ums\+\_\+thread\+\_\+context Struct Reference}
+\label{structums__thread__context}\index{ums\_thread\_context@{ums\_thread\_context}}
+
+
+The ums thread(scheduler)  
+
+
+
+
+{\ttfamily \#include $<$ums.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{structums__thread__context_a9b594f8c5ec95bdcc2bb90d6f5588721}{id}}
+\item 
+\mbox{\Hypertarget{structums__thread__context_a4973b34502e3a5e65aa2b2b6a58e3402}\label{structums__thread__context_a4973b34502e3a5e65aa2b2b6a58e3402}} 
+struct list\+\_\+head {\bfseries list}
+\item 
+unsigned long \mbox{\hyperlink{structums__thread__context_a32aa3478a25c6fc832193a983c734823}{entry\+\_\+point}}
+\item 
+unsigned int \mbox{\hyperlink{structums__thread__context_aada95dacd52bb950a3fe8f1629d8d17a}{cl\+\_\+id}}
+\item 
+unsigned int \mbox{\hyperlink{structums__thread__context_aa66c738f2ee9ffa03198348143cc49c3}{wt\+\_\+id}}
+\item 
+pid\+\_\+t \mbox{\hyperlink{structums__thread__context_abf06939bac9db7caede4234c208acc01}{created\+\_\+by}}
+\item 
+pid\+\_\+t \mbox{\hyperlink{structums__thread__context_a12fb7174037d944027a0dd3eed12d226}{run\+\_\+by}}
+\item 
+\mbox{\hyperlink{ums_8h_adf78edcd8347bb088e9ef4797813efd0}{ums\+\_\+state\+\_\+t}} \mbox{\hyperlink{structums__thread__context_ad39f49e374ec95ecf13c448283b4535a}{state}}
+\item 
+unsigned int \mbox{\hyperlink{structums__thread__context_a22ab508a18133af3af2f6cf804d04ed6}{switch\+\_\+count}}
+\item 
+struct timespec64 \mbox{\hyperlink{structums__thread__context_a5ecfdc22f1c91698ffd474e1a975f9b6}{last\+\_\+switch\+\_\+time}}
+\item 
+unsigned long \mbox{\hyperlink{structums__thread__context_a172287161e05473566433859037e9e24}{switching\+\_\+time}}
+\item 
+unsigned long \mbox{\hyperlink{structums__thread__context_ac74c703816309c71d887b07b3c7da0b6}{avg\+\_\+switching\+\_\+time}}
+\item 
+struct pt\+\_\+regs \mbox{\hyperlink{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}{regs}}
+\item 
+struct fpu \mbox{\hyperlink{structums__thread__context_a01b56016d18235e154a353c29b2b8c68}{fpu\+\_\+regs}}
+\item 
+struct pt\+\_\+regs \mbox{\hyperlink{structums__thread__context_a85e0111a0c22f806eecd448f5ff8a642}{ret\+\_\+regs}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The ums thread(scheduler) 
+
+This is a node in the \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{process\+::ums\+\_\+thread\+\_\+list}}. This is a description of ums thread(scheduler). 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structums__thread__context_ac74c703816309c71d887b07b3c7da0b6}\label{structums__thread__context_ac74c703816309c71d887b07b3c7da0b6}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!avg\_switching\_time@{avg\_switching\_time}}
+\index{avg\_switching\_time@{avg\_switching\_time}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{avg\_switching\_time}{avg\_switching\_time}}
+{\footnotesize\ttfamily unsigned long ums\+\_\+thread\+\_\+context\+::avg\+\_\+switching\+\_\+time}
+
+The average switching time of the ums thread(scheduler) \mbox{\Hypertarget{structums__thread__context_aada95dacd52bb950a3fe8f1629d8d17a}\label{structums__thread__context_aada95dacd52bb950a3fe8f1629d8d17a}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!cl\_id@{cl\_id}}
+\index{cl\_id@{cl\_id}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{cl\_id}{cl\_id}}
+{\footnotesize\ttfamily unsigned int ums\+\_\+thread\+\_\+context\+::cl\+\_\+id}
+
+The id of the completion list associated to the ums thread(scheduler) \mbox{\Hypertarget{structums__thread__context_abf06939bac9db7caede4234c208acc01}\label{structums__thread__context_abf06939bac9db7caede4234c208acc01}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!created\_by@{created\_by}}
+\index{created\_by@{created\_by}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{created\_by}{created\_by}}
+{\footnotesize\ttfamily pid\+\_\+t ums\+\_\+thread\+\_\+context\+::created\+\_\+by}
+
+The PID of the process that created the ums thread(scheduler) \mbox{\Hypertarget{structums__thread__context_a32aa3478a25c6fc832193a983c734823}\label{structums__thread__context_a32aa3478a25c6fc832193a983c734823}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!entry\_point@{entry\_point}}
+\index{entry\_point@{entry\_point}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{entry\_point}{entry\_point}}
+{\footnotesize\ttfamily unsigned long ums\+\_\+thread\+\_\+context\+::entry\+\_\+point}
+
+The starting function of the ums thread(scheduler), i.\+e. scheduling function \mbox{\Hypertarget{structums__thread__context_a01b56016d18235e154a353c29b2b8c68}\label{structums__thread__context_a01b56016d18235e154a353c29b2b8c68}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!fpu\_regs@{fpu\_regs}}
+\index{fpu\_regs@{fpu\_regs}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{fpu\_regs}{fpu\_regs}}
+{\footnotesize\ttfamily struct fpu ums\+\_\+thread\+\_\+context\+::fpu\+\_\+regs}
+
+The current snapshot of fpu registers \mbox{\Hypertarget{structums__thread__context_a9b594f8c5ec95bdcc2bb90d6f5588721}\label{structums__thread__context_a9b594f8c5ec95bdcc2bb90d6f5588721}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!id@{id}}
+\index{id@{id}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily unsigned int ums\+\_\+thread\+\_\+context\+::id}
+
+Unique id of the ums thread(scheduler) \mbox{\Hypertarget{structums__thread__context_a5ecfdc22f1c91698ffd474e1a975f9b6}\label{structums__thread__context_a5ecfdc22f1c91698ffd474e1a975f9b6}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!last\_switch\_time@{last\_switch\_time}}
+\index{last\_switch\_time@{last\_switch\_time}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{last\_switch\_time}{last\_switch\_time}}
+{\footnotesize\ttfamily struct timespec64 ums\+\_\+thread\+\_\+context\+::last\+\_\+switch\+\_\+time}
+
+The time of the last switch to the ums thread(scheduler) \mbox{\Hypertarget{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}\label{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!regs@{regs}}
+\index{regs@{regs}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{regs}{regs}}
+{\footnotesize\ttfamily struct pt\+\_\+regs ums\+\_\+thread\+\_\+context\+::regs}
+
+The current snapshot of cpu registers \mbox{\Hypertarget{structums__thread__context_a85e0111a0c22f806eecd448f5ff8a642}\label{structums__thread__context_a85e0111a0c22f806eecd448f5ff8a642}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!ret\_regs@{ret\_regs}}
+\index{ret\_regs@{ret\_regs}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{ret\_regs}{ret\_regs}}
+{\footnotesize\ttfamily struct pt\+\_\+regs ums\+\_\+thread\+\_\+context\+::ret\+\_\+regs}
+
+The snapshot of cpu registers of the pthread that switched to the ums thread(scheduler). This is needed when thread exits UMS scheduling mode and converts back to the pthread \mbox{\Hypertarget{structums__thread__context_a12fb7174037d944027a0dd3eed12d226}\label{structums__thread__context_a12fb7174037d944027a0dd3eed12d226}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!run\_by@{run\_by}}
+\index{run\_by@{run\_by}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{run\_by}{run\_by}}
+{\footnotesize\ttfamily pid\+\_\+t ums\+\_\+thread\+\_\+context\+::run\+\_\+by}
+
+The PID of the thread that is currently running the ums thread(scheduler) \mbox{\Hypertarget{structums__thread__context_ad39f49e374ec95ecf13c448283b4535a}\label{structums__thread__context_ad39f49e374ec95ecf13c448283b4535a}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!state@{state}}
+\index{state@{state}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{state}{state}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ums_8h_adf78edcd8347bb088e9ef4797813efd0}{ums\+\_\+state\+\_\+t}} ums\+\_\+thread\+\_\+context\+::state}
+
+The current state of the ums thread(scheduler) \mbox{\Hypertarget{structums__thread__context_a22ab508a18133af3af2f6cf804d04ed6}\label{structums__thread__context_a22ab508a18133af3af2f6cf804d04ed6}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!switch\_count@{switch\_count}}
+\index{switch\_count@{switch\_count}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{switch\_count}{switch\_count}}
+{\footnotesize\ttfamily unsigned int ums\+\_\+thread\+\_\+context\+::switch\+\_\+count}
+
+The number of switches to the ums thread(scheduler) \mbox{\Hypertarget{structums__thread__context_a172287161e05473566433859037e9e24}\label{structums__thread__context_a172287161e05473566433859037e9e24}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!switching\_time@{switching\_time}}
+\index{switching\_time@{switching\_time}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{switching\_time}{switching\_time}}
+{\footnotesize\ttfamily unsigned long ums\+\_\+thread\+\_\+context\+::switching\+\_\+time}
+
+The total switching time of the ums thread(scheduler) \mbox{\Hypertarget{structums__thread__context_aa66c738f2ee9ffa03198348143cc49c3}\label{structums__thread__context_aa66c738f2ee9ffa03198348143cc49c3}} 
+\index{ums\_thread\_context@{ums\_thread\_context}!wt\_id@{wt\_id}}
+\index{wt\_id@{wt\_id}!ums\_thread\_context@{ums\_thread\_context}}
+\doxysubsubsection{\texorpdfstring{wt\_id}{wt\_id}}
+{\footnotesize\ttfamily unsigned int ums\+\_\+thread\+\_\+context\+::wt\+\_\+id}
+
+The id of the worker thread that is currently run by the ums thread(scheduler) 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{ums_8h}{ums.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,149 @@
+\hypertarget{ums_8h_source}{}\doxysection{ums.\+h}
+\mbox{\hyperlink{ums_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include <asm/current.h>}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include <asm/fpu/internal.h>}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include <asm/fpu/types.h>}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include <linux/list.h>}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <linux/kernel.h>}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include <linux/slab.h>}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#include <linux/sched.h>}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#include <linux/sched/task\_stack.h>}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#include <linux/uaccess.h>}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#include <linux/ktime.h>}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{device__shared_8h}{device\_shared.h}}"{}}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{proc_8h}{proc.h}}"{}}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#define UMS\_LOG "{}UMS: "{}}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define ERROR\_UMS\_FAIL 1                            }}
+\DoxyCodeLine{50 \textcolor{preprocessor}{\#define ERROR\_PROCESS\_ALREADY\_INITIALIZED 500       }}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#define ERROR\_PROCESS\_NOT\_INITIALIZED 501           }}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#define ERROR\_COMPLETION\_LIST\_NOT\_FOUND 502         }}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define ERROR\_WORKER\_THREAD\_NOT\_FOUND 503           }}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#define ERROR\_UMS\_THREAD\_NOT\_FOUND 504              }}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#define ERROR\_UMS\_THREAD\_ALREADY\_RUNNING 505        }}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{comment}{/* }}
+\DoxyCodeLine{58 \textcolor{comment}{ * Structs}}
+\DoxyCodeLine{59 \textcolor{comment}{ */}}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{67 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structprocess__list}{process\_list}} \{}
+\DoxyCodeLine{68     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{69     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structprocess__list_adcd46217f5bf2f0f104f180e19ab4f2f}{process\_count}};        }
+\DoxyCodeLine{70 \} \mbox{\hyperlink{ums_8h_aeab9a7fcce181267a3e8390f4e5469c5}{process\_list\_t}};}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{78 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structcl__list}{cl\_list}} \{}
+\DoxyCodeLine{79     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{80     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structcl__list_a22de9667427aefd3059ddb3c1e1efcdf}{cl\_count}};          }
+\DoxyCodeLine{81 \} \mbox{\hyperlink{ums_8h_a331020b397767045df55c3440bcfe919}{cl\_list\_t}};}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{89 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structworker__thread__list}{worker\_thread\_list}} \{}
+\DoxyCodeLine{90     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{91     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structworker__thread__list_aa29eea4868cb925b924d53f038dc7b50}{worker\_thread\_count}};        }
+\DoxyCodeLine{92 \} \mbox{\hyperlink{ums_8h_a0b7394272d57022d03b53178cbc1c260}{worker\_thread\_list\_t}};}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{100 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structums__thread__list}{ums\_thread\_list}} \{}
+\DoxyCodeLine{101     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{102     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread__list_ac23ca6aa50b17a8e980e01c08a357760}{ums\_thread\_count}};      }
+\DoxyCodeLine{103 \} \mbox{\hyperlink{ums_8h_a35c358a86004735824917343df36009f}{ums\_thread\_list\_t}};}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{115 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structprocess}{process}} \{}
+\DoxyCodeLine{116     pid\_t \mbox{\hyperlink{structprocess_ab7b330a89c9b52c5f0c7dedd4f90dfb8}{pid}};                                   }
+\DoxyCodeLine{117     \mbox{\hyperlink{structcl__list}{cl\_list\_t}} \mbox{\hyperlink{structprocess_ab0972857847dcec4ae7095b0b5503ec1}{cl\_list}};                          }
+\DoxyCodeLine{118     \mbox{\hyperlink{structworker__thread__list}{worker\_thread\_list\_t}} \mbox{\hyperlink{structprocess_a8304715a0688e07a8d3a8bc64bce8672}{worker\_thread\_list}};  }
+\DoxyCodeLine{119     \mbox{\hyperlink{structums__thread__list}{ums\_thread\_list\_t}} \mbox{\hyperlink{structprocess_a8345f9b6261c56acd1a89bfa0ae7b129}{ums\_thread\_list}};          }
+\DoxyCodeLine{120     \textcolor{keyword}{struct }list\_head list;}
+\DoxyCodeLine{121 \} \mbox{\hyperlink{ums_8h_a0887f99826284e3828917609857e5e5c}{process\_t}};}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{129 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structcompletion__list}{completion\_list}} \{}
+\DoxyCodeLine{130     \textcolor{keyword}{struct }list\_head \mbox{\hyperlink{structcompletion__list_a2ba4e0ef117a85959588d94a81d19252}{list}};                  }
+\DoxyCodeLine{131     \textcolor{keyword}{struct }list\_head \mbox{\hyperlink{structcompletion__list_a35419b9ab0e3ef392a786fdc5e70a4ea}{wt\_list}};                }
+\DoxyCodeLine{132     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structcompletion__list_a053c1483124f251f5ce17414f0b36e80}{id}};                      }
+\DoxyCodeLine{133     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structcompletion__list_a3c0a4928a6e8454fce9eba410bd6f9e5}{worker\_thread\_count}};        }
+\DoxyCodeLine{134 \} \mbox{\hyperlink{ums_8h_a3aa2faf3090172d4cd003dbf1704efbb}{completion\_list\_t}};}
+\DoxyCodeLine{135 }
+\DoxyCodeLine{136 }
+\DoxyCodeLine{141 \textcolor{keyword}{typedef} \textcolor{keyword}{enum} \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6}{worker\_state}} \{}
+\DoxyCodeLine{142     \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6aa6e504d57ec9777faa0185fbd3b93b97}{BUSY}},           }
+\DoxyCodeLine{143     \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6a6564f2f3e15be06b670547bbcaaf0798}{READY}},         }
+\DoxyCodeLine{144     \mbox{\hyperlink{ums_8h_a74d6a8e9b05f036ec5b86d00abaffea6adbd1812bee789fbf3548cf79d3f2b400}{FINISHED}}        }
+\DoxyCodeLine{145 \} \mbox{\hyperlink{ums_8h_a6bd19f25c5ade6501005b818464ee2e4}{worker\_state\_t}};}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{153 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structworker__thread__context}{worker\_thread\_context}} \{}
+\DoxyCodeLine{154     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structworker__thread__context_afa9716132e7502ee44ffbfd96827226e}{id}};                      }
+\DoxyCodeLine{155     \textcolor{keyword}{struct }list\_head \mbox{\hyperlink{structworker__thread__context_ad70d419706bac42b5d1b62bfcb79489f}{list}};                  }
+\DoxyCodeLine{156     \textcolor{keyword}{struct }list\_head \mbox{\hyperlink{structworker__thread__context_a55e983492f5030260088ff79a96e888e}{wt\_list}};                }
+\DoxyCodeLine{157     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{structworker__thread__context_a4dc5458fb6ced5ae28ee72bd70a1725f}{entry\_point}};               }
+\DoxyCodeLine{158     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structworker__thread__context_aeb201e41d85e5e5737d97f04bb020cb1}{cl\_id}};                        }
+\DoxyCodeLine{159     pid\_t \mbox{\hyperlink{structworker__thread__context_aad083bf9e4acb5588d86c0428f694b0e}{created\_by}};                     }
+\DoxyCodeLine{160     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structworker__thread__context_a0069c68289848a127b7758755f3ad4bc}{run\_by}};                  }
+\DoxyCodeLine{161     \mbox{\hyperlink{ums_8h_a6bd19f25c5ade6501005b818464ee2e4}{worker\_state\_t}} \mbox{\hyperlink{structworker__thread__context_a5874572082354fd3c22aab2bf32e23e6}{state}};                    }
+\DoxyCodeLine{162     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{structworker__thread__context_ab065b954e4426a48bf0c4d2ec2884e9e}{running\_time}};             }
+\DoxyCodeLine{163     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structworker__thread__context_ac64a4db7d891f3ce348778b946556eab}{switch\_count}};              }
+\DoxyCodeLine{164     \textcolor{keyword}{struct }timespec64 \mbox{\hyperlink{structworker__thread__context_aa4b843564cc7c069d44deaa56c7e66bd}{last\_switch\_time}};     }
+\DoxyCodeLine{165     \textcolor{keyword}{struct }pt\_regs \mbox{\hyperlink{structworker__thread__context_aefef0092884ac37e5a541b9a617a2a8f}{regs}};                    }
+\DoxyCodeLine{166     \textcolor{keyword}{struct }fpu \mbox{\hyperlink{structworker__thread__context_a6c2a3d2b66cf5537ac22f3866533b136}{fpu\_regs}};                    }
+\DoxyCodeLine{167 \} \mbox{\hyperlink{ums_8h_a122c865caa826d3b11882e53707fbf7e}{worker\_thread\_context\_t}};}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{173 \textcolor{keyword}{typedef} \textcolor{keyword}{enum} \mbox{\hyperlink{ums_8h_a20c07d57fac8a74722c0d3471d0472bd}{ums\_state}} \{}
+\DoxyCodeLine{174     \mbox{\hyperlink{ums_8h_a20c07d57fac8a74722c0d3471d0472bda1061be6c3fb88d32829cba6f6b2be304}{RUNNING}},     }
+\DoxyCodeLine{175     \mbox{\hyperlink{ums_8h_a20c07d57fac8a74722c0d3471d0472bdafd6a0e4343048b10646dd2976cc5ad18}{IDLE}}            }
+\DoxyCodeLine{176 \} \mbox{\hyperlink{ums_8h_adf78edcd8347bb088e9ef4797813efd0}{ums\_state\_t}};}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{184 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structums__thread__context}{ums\_thread\_context}} \{}
+\DoxyCodeLine{185     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread__context_a9b594f8c5ec95bdcc2bb90d6f5588721}{id}};                      }
+\DoxyCodeLine{186     \textcolor{keyword}{struct }list\_head list;                  }
+\DoxyCodeLine{187     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{structums__thread__context_a32aa3478a25c6fc832193a983c734823}{entry\_point}};               }
+\DoxyCodeLine{188     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread__context_aada95dacd52bb950a3fe8f1629d8d17a}{cl\_id}};                        }
+\DoxyCodeLine{189     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread__context_aa66c738f2ee9ffa03198348143cc49c3}{wt\_id}};                        }
+\DoxyCodeLine{190     pid\_t \mbox{\hyperlink{structums__thread__context_abf06939bac9db7caede4234c208acc01}{created\_by}};                     }
+\DoxyCodeLine{191     pid\_t \mbox{\hyperlink{structums__thread__context_a12fb7174037d944027a0dd3eed12d226}{run\_by}};                         }
+\DoxyCodeLine{192     \mbox{\hyperlink{ums_8h_adf78edcd8347bb088e9ef4797813efd0}{ums\_state\_t}} \mbox{\hyperlink{structums__thread__context_ad39f49e374ec95ecf13c448283b4535a}{state}};                      }
+\DoxyCodeLine{193     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{structums__thread__context_a22ab508a18133af3af2f6cf804d04ed6}{switch\_count}};              }
+\DoxyCodeLine{194     \textcolor{keyword}{struct }timespec64 \mbox{\hyperlink{structums__thread__context_a5ecfdc22f1c91698ffd474e1a975f9b6}{last\_switch\_time}};     }
+\DoxyCodeLine{195     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{structums__thread__context_a172287161e05473566433859037e9e24}{switching\_time}};         }
+\DoxyCodeLine{196     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{structums__thread__context_ac74c703816309c71d887b07b3c7da0b6}{avg\_switching\_time}};     }
+\DoxyCodeLine{197     \textcolor{keyword}{struct }pt\_regs \mbox{\hyperlink{structums__thread__context_ae5c1f8b548fceaaef862bee953afc101}{regs}};                    }
+\DoxyCodeLine{198     \textcolor{keyword}{struct }fpu \mbox{\hyperlink{structums__thread__context_a01b56016d18235e154a353c29b2b8c68}{fpu\_regs}};                    }
+\DoxyCodeLine{199     \textcolor{keyword}{struct }pt\_regs \mbox{\hyperlink{structums__thread__context_a85e0111a0c22f806eecd448f5ff8a642}{ret\_regs}};                }
+\DoxyCodeLine{201 \} \mbox{\hyperlink{ums_8h_ab7704f774ab72f95b456c1fcadb0c83f}{ums\_thread\_context\_t}};}
+\DoxyCodeLine{202 }
+\DoxyCodeLine{203 \textcolor{comment}{/* }}
+\DoxyCodeLine{204 \textcolor{comment}{ * Functions}}
+\DoxyCodeLine{205 \textcolor{comment}{ */}}
+\DoxyCodeLine{206 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a6f0ba61c7c4c5bcc133f227ce66671fc}{init\_ums\_process}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{207 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a021582c885c8a14b8ebd8d3846f975ba}{exit\_ums\_process}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{208 \textcolor{keywordtype}{void} \mbox{\hyperlink{ums_8h_a8c2655f2f806f114bf859a362324433f}{exit\_ums}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{209 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a75ce1900a0840e6b37a61c11f973cbb9}{create\_completion\_list}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{210 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_abc8cc7df36f79b361fa1c72961948571}{create\_worker\_thread}}(\mbox{\hyperlink{structworker__thread__params}{worker\_thread\_params\_t}} *params);}
+\DoxyCodeLine{211 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a91a276dd169c9225d57c5d8f55d53aba}{add\_to\_completion\_list}}(\mbox{\hyperlink{structadd__wt__params}{add\_wt\_params\_t}} *params);}
+\DoxyCodeLine{212 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a52e3e330114076371db8a28d840d4f19}{create\_ums\_thread}}(\mbox{\hyperlink{structums__thread__params}{ums\_thread\_params\_t}} *params);}
+\DoxyCodeLine{213 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a3e10182dc213395263cd6828d416bbd2}{convert\_to\_ums\_thread}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} ums\_thread\_id);}
+\DoxyCodeLine{214 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a2e220d694fcbee583e42701da8cd4896}{convert\_from\_ums\_thread}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{215 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a8ea95ef04ac1da83212ae3c9657ce690}{dequeue\_completion\_list\_items}}(\textcolor{keywordtype}{int} *runnable\_wt\_ptr);}
+\DoxyCodeLine{216 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_af88cdd76665d17307ce464e5182f3ccd}{switch\_to\_worker\_thread}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} worker\_thread\_id);}
+\DoxyCodeLine{217 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a2f0a7c9a0decf8a521b2e380f0fbb464}{switch\_back\_to\_ums\_thread}}(\mbox{\hyperlink{device__shared_8h_af6a037295cc215d38e0865102e652366}{yield\_reason\_t}} \mbox{\hyperlink{device__shared_8h_a173c832278e844627c9b4ac112127dd1}{yield\_reason}});}
+\DoxyCodeLine{218 }
+\DoxyCodeLine{219 \textcolor{comment}{/* }}
+\DoxyCodeLine{220 \textcolor{comment}{ * Auxiliary functions}}
+\DoxyCodeLine{221 \textcolor{comment}{ */}}
+\DoxyCodeLine{222 \mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{ums_8h_a675f8fb78aabe5442f47cb86e0a95664}{get\_process\_with\_pid}}(pid\_t req\_pid);}
+\DoxyCodeLine{223 \mbox{\hyperlink{structcompletion__list}{completion\_list\_t}} *\mbox{\hyperlink{ums_8h_a3a162c63f1b0ad09dea0ee0dd29f4357}{get\_cl\_with\_id}}(\mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{structprocess}{process}}, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} completion\_list\_id);}
+\DoxyCodeLine{224 \mbox{\hyperlink{structworker__thread__context}{worker\_thread\_context\_t}} *\mbox{\hyperlink{ums_8h_aef3cee42b6891e083223c643fa1229f5}{get\_wt\_with\_id}}(\mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{structprocess}{process}}, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} worker\_thread\_id);}
+\DoxyCodeLine{225 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a669f410186fca6be1184cfec91538482}{get\_ready\_wt\_list}}(\mbox{\hyperlink{structcompletion__list}{completion\_list\_t}} *\mbox{\hyperlink{structcompletion__list}{completion\_list}}, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} *ready\_wt\_list);}
+\DoxyCodeLine{226 \mbox{\hyperlink{structworker__thread__context}{worker\_thread\_context\_t}} *\mbox{\hyperlink{ums_8h_a6053cda9b5ef3d9e380357b0db351f8d}{get\_wt\_run\_by\_umst\_id}}(\mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{structprocess}{process}}, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} ums\_thread\_id);}
+\DoxyCodeLine{227 \mbox{\hyperlink{structums__thread__context}{ums\_thread\_context\_t}} *\mbox{\hyperlink{ums_8h_a4b71cdba8cfa9ab83b97c5a3a1bb3463}{get\_umst\_with\_id}}(\mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{structprocess}{process}}, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} ums\_thread\_id);}
+\DoxyCodeLine{228 \mbox{\hyperlink{structums__thread__context}{ums\_thread\_context\_t}} *\mbox{\hyperlink{ums_8h_ac030b78b6219960507cd37eb7e4dbeee}{get\_umst\_run\_by\_pid}}(\mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{structprocess}{process}}, pid\_t req\_pid);}
+\DoxyCodeLine{229 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a38247438dcbb475d4744d0463c5f5390}{free\_process\_ums\_thread\_list}}(\mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{structprocess}{process}});}
+\DoxyCodeLine{230 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a04223f98521c33aef04bd75585c49b88}{free\_process\_cl\_list}}(\mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{structprocess}{process}});}
+\DoxyCodeLine{231 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a73a4721236a17583867c5cf2445e673c}{free\_process\_worker\_thread\_list}}(\mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{structprocess}{process}});}
+\DoxyCodeLine{232 \textcolor{keywordtype}{int} \mbox{\hyperlink{ums_8h_a302901f16efb6791d3b0d0514bfda7bf}{free\_process}}(\mbox{\hyperlink{structprocess}{process\_t}} *\mbox{\hyperlink{structprocess}{process}});}
+\DoxyCodeLine{233 \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{ums_8h_a948cb61485daa4bbd00b17ced951c2fe}{get\_wt\_running\_time}}(\mbox{\hyperlink{structworker__thread__context}{worker\_thread\_context\_t}} *\mbox{\hyperlink{structworker__thread__context}{worker\_thread\_context}});}
+\DoxyCodeLine{234 \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \mbox{\hyperlink{ums_8h_a225973539481835bbb121821f11ebbe3}{get\_umst\_switching\_time}}(\mbox{\hyperlink{structums__thread__context}{ums\_thread\_context\_t}} *\mbox{\hyperlink{structums__thread__context}{ums\_thread\_context}});}
+
+\end{DoxyCode}
