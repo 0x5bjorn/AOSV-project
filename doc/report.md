@@ -31,10 +31,10 @@ The implementation was built on the following environment:
 
 The log information examples of the library and module are shown the following pictures:
 ![library log](https://user-images.githubusercontent.com/39553131/145228638-8aa85161-3df0-4d4b-b978-2ff85aa11bda.png)
-
-The measured benchmark sample of the project is the average time needed for a scheduler thread to switch a worker thread which is in range between 150-250 ms. 
 ![module log1](https://user-images.githubusercontent.com/39553131/145228644-31267e8f-dfc6-46f7-804f-8f4400a2b8b3.png)
 ![module log2](https://user-images.githubusercontent.com/39553131/145228651-2b105030-6f98-48f5-9fd5-d540a49f09e4.png)
+
+The measured benchmark sample of the project is the average time needed for a scheduler thread to switch a worker thread which is in range between 150-250 ms. 
 
 The process of executing the worker threads is straight-forward and not optimized completely. Scheduler routine in user space queries(dequeue) a list of available and ready to run worker threads and stores it locally. Thus, when 2 scheduler share a completion list, it is not updated globally. Scheduler updates a local list during the execution attempt of a worker thread, specifically when it sees that the status of the worker thread is finished. Thus, there might be cases when one scheduler finishes the whole list and another scheduler is just trailing behind and updating local list.
 Another case to be noted and reported is when one scheduler finishes the list even before the second scheduler has started. 
