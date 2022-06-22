@@ -5,7 +5,7 @@ _A.Y. 2020/2021_
 Author(s): Sultan Umabraev (1954544) 
 
 # Introduction
-The goal of the project was to implement **User Mode thread Scheduling** mechanism for the Linux distribution, inspired by the **User-mode scheduling (UMS)** implementation available in the Windows kernel [1]. UMS is a mechanism that allows applications/programs in the user mode to schedule their own threads without involving the kernel/system scheduler. The main goal and advantage is that thread switching in user mode is "*more efficient than thread pools for managing large numbers of short-duration work items...*" [2].
+The goal of the project was to implement **User Mode thread Scheduling** mechanism for the Linux distribution, inspired by the **User-mode scheduling (UMS)** implementation available in the Windows kernel [1]. UMS is a mechanism that allows applications/programs in the user mode to schedule their own threads without involving the kernel/system scheduler. The main goal and advantage is that thread switching in user mode is "*more efficient than thread pools for managing large numbers of short-duration work items that require few system calls.*" [2].
 
 # Design and Implementation
 The main components of the UMS mechanism in this implementation are:
